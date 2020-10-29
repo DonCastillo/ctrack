@@ -20,6 +20,7 @@ class Issue {
  private:
      std::string title;
      unsigned int id;
+     User* issuer;
      std::vector<User*> assigned;
      //Comment* description
      //std::vector<Comment*> comments

@@ -7,6 +7,7 @@ class User {
  public:
      User(std::string pName) : name(pName) {}
      virtual ~User() {}
+
      void setName(std::string pName);
      std::string getName();
 
