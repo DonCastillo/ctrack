@@ -1,6 +1,11 @@
 #include "service/User.h"
 #include <string>
 
+User::User(std::string pName) {
+    name = pName;
+    group = Group::USER;
+}
+
 void User::setName(std::string pName){
     name = pName;
 }

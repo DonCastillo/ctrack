@@ -7,8 +7,7 @@ class User {
  public:
      enum Group {DEVELOPER, TESTER, MANAGER, USER};
 
-     User(std::string pName) :
-         name(pName), group(Group::USER) {}
+     User(std::string pName);
      virtual ~User() {}
 
      void setName(std::string pName);

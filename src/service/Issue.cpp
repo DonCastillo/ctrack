@@ -4,6 +4,21 @@
 #include <string>
 #include <vector>
 
+Issue::Issue(std::string pTitle, User* pIssuer) {
+    title = pTitle;
+    issuer = pIssuer;
+    type = Type::TASK;
+    status = Status::NEW;
+}
+
+Issue::~Issue() {
+    delete issuer;
+    for (User* u : assigned)
+        delete u;
+    for (Comment* c : comments)
+        delete c;
+}
+
 void Issue::setTitle(std::string pTitle) {
     title = pTitle;
 }

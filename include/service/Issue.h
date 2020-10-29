@@ -12,9 +12,8 @@ class Issue {
      enum Status {NEW, ASSIGNED, FIXED, WONTFIX};
 
 
-     Issue(std::string pTitle, User* pIssuer) :
-         title(pTitle), issuer(pIssuer), type(Type::TASK), status(Status::NEW) {}
-     virtual ~Issue() {}
+     Issue(std::string pTitle, User* pIssuer);
+     virtual ~Issue();
 
      void setTitle(std::string pTitle);
      std::string getTitle();
@@ -43,7 +42,6 @@ class Issue {
      Type type;
      Status status;
      std::vector<User*> assigned;
-     Comment* description;
      std::vector<Comment*> comments;
 };
 

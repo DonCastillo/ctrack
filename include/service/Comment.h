@@ -8,9 +8,8 @@
 class Comment {
  public:
 
-     Comment(User* pCommenter, std::string pComment) :
-         commenter(pCommenter), comment(pComment) {}
-     virtual ~Comment() {}
+     Comment(User* pCommenter, std::string pComment);
+     virtual ~Comment();
 
      void setComment(std::string pComment);
      std::string getComment();
