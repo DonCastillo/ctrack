@@ -1,7 +1,9 @@
 #include "Issue.h"
+#include "Comment.h"
 #include "User.h"
 #include "gtest/gtest.h"
 #include <string>
+#include <vector>
 
 
 TEST(TestIssue, issue_id) {
@@ -171,3 +173,49 @@ TEST(TestIssue, getting_description) {
     delete myIssue;
     delete karen;
 }
+
+
+TEST(TestIssue, adding_getting_deleting_comments){
+    // declare all users
+    User* stanley = new User(0, "Stanley");
+    User* kelly = new User(1, "Kelly");
+
+    Issue* printerIssue = new Issue(0, "Printer not working!", stanley);
+
+    // no comment
+    EXPECT(printerIssue->getComments().size(), 0);
+
+    // add comments
+    std::vector<std::string> comments;
+    comments.push_back("Printer prints b&w instead of colored");
+    comments.push_back("It also jams paper");
+    comments.push_back("Seriously we need a new printer.");
+
+    std::vector<std::string> commenters;
+    commenters.push_back(stanley);
+    commenters.push_back(kelly);
+    commenters.push_back(kelly);
+
+    printerIssue->addComment(new Comment(0, commenters[0], comments[0]));
+    printerIssue->addComment(new Comment(1, commenters[1], comments[1]));
+    printerIssue->addComment(new Comment(2, commenters[2], comments[2]));
+
+
+    for(int i = 0; i < printerIssue->getComments().size(); ++i) {
+        Comment* thisComment = printerIssue->getComments()[i];
+        bool isSameID = thisComment->getID() == i;
+        bool isSameCommenter = thisComment->getCommenter()->getID() == commenters[i]->getID();
+        bool isSameComments = thisComment->getComment() == comments[i];
+        EXPECT_TRUE(isSameID && isSameCommenter && isSameComments);
+    }
+
+
+
+}
+
+
+
+
+
+
+
