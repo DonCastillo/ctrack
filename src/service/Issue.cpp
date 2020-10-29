@@ -12,9 +12,6 @@ Issue::Issue(std::string pTitle, User* pIssuer) {
 }
 
 Issue::~Issue() {
-    delete issuer;
-    for (int i = 0; i < assigned.size(); ++i)
-        delete assigned[i];
     for (int i = 0; i < comments.size(); ++i)
         delete comments[i];
 }

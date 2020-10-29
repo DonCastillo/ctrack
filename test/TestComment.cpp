@@ -9,9 +9,42 @@ TEST(TestComment, setting_and_getting_comment) {
 
     // blank comment
     comment = "";
-    Comment* comment1 = new Comment(jane, comment);
+    Comment* myComment = new Comment(jane, comment);
+    EXPECT_EQ(myComment->getComment().length(), 0);
 
-    EXPECT_EQ(comment1->getComment().length(), 0);
+    // one char comment
+    comment = "x";
+    myComment->setComment(comment);
+    EXPECT_EQ(myComment->getComment(), comment);
+
+    // short comment
+    comment = "this is a short comment.";
+    myComment->setComment(comment);
+    EXPECT_EQ(myComment->getComment(), comment);
+
+    // long comment
+    comment = "this is a very long long long long comment.";
+    myComment->setComment(comment);
+    EXPECT_EQ(myComment->getComment(), comment);
+
+    delete myComment;
+    delete jane;
+}
 
 
+TEST(TestComment, setting_and_getting_commenter) {
+    // jane as original commenter
+    User* jane = new User("Jane");
+    Comment* myComment = new Comment(jane, "sample comment");
+    EXPECT_EQ(myComment->getCommenter()->getName(), "Jane");
+
+    // change commenter to Bob
+    User* bob = new User("Bob");
+    myComment->setCommenter(bob);
+    EXPECT_EQ(myComment->getCommenter()->getName(), "Bob");
+
+
+    delete myComment;
+    delete jane;
+    delete bob;
 }
