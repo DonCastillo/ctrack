@@ -3,16 +3,14 @@
 #include "gtest/gtest.h"
 #include <string>
 
-unsigned int Comment::counter;
-
 TEST(TestComment, comment_id) {
-    User* jane = new User("Jane");
-    Comment* comment1 = new Comment(jane, "This is comment 1");
-    Comment* comment2 = new Comment(jane, "This is comment 2");
+    User* jane = new User(0, "Jane");
+    Comment* comment1 = new Comment(0, jane, "This is comment 1");
+    Comment* comment2 = new Comment(1, jane, "This is comment 2");
 
-    User* bob = new User("Bob");
-    Comment* comment3 = new Comment(bob, "This is comment 3");
-    Comment* comment4 = new Comment(bob, "This is comment 4");
+    User* bob = new User(1, "Bob");
+    Comment* comment3 = new Comment(2, bob, "This is comment 3");
+    Comment* comment4 = new Comment(3, bob, "This is comment 4");
 
     EXPECT_EQ(comment1->getID(), 0);
     EXPECT_EQ(comment2->getID(), 1);
@@ -29,11 +27,11 @@ TEST(TestComment, comment_id) {
 
 TEST(TestComment, setting_and_getting_comment) {
     std::string comment = "";
-    User* jane = new User("Jane");
+    User* jane = new User(0, "Jane");
 
     // blank comment
     comment = "";
-    Comment* myComment = new Comment(jane, comment);
+    Comment* myComment = new Comment(0, jane, comment);
     EXPECT_EQ(myComment->getComment().length(), 0);
 
     // one char comment
@@ -58,12 +56,12 @@ TEST(TestComment, setting_and_getting_comment) {
 
 TEST(TestComment, setting_and_getting_commenter) {
     // jane as original commenter
-    User* jane = new User("Jane");
-    Comment* myComment = new Comment(jane, "sample comment");
+    User* jane = new User(0, "Jane");
+    Comment* myComment = new Comment(0, jane, "sample comment");
     EXPECT_EQ(myComment->getCommenter()->getName(), "Jane");
 
     // change commenter to Bob
-    User* bob = new User("Bob");
+    User* bob = new User(1, "Bob");
     myComment->setCommenter(bob);
     EXPECT_EQ(myComment->getCommenter()->getName(), "Bob");
 
