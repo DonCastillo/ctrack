@@ -183,7 +183,7 @@ TEST(TestIssue, adding_getting_deleting_comments){
     Issue* printerIssue = new Issue(0, "Printer not working!", stanley);
 
     // no comment
-    EXPECT(printerIssue->getComments().size(), 0);
+    EXPECT_EQ(printerIssue->getComments().size(), 0);
 
     // add comments
     std::vector<std::string> comments;
