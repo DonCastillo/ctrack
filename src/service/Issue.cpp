@@ -9,11 +9,17 @@ Issue::Issue(std::string pTitle, User* pIssuer) {
     issuer = pIssuer;
     type = Issue::TASK;
     status = Issue::NEW;
+    id = counter;
+    ++counter;
 }
 
 Issue::~Issue() {
     for (int i = 0; i < comments.size(); ++i)
         delete comments[i];
+}
+
+unsigned int Issue::getID() {
+    return id;
 }
 
 void Issue::setTitle(std::string pTitle) {

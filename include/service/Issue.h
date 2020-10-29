@@ -10,6 +10,7 @@ class Issue {
  public:
      enum Type {FEATURE, BUG, TASK};
      enum Status {NEW, ASSIGNED, FIXED, WONTFIX};
+     static unsigned int counter;
 
 
      Issue(std::string pTitle, User* pIssuer);
@@ -34,6 +35,8 @@ class Issue {
 
      void addComment(Comment* pComment);
      std::vector<Comment*> getComments();
+
+     unsigned int getID();
 
  private:
      std::string title;

@@ -3,6 +3,30 @@
 #include "gtest/gtest.h"
 #include <string>
 
+unsigned int Issue::counter;
+
+TEST(TestIssue, issue_id) {
+    User* jane = new User("Jane");
+    Issue* issue1 = new Issue("Not working properly", jane);
+    Issue* issue2 = new Issue("Not really working properly", jane);
+
+    User* bob = new User("Bob");
+    Issue* issue3 = new Issue("Can't close the tab", bob);
+    Issue* issue4 = new Issue("Can't really close the tab", bob);
+
+    EXPECT_EQ(issue1->getID(), 0);
+    EXPECT_EQ(issue2->getID(), 1);
+    EXPECT_EQ(issue3->getID(), 2);
+    EXPECT_EQ(issue4->getID(), 3);
+
+    delete issue1;
+    delete issue2;
+    delete issue3;
+    delete issue4;
+    delete jane;
+    delete bob;
+}
+
 TEST(TestIssue, setting_and_getting_title) {
     User* jane = new User("Jane");
 

@@ -24,6 +24,7 @@ TEST(TestComment, comment_id) {
     delete comment3;
     delete comment4;
     delete jane;
+    delete bob;
 }
 
 TEST(TestComment, setting_and_getting_comment) {
