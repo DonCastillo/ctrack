@@ -1,5 +1,5 @@
-#ifndef ISSUE_H
-#define ISSUE_H
+#ifndef ISSUE_H_INCLUDED
+#define ISSUE_H_INCLUDED
 
 #include "User.h"
 #include "Comment.h"
@@ -46,4 +46,4 @@ class Issue {
 };
 
 
-#endif // ISSUE_H
+#endif // ISSUE_H_INCLUDED

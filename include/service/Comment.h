@@ -1,5 +1,5 @@
-#ifndef COMMENT_H
-#define COMMENT_H
+#ifndef COMMENT_H_INCLUDED
+#define COMMENT_H_INCLUDED
 
 #include "User.h"
 #include <string>
@@ -25,4 +25,4 @@ class Comment {
 };
 
 
-#endif // ISSUE_H
+#endif // ISSUE_H_INCLUDED
