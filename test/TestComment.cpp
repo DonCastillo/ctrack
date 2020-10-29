@@ -4,7 +4,7 @@
 #include <string>
 
 TEST(TestComment, comment_id) {
-    Comment::counter = 0;
+    unsigned int Comment::counter = 0;
     User* jane = new User("Jane");
     Comment* comment1 = new Comment(jane, "This is comment 1");
     Comment* comment2 = new Comment(jane, "This is comment 2");
