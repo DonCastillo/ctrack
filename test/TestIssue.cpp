@@ -236,6 +236,17 @@ TEST(TestIssue, getting_removing_specific_comment) {
     EXPECT_TRUE(uiError->deleteComment(0));
     EXPECT_FALSE(uiError->deleteComment(0));
 
+    // added more commets
+    uiError->addComment(new Comment(0, donna, "ui has awful background"));
+    uiError->addComent(new Comment(1, donna, "font is bad"));
+    uiError->addComment(new Comment(2, donna, "scroll bar is invisible"));
+    EXPECT_EQ(uiError->getComment(0)->getCommenter()->getName(), donna->getName());
+    EXPECT_EQ(uiError->getComment(1)->getCommenter()->getName(), donna->getName());
+    EXPECT_FALSE(uiError->deleteComment(3));
+    EXPECT_TRUE(uiError->deleteComment(1));
+    EXPECT_EQ(uiError->getComment(1), nullptr);
+    EXPECT_EQ(uiError->getComments().size(), 2);
+
     delete uiError;
     delete donna;
 }
