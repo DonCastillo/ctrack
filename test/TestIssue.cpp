@@ -74,5 +74,35 @@ TEST(TestUser, setting_and_getting_type) {
 }
 
 
+TEST(TestUser, setting_and_getting_status) {
+    User* andy = new User("Andy");
+    Issue* myIssue = new Issue("Error on line 5", andy);
+
+    // check default status
+    EXPECT_EQ(myIssue->getStatus(), "new");
+
+    // change to new
+    myIssue->setStatus(0);
+    EXPECT_EQ(myIssue->getStatus(), "new");
+
+    // change to assigned
+    myIssue->setStatus(1);
+    EXPECT_EQ(myIssue->getStatus(), "assigned");
+
+    // change to fixed
+    myIssue->setStatus(2);
+    EXPECT_EQ(myIssue->getStatus(), "fixed");
+
+    // change to won't fix
+    myIssue->setStatus(3);
+    EXPECT_EQ(myIssue->getStatus(), "won't fix");
+
+    // change to new
+    myIssue->setStatus(999);
+    EXPECT_EQ(myIssue->getStatus(), "new");
+
+    delete myIssue;
+    delete andy;
+}
 
 
