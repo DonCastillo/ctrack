@@ -191,7 +191,7 @@ TEST(TestIssue, adding_getting_deleting_comments){
     comments.push_back("It also jams paper");
     comments.push_back("Seriously we need a new printer.");
 
-    std::vector<std::string> commenters;
+    std::vector<User*> commenters;
     commenters.push_back(stanley);
     commenters.push_back(kelly);
     commenters.push_back(kelly);
