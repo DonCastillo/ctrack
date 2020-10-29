@@ -144,7 +144,7 @@ Comment* Issue::getComment(unsigned int pId) {
 
 bool Issue::deleteComment(unsigned int pId) {
     for (int i = 0; i < comments.size(); ++i) {
-        if (c->getID() == pId) {
+        if (comments[i]->getID() == pId) {
             comments.erase(comments.begin() + i);
             return true;
         }
