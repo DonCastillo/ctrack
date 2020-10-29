@@ -3,10 +3,13 @@
 #include <cstdlib>
 #include <memory>
 #include <string>
+#include <fstream>
 #include <nlohmann/json.hpp>
 #include "../../include/service/Comment.h"
 #include "../../include/service/Issue.h"
 #include "../../include/service/User.h"
+
+using json = nlohmann::json;
 
 // Response header to prevent a cross-site validation problem
 #define ALLOW_ALL { "Access-Control-Allow-Origin", "*" }
@@ -61,11 +64,19 @@ void get_method_handler(const std::shared_ptr<restbed::Session>& session) {
 }
 
 void readDB(std::vector<User*>* users, std::vector<Issue*>* issues) {
+    json j;
+    std::fstream f("./db.json");
+    j = json::parse(f);
+
+    for(auto &u:j["users"]) {
+        
+    }
 }
 
 int main(const int, const char**) {
     std::vector<User*> users;
     std::vector<Issue*> issues;
+
     readDB(&users, &issues);
 
     // Setup service and request handlers
