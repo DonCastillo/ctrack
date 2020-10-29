@@ -13,10 +13,7 @@ class User {
 
  private:
      std::string name;
-
-
-
-
+     unsigned int id;
 };
 
 
