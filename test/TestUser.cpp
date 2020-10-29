@@ -5,15 +5,15 @@
 unsigned int User::counter;
 
 TEST(TestUser, user_id) {
-    User* michael = new User("Michael");
-    User* dwight = new User("Dwight");
-    User* jim = new User("Jim");
-    User* pam = new User("Pam");
+    User* michael = new User(0, "Michael");
+    User* dwight = new User(1, "Dwight");
+    User* jim = new User(2, "Jim");
+    User* pam = new User(3, "Pam");
 
-    EXPECT_EQ(michael->getID(), 16);
-    EXPECT_EQ(dwight->getID(), 17);
-    EXPECT_EQ(jim->getID(), 18);
-    EXPECT_EQ(pam->getID(), 19);
+    EXPECT_EQ(michael->getID(), 0);
+    EXPECT_EQ(dwight->getID(), 1);
+    EXPECT_EQ(jim->getID(), 2);
+    EXPECT_EQ(pam->getID(), 3);
 
     delete michael;
     delete dwight;
@@ -22,7 +22,7 @@ TEST(TestUser, user_id) {
 }
 
 TEST(TestUser, setting_and_getting_name) {
-    User* jane = new User("Jane");
+    User* jane = new User(0, "Jane");
 
     // check original name
     EXPECT_EQ(jane->getName(), "Jane");
@@ -35,7 +35,7 @@ TEST(TestUser, setting_and_getting_name) {
 }
 
 TEST(TestUser, setting_and_getting_group) {
-    User* jane = new User("Jane");
+    User* jane = new User(0, "Jane");
 
     // checking default user group
     EXPECT_EQ(jane->getGroup(), "user");
