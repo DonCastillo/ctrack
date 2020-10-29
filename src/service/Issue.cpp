@@ -53,13 +53,13 @@ void Issue::setType(unsigned int pInt) {
 std::string Issue::getType() {
     std::string typeLabel = "";
     switch(type) {
-        case Type::FEATURE:
+        case Issue::FEATURE:
             typeLabel = "feature";
             break;
-        case Type::BUG:
+        case Issue::BUG:
             typeLabel = "bug";
             break;
-        case Type::TASK:
+        case Issue::TASK:
             typeLabel = "task";
     }
     return typeLabel;
@@ -89,16 +89,16 @@ void Issue::setStatus(unsigned int pInt) {
 std::string Issue::getStatus() {
     std::string statusLabel = "";
     switch (status) {
-        case Status::NEW:
+        case Issue::NEW:
             statusLabel = "new";
             break;
-        case Status::ASSIGNED:
+        case Issue::ASSIGNED:
             statusLabel = "assigned";
             break;
-        case Status::FIXED:
+        case Issue::FIXED:
             statusLabel = "fixed";
             break;
-        case Status::WONTFIX:
+        case Issue::WONTFIX:
             statusLabel = "won't fix";
             break;
     }
