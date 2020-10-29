@@ -28,7 +28,7 @@ TEST(TestUser, setting_and_getting_issuer) {
     User* michael = new User("Michael");
     User* dwight = new User("Dwight");
 
-    Issue* issue1 = new Issue(title, jane);
+    Issue* issue1 = new Issue("Background color is too dark", jane);
 
     // check original issuer
     EXPECT_EQ(issue1->getIssuer()->getName(), "Jane");
