@@ -10,10 +10,9 @@ class Issue {
  public:
      enum Type {FEATURE, BUG, TASK};
      enum Status {NEW, ASSIGNED, FIXED, WONTFIX};
-     static unsigned int counter;
 
 
-     Issue(std::string pTitle, User* pIssuer);
+     Issue(unsigned int pId, std::string pTitle, User* pIssuer);
      virtual ~Issue();
 
      void setTitle(std::string pTitle);

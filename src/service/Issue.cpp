@@ -4,13 +4,12 @@
 #include <string>
 #include <vector>
 
-Issue::Issue(std::string pTitle, User* pIssuer) {
+Issue::Issue(unsigned int pId, std::string pTitle, User* pIssuer) {
+    id = pId;
     title = pTitle;
     issuer = pIssuer;
     type = Issue::TASK;
     status = Issue::NEW;
-    id = counter;
-    ++counter;
 }
 
 Issue::~Issue() {
