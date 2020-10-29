@@ -17,9 +17,13 @@ class Comment {
      void setCommenter(User* pCommenter);
      User* getCommenter();
 
+     unsigned int getID();
+
+
+
 
  private:
-     unsigned int id;
+     static unsigned int id;
      std::string comment;
      User* commenter;
 };

@@ -5,9 +5,14 @@
 Comment::Comment(User* pCommenter, std::string pComment) {
     commenter = pCommenter;
     comment = pComment;
+    ++id;
 }
 
 Comment::~Comment() {}
+
+unsigned int Comment::getID() {
+    return id;
+}
 
 void Comment::setComment(std::string pComment) {
     comment = pComment;

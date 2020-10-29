@@ -3,6 +3,28 @@
 #include "gtest/gtest.h"
 #include <string>
 
+TEST(TestComment, comment_id) {
+    Comment::id = 0;
+    User* jane = new User("Jane");
+    Comment* comment1 = new Comment(jane, "This is comment 1");
+    Comment* comment2 = new Comment(jane, "This is comment 2");
+
+    User* bob = new User("Bob");
+    Comment* comment3 = new Comment(bob, "This is comment 3");
+    Comment* comment4 = new Comment(bob, "This is comment 4");
+
+    EXPECT_EQ(comment1->getID(), 1);
+    EXPECT_EQ(comment2->getID(), 2);
+    EXPECT_EQ(comment3->getID(), 3);
+    EXPECT_EQ(comment4->getID(), 4);
+
+    delete comment1;
+    delete comment2;
+    delete comment3;
+    delete comment4;
+    delete jane;
+}
+
 TEST(TestComment, setting_and_getting_comment) {
     std::string comment = "";
     User* jane = new User("Jane");
