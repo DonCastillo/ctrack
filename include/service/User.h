@@ -6,9 +6,8 @@
 class User {
  public:
      enum Group {DEVELOPER, TESTER, MANAGER, USER};
-     static unsigned int counter;
 
-     User(std::string pName);
+     User(unsigned int pId, std::string pName);
      virtual ~User() {}
 
      void setName(std::string pName);

@@ -1,11 +1,10 @@
 #include "User.h"
 #include <string>
 
-User::User(std::string pName) {
+User::User(unsigned int pId, std::string pName) {
+    id = pId;
     name = pName;
     group = User::USER;
-    id = counter;
-    ++counter;
 }
 
 unsigned int User::getID() {
