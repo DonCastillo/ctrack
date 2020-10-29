@@ -175,7 +175,7 @@ TEST(TestIssue, getting_description) {
 }
 
 
-TEST(TestIssue, adding_getting_deleting_comments){
+TEST(TestIssue, adding_getting_comments){
     // declare all users
     User* stanley = new User(0, "Stanley");
     User* kelly = new User(1, "Kelly");
@@ -209,10 +209,36 @@ TEST(TestIssue, adding_getting_deleting_comments){
         EXPECT_TRUE(isSameID && isSameCommenter && isSameComments);
     }
 
-
-
+    delete stanley;
+    delete kelly;
+    delete printerIssue;
 }
 
+
+TEST(TestIssue, getting_removing_specific_comment) {
+    User* donna = new User(0, "Donna");
+    Issue* uiError = new Issue(0, "Error in the ui", donna);
+
+    // no comment
+    // search for comment with id = 0
+    EXPECT_EQ(uiError->getComment(0), nullptr);
+    EXPECT_FALSE(uiError->deleteComment(0));
+
+    // search for comment with id = 5
+    EXPECT_EQ(uiError->getComment(5), nullptr);
+    EXPECT_FALSE(uiError->deleteComment(5));
+
+    // add a comment
+    uiError->addComment(new Comment(0, donna, "ui not mobile responsive"));
+    EXPECT_NE(uiError->getComment(0), nullptr);
+    EXPECT_EQ(uiError->getComment(0)->getID(), 0);
+    EXPECT_FALSE(uiError->deleteComment(5));
+    EXPECT_TRUE(uiError->deleteComment(0));
+    EXPECT_FALSE(uiError->deleteComment(0));
+
+    delete uiError;
+    delete donna;
+}
 
 
 
