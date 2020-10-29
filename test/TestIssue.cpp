@@ -49,7 +49,7 @@ TEST(TestUser, setting_and_getting_issuer) {
 
 TEST(TestUser, setting_and_getting_type) {
     User* pam = new User("Pam");
-    Issue* myIssue = new Issue("Error on line 5");
+    Issue* myIssue = new Issue("Error on line 5", pam);
 
     // check default type
     EXPECT_EQ(myIssue->getType(), "task");
@@ -68,6 +68,9 @@ TEST(TestUser, setting_and_getting_type) {
 
     myIssue->setType(999);
     EXPECT_EQ(myIssue->getType(), "task");
+
+    delete myIssue;
+    delete pam;
 }
 
 
