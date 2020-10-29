@@ -7,8 +7,8 @@
 Issue::Issue(std::string pTitle, User* pIssuer) {
     title = pTitle;
     issuer = pIssuer;
-    type = Type::TASK;
-    status = Status::NEW;
+    type = Issue::TASK;
+    status = Issue::NEW;
 }
 
 Issue::~Issue() {
@@ -38,14 +38,14 @@ User* Issue::getIssuer() {
 void Issue::setType(unsigned int pInt) {
     switch (pInt) {
         case 0:
-            type = Type::FEATURE;
+            type = Issue::FEATURE;
             break;
         case 1:
-            type = Type::BUG;
+            type = Issue::BUG;
             break;
         case 2:
         default:
-            type = Type::TASK;
+            type = Issue::TASK;
             break;
     }
 }
@@ -68,19 +68,19 @@ std::string Issue::getType() {
 void Issue::setStatus(unsigned int pInt) {
     switch (pInt) {
         case 0:
-            status = Status::NEW;
+            status = Issue::NEW;
             break;
         case 1:
-            status = Status::ASSIGNED;
+            status = Issue::ASSIGNED;
             break;
         case 2:
-            status = Status::FIXED;
+            status = Issue::FIXED;
             break;
         case 3:
-            status = Status::WONTFIX;
+            status = Issue::WONTFIX;
             break;
         default:
-            status = Status::NEW;
+            status = Issue::NEW;
             break;
     }
 }

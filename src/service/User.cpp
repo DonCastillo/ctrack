@@ -3,7 +3,7 @@
 
 User::User(std::string pName) {
     name = pName;
-    group = Group::USER;
+    group = User::USER;
 }
 
 void User::setName(std::string pName){
@@ -17,17 +17,17 @@ std::string User::getName() {
 void User::setGroup(unsigned int pInt) {
     switch (pInt) {
         case 0:
-            group = Group::DEVELOPER;
+            group = User::DEVELOPER;
             break;
         case 1:
-            group = Group::TESTER;
+            group = User::TESTER;
             break;
         case 2:
-            group = Group::MANAGER;
+            group = User::MANAGER;
             break;
         case 3:
         default:
-            group = Group::USER;
+            group = User::USER;
             break;
     }
 }
@@ -36,16 +36,16 @@ std::string User::getGroup() {
     std::string groupLabel = "";
 
     switch (group) {
-        case Group::DEVELOPER:
+        case User::DEVELOPER:
             groupLabel = "developer";
             break;
-        case Group::TESTER:
+        case User::TESTER:
             groupLabel = "tester";
             break;
-        case Group::MANAGER:
+        case User::MANAGER:
             groupLabel = "manager";
             break;
-        case Group::USER:
+        case User::USER:
             groupLabel = "user";
             break;
     }
