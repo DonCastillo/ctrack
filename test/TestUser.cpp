@@ -2,7 +2,7 @@
 #include "gtest/gtest.h"
 #include <string>
 
-unsigned int User::counter;
+unsigned int User::counter = 0;
 
 TEST(TestUser, user_id) {
     User* michael = new User("Michael");
