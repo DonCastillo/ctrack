@@ -1,6 +1,6 @@
-#include "service/Issue.h"
-#include "service/Comment.h"
-#include "service/User.h"
+#include "Issue.h"
+#include "Comment.h"
+#include "User.h"
 #include <string>
 #include <vector>
 

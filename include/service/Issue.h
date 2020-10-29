@@ -1,8 +1,8 @@
 #ifndef ISSUE_H
 #define ISSUE_H
 
-#include "service/User.h"
-#include "service/Comment.h"
+#include "User.h"
+#include "Comment.h"
 #include <string>
 #include <vector>
 

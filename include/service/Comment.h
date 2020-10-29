@@ -1,7 +1,7 @@
 #ifndef COMMENT_H
 #define COMMENT_H
 
-#include "service/User.h"
+#include "User.h"
 #include <string>
 #include <vector>
 

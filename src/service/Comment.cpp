@@ -1,5 +1,5 @@
-#include "service/Comment.h"
-#include "service/User.h"
+#include "Comment.h"
+#include "User.h"
 #include <string>
 
 Comment::Comment(User* pCommenter, std::string pComment) {
@@ -7,9 +7,7 @@ Comment::Comment(User* pCommenter, std::string pComment) {
     comment = pComment;
 }
 
-Comment::~Comment() {
-    delete commenter;
-}
+Comment::~Comment() {}
 
 void Comment::setComment(std::string pComment) {
     comment = pComment;
