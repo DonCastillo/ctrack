@@ -6,13 +6,13 @@
 unsigned int Issue::counter;
 
 TEST(TestIssue, issue_id) {
-    User* jane = new User("Jane");
-    Issue* issue1 = new Issue("Not working properly", jane);
-    Issue* issue2 = new Issue("Not really working properly", jane);
+    User* jane = new User(0, "Jane");
+    Issue* issue1 = new Issue(0, "Not working properly", jane);
+    Issue* issue2 = new Issue(1, "Not really working properly", jane);
 
-    User* bob = new User("Bob");
-    Issue* issue3 = new Issue("Can't close the tab", bob);
-    Issue* issue4 = new Issue("Can't really close the tab", bob);
+    User* bob = new User(1, "Bob");
+    Issue* issue3 = new Issue(2, "Can't close the tab", bob);
+    Issue* issue4 = new Issue(3, "Can't really close the tab", bob);
 
     EXPECT_EQ(issue1->getID(), 0);
     EXPECT_EQ(issue2->getID(), 1);
@@ -28,11 +28,11 @@ TEST(TestIssue, issue_id) {
 }
 
 TEST(TestIssue, setting_and_getting_title) {
-    User* jane = new User("Jane");
+    User* jane = new User(0, "Jane");
 
     std::string title = "";
     title = "Search bar is working!";
-    Issue* issue1 = new Issue(title, jane);
+    Issue* issue1 = new Issue(0, title, jane);
 
     // check original title
     EXPECT_EQ(issue1->getTitle(), title);
@@ -48,11 +48,11 @@ TEST(TestIssue, setting_and_getting_title) {
 
 
 TEST(TestIssue, setting_and_getting_issuer) {
-    User* jane = new User("Jane");
-    User* michael = new User("Michael");
-    User* dwight = new User("Dwight");
+    User* jane = new User(0, "Jane");
+    User* michael = new User(1, "Michael");
+    User* dwight = new User(2, "Dwight");
 
-    Issue* issue1 = new Issue("Background color is too dark", jane);
+    Issue* issue1 = new Issue(0, "Background color is too dark", jane);
 
     // check original issuer
     EXPECT_EQ(issue1->getIssuer()->getName(), "Jane");
@@ -72,8 +72,8 @@ TEST(TestIssue, setting_and_getting_issuer) {
 }
 
 TEST(TestIssue, setting_and_getting_type) {
-    User* pam = new User("Pam");
-    Issue* myIssue = new Issue("Error on line 5", pam);
+    User* pam = new User(0, "Pam");
+    Issue* myIssue = new Issue(0, "Error on line 5", pam);
 
     // check default type
     EXPECT_EQ(myIssue->getType(), "task");
@@ -99,8 +99,8 @@ TEST(TestIssue, setting_and_getting_type) {
 
 
 TEST(TestIssue, setting_and_getting_status) {
-    User* andy = new User("Andy");
-    Issue* myIssue = new Issue("Error on line 5", andy);
+    User* andy = new User(0, "Andy");
+    Issue* myIssue = new Issue(0, "Error on line 5", andy);
 
     // check default status
     EXPECT_EQ(myIssue->getStatus(), "new");
@@ -131,9 +131,9 @@ TEST(TestIssue, setting_and_getting_status) {
 
 
 TEST(TestIssue, adding_assignee) {
-    User* phyllis = new User("Phyllis");
-    User* daryll = new User("Daryll");
-    Issue* myIssue = new Issue("Error on line 5", phyllis);
+    User* phyllis = new User(0, "Phyllis");
+    User* daryll = new User(1, "Daryll");
+    Issue* myIssue = new Issue(0, "Error on line 5", phyllis);
 
     // if noone is assigned
     EXPECT_EQ(myIssue->getAssignees().size(), 0);
@@ -156,8 +156,8 @@ TEST(TestIssue, adding_assignee) {
 
 
 TEST(TestIssue, getting_description) {
-    User* karen = new User("Karen");
-    Issue* myIssue = new Issue("Slow response", karen);
+    User* karen = new User(0, "Karen");
+    Issue* myIssue = new Issue(0, "Slow response", karen);
     std::string comment = "";
 
     // no description
