@@ -238,7 +238,7 @@ TEST(TestIssue, getting_removing_specific_comment) {
 
     // added more commets
     uiError->addComment(new Comment(0, donna, "ui has awful background"));
-    uiError->addComent(new Comment(1, donna, "font is bad"));
+    uiError->addComment(new Comment(1, donna, "font is bad"));
     uiError->addComment(new Comment(2, donna, "scroll bar is invisible"));
     EXPECT_EQ(uiError->getComment(0)->getCommenter()->getName(), donna->getName());
     EXPECT_EQ(uiError->getComment(1)->getCommenter()->getName(), donna->getName());
