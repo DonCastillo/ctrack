@@ -1,3 +1,4 @@
 *.depend
 *.cbp
 *.o
+*.gcno

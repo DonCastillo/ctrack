@@ -23,9 +23,9 @@ STATIC_ANALYSIS = cppcheck
 
 STYLE_CHECK = cpplint.py
 
-PROGRAM_SERVER = calcServer
-PROGRAM_CLIENT = calcClient
-PROGRAM_TEST = calcTest
+PROGRAM_SERVER = czarServer
+PROGRAM_CLIENT = czarClient
+PROGRAM_TEST = czarTest
 
 .PHONY: all
 all: $(PROGRAM_SERVER) $(PROGRAM_CLIENT) $(PROGRAM_TEST) coverage docs static style
@@ -56,25 +56,25 @@ stopServer:
 	kill -9 ${PROGRAM_SERVER}
 
 $(PROGRAM_SERVER): $(SRC_DIR_SERVER) $(SRC_DIR_SERVICE)
-	$(CXX_9) $(CXXFLAGS) -o $(PROGRAM_SERVER) $(SERVICE_INCLUDE) \
+	$(CXX) $(CXXFLAGS) -o $(PROGRAM_SERVER) $(SERVICE_INCLUDE) \
 	$(SRC_DIR_SERVER)/*.cpp $(SRC_DIR_SERVICE)/*.cpp $(LINKFLAGS)
 
 $(PROGRAM_CLIENT): $(SRC_DIR_CLIENT)
-	$(CXX_9) $(CXXFLAGS) -o $(PROGRAM_CLIENT) \
+	$(CXX) $(CXXFLAGS) -o $(PROGRAM_CLIENT) \
 	$(SRC_DIR_CLIENT)/*.cpp $(LINKFLAGS)
 
 $(PROGRAM_TEST): $(TEST_DIR) $(SRC_DIR_SERVICE)
-	$(CXX) $(CXXFLAGS) -o $(PROGRAM_TEST) $(SERVICE_INCLUDE) \
+	$(CXX) $(CXXFLAGS) -o ./$(PROGRAM_TEST) $(SERVICE_INCLUDE) \
 	$(TEST_DIR)/*.cpp $(SRC_DIR_SERVICE)/*.cpp $(LINKFLAGS_TEST)
 
 tests: $(PROGRAM_TEST)
-	$(PROGRAM_TEST)
+	./$(PROGRAM_TEST)
 
 memcheck: $(PROGRAM_TEST)
-	valgrind --tool=memcheck --leak-check=yes $(PROGRAM_TEST)
+	valgrind --tool=memcheck --leak-check=yes ./$(PROGRAM_TEST)
 
 coverage: $(PROGRAM_TEST)
-	$(PROGRAM_TEST)
+	./$(PROGRAM_TEST)
 	# Determine code coverage
 	$(GCOV) -b $(SRC_DIR_SERVICE)/*.cpp -o .
 	#Remove all of the generated files from gcov
