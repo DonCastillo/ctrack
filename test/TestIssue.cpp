@@ -47,6 +47,29 @@ TEST(TestUser, setting_and_getting_issuer) {
     delete dwight;
 }
 
+TEST(TestUser, setting_and_getting_type) {
+    User* pam = new User("Pam");
+    Issue* myIssue = new Issue("Error on line 5");
+
+    // check default type
+    EXPECT_EQ(myIssue->getType(), "task");
+
+    // change type to feature
+    myIssue->setType(0);
+    EXPECT_EQ(myIssue->getType(), "feature");
+
+    // change type to bug
+    myIssue->setType(1);
+    EXPECT_EQ(myIssue->getType(), "bug");
+
+    // change type to task
+    myIssue->setType(2);
+    EXPECT_EQ(myIssue->getType(), "task");
+
+    myIssue->setType(999);
+    EXPECT_EQ(myIssue->getType(), "task");
+}
+
 
 
 
