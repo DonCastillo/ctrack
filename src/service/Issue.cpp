@@ -102,16 +102,16 @@ std::string Issue::getStatus() {
     return statusLabel;
 }
 
-void Issue::assignTo(User* pUser) {
-    assigned.push_back(pUser);
+void Issue::addAssignee(User* pUser) {
+    assignees.push_back(pUser);
     status = Issue::ASSIGNED;
 }
 
-std::vector<User*> Issue::getAssignedUsers() {
-    if (assigned.empty()) {
+std::vector<User*> Issue::getAssignees() {
+    if (assignees.empty()) {
         status = Issue::NEW;
     }
-    return assigned;
+    return assignees;
 }
 
 Comment* Issue::getDescription() {

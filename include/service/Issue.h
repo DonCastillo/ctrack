@@ -27,8 +27,8 @@ class Issue {
      void setStatus(unsigned int pInt);
      std::string getStatus();
 
-     void assignTo(User* pUser);
-     std::vector<User*> getAssignedUsers();
+     void addAssignee(User* pUser);
+     std::vector<User*> getAssignees();
 
      Comment* getDescription();
 
@@ -41,7 +41,7 @@ class Issue {
      User* issuer;
      Type type;
      Status status;
-     std::vector<User*> assigned;
+     std::vector<User*> assignees;
      std::vector<Comment*> comments;
 };
 

@@ -3,7 +3,7 @@
 #include "gtest/gtest.h"
 #include <string>
 
-TEST(TestUser, setting_and_getting_title) {
+TEST(TestIssue, setting_and_getting_title) {
     User* jane = new User("Jane");
 
     std::string title = "";
@@ -23,7 +23,7 @@ TEST(TestUser, setting_and_getting_title) {
 }
 
 
-TEST(TestUser, setting_and_getting_issuer) {
+TEST(TestIssue, setting_and_getting_issuer) {
     User* jane = new User("Jane");
     User* michael = new User("Michael");
     User* dwight = new User("Dwight");
@@ -47,7 +47,7 @@ TEST(TestUser, setting_and_getting_issuer) {
     delete dwight;
 }
 
-TEST(TestUser, setting_and_getting_type) {
+TEST(TestIssue, setting_and_getting_type) {
     User* pam = new User("Pam");
     Issue* myIssue = new Issue("Error on line 5", pam);
 
@@ -74,7 +74,7 @@ TEST(TestUser, setting_and_getting_type) {
 }
 
 
-TEST(TestUser, setting_and_getting_status) {
+TEST(TestIssue, setting_and_getting_status) {
     User* andy = new User("Andy");
     Issue* myIssue = new Issue("Error on line 5", andy);
 
@@ -106,3 +106,26 @@ TEST(TestUser, setting_and_getting_status) {
 }
 
 
+TEST(TestIssue, adding_assignee) {
+    User* phyllis = new User("Phyllis");
+    User* daryll = new User("Daryll");
+    Issue* myIssue = new Issue("Error on line 5", phyllis);
+
+    // if noone is assigned
+    EXPECT_EQ(myIssue->getAssignees().size(), 0);
+    EXPECT_EQ(myIssue->getStatus(), "new");
+
+    // assigning one user
+    myIssue->addAssignee(phyllis);
+    EXPECT_EQ(myIssue->getAssignees().size(), 1);
+    EXPECT_EQ(myIssue->getStatus(), "assigned");
+
+    // assigned more user
+    myIssue->addAssignee(daryll);
+    EXPECT_EQ(myIssue->getAssignees().size(), 2);
+    EXPECT_EQ(myIssue->getStatus(), "assigned");
+
+    delete myIssue;
+    delete phyllis;
+    delete daryll;
+}
