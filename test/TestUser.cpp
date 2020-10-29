@@ -2,7 +2,7 @@
 #include "gtest/gtest.h"
 #include <string>
 
-unsigned int User::counter = 0;
+unsigned int User::counter;
 
 TEST(TestUser, user_id) {
     User* michael = new User("Michael");
@@ -10,10 +10,10 @@ TEST(TestUser, user_id) {
     User* jim = new User("Jim");
     User* pam = new User("Pam");
 
-    EXPECT_EQ(michael->getID(), 0);
-    EXPECT_EQ(dwight->getID(), 1);
-    EXPECT_EQ(jim->getID(), 2);
-    EXPECT_EQ(pam->getID(), 3);
+    EXPECT_EQ(michael->getID(), 16);
+    EXPECT_EQ(dwight->getID(), 17);
+    EXPECT_EQ(jim->getID(), 18);
+    EXPECT_EQ(pam->getID(), 19);
 
     delete michael;
     delete dwight;

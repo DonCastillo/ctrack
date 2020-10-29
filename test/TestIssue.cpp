@@ -3,7 +3,7 @@
 #include "gtest/gtest.h"
 #include <string>
 
-unsigned int Issue::counter = 0;
+unsigned int Issue::counter;
 
 TEST(TestIssue, issue_id) {
     User* jane = new User("Jane");

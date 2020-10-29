@@ -3,7 +3,7 @@
 #include "gtest/gtest.h"
 #include <string>
 
-unsigned int Comment::counter = 0;
+unsigned int Comment::counter;
 
 TEST(TestComment, comment_id) {
     User* jane = new User("Jane");
