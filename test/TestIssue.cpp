@@ -18,5 +18,35 @@ TEST(TestUser, setting_and_getting_title) {
     issue1->setTitle(title);
     EXPECT_EQ(issue1->getTitle(), title);
 
+    delete issue1;
     delete jane;
 }
+
+
+TEST(TestUser, setting_and_getting_issuer) {
+    User* jane = new User("Jane");
+    User* michael = new User("Michael");
+    User* dwight = new User("Dwight");
+
+    Issue* issue1 = new Issue(title, jane);
+
+    // check original issuer
+    EXPECT_EQ(issue1->getIssuer()->getName(), "Jane");
+
+    // change issuer to Michael
+    issue1->setIssuer(michael);
+    EXPECT_EQ(issue1->getIssuer()->getName(), "Michael");
+
+    // change issuer to Dwight
+    issue1->setIssuer(dwight);
+    EXPECT_EQ(issue1->getIssuer()->getName(), "Dwight");
+
+    delete issue1;
+    delete jane;
+    delete michael;
+    delete dwight;
+}
+
+
+
+
