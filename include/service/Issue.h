@@ -7,8 +7,8 @@
 
 class Issue {
  public:
-     enum Type { Feature, Bug, Task };
-     enum Status { New, Assigned, Fixed, WontFix };
+     enum Type {FEATURE, BUG, TASK};
+     enum Status {NEW, ASSIGNED, FIXED, WONTFIX};
 
 
      Issue() {}
@@ -17,13 +17,15 @@ class Issue {
      std::string getTitle();
 
 
+
+
  private:
      std::string title;
      unsigned int id;
      User* issuer;
      std::vector<User*> assigned;
-     //Comment* description
-     //std::vector<Comment*> comments
+     Comment* description
+     std::vector<Comment*> comments;
 };
 
 
