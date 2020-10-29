@@ -129,3 +129,21 @@ TEST(TestIssue, adding_assignee) {
     delete phyllis;
     delete daryll;
 }
+
+
+TEST(TestIssue, getting_description) {
+    User* karen = new User("Karen");
+    Issue* myIssue = new Issue("Slow response", karen);
+    std::string comment = "";
+
+    // no description
+    EXPECT_EQ(myIssue->getDescription(), nullptr);
+
+    // add a description
+    comment = "Low security";
+    myIssue->addComment(new Comment(comment));
+    EXPECT_EQ(myIssue->getDescription(), comment);
+
+    delete myIssue;
+    delete karen;
+}
