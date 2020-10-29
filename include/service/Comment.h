@@ -18,12 +18,13 @@ class Comment {
      User* getCommenter();
 
      unsigned int getID();
+     static unsigned int counter;
 
 
 
 
  private:
-     static unsigned int id;
+     unsigned int id;
      std::string comment;
      User* commenter;
 };

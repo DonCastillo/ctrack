@@ -13,10 +13,10 @@ TEST(TestComment, comment_id) {
     Comment* comment3 = new Comment(bob, "This is comment 3");
     Comment* comment4 = new Comment(bob, "This is comment 4");
 
-    EXPECT_EQ(comment1->getID(), 1);
-    EXPECT_EQ(comment2->getID(), 2);
-    EXPECT_EQ(comment3->getID(), 3);
-    EXPECT_EQ(comment4->getID(), 4);
+    EXPECT_EQ(comment1->getID(), 0);
+    EXPECT_EQ(comment2->getID(), 1);
+    EXPECT_EQ(comment3->getID(), 2);
+    EXPECT_EQ(comment4->getID(), 3);
 
     delete comment1;
     delete comment2;
