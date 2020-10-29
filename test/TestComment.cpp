@@ -3,8 +3,9 @@
 #include "gtest/gtest.h"
 #include <string>
 
+unsigned int Comment::counter;
+
 TEST(TestComment, comment_id) {
-    unsigned int Comment::counter;
     User* jane = new User("Jane");
     Comment* comment1 = new Comment(jane, "This is comment 1");
     Comment* comment2 = new Comment(jane, "This is comment 2");
