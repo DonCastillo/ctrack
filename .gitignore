@@ -2,3 +2,4 @@
 *.cbp
 *.o
 *.gcno
+db.json

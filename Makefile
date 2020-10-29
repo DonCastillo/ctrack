@@ -1,6 +1,6 @@
 CXX_9=g++9.1
 CXX=g++
-CXXFLAGS= -std=c++11 -g -fprofile-arcs -ftest-coverage
+CXXFLAGS= -std=c++14 -g -fprofile-arcs -ftest-coverage
 
 LINKFLAGS = -lrestbed -lpthread
 LINKFLAGS_TEST = -lgtest
@@ -22,6 +22,7 @@ COVERAGE_DIR = coverage
 STATIC_ANALYSIS = cppcheck
 
 STYLE_CHECK = cpplint.py
+STYLE_CHECK_LOCAL = cpplint
 
 PROGRAM_SERVER = czarServer
 PROGRAM_CLIENT = czarClient
@@ -85,6 +86,9 @@ static: ${SRC_DIR_SERVER} ${SRC_DIR_CLIENT} ${SRC_DIR_SERVICE} ${TEST_DIR}
 
 style: ${SRC_DIR_SERVICE} ${SRC_INCLUDE}
 	${STYLE_CHECK} $(SRC_INCLUDE)/*.h $(SRC_DIR_SERVICE)/*.cpp $(SRC_DIR_CLIENT)/*.cpp $(SRC_DIR_SERVER)/*.cpp
+
+style-local: ${SRC_DIR_SERVICE} ${SRC_INCLUDE}
+	${STYLE_CHECK_LOCAL} $(SRC_INCLUDE)/*.h $(SRC_DIR_SERVICE)/*.cpp $(SRC_DIR_CLIENT)/*.cpp $(SRC_DIR_SERVER)/*.cpp
 
 docs:
 	doxygen doxygen/doxyfile
