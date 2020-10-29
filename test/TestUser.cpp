@@ -2,6 +2,25 @@
 #include "gtest/gtest.h"
 #include <string>
 
+unsigned int User::counter;
+
+TEST(TestUser, user_id) {
+    User* michael = new User("Michael");
+    User* dwight = new User("Dwight");
+    User* jim = new User("Jim");
+    User* pam = new User("Pam");
+
+    EXPECT_EQ(michael->getID(), 0);
+    EXPECT_EQ(dwight->getID(), 1);
+    EXPECT_EQ(jim->getID(), 2);
+    EXPECT_EQ(pam->getID(), 3);
+
+    delete michael;
+    delete dwight;
+    delete jim;
+    delete pam;
+}
+
 TEST(TestUser, setting_and_getting_name) {
     User* jane = new User("Jane");
 

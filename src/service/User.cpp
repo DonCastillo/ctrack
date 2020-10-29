@@ -4,6 +4,12 @@
 User::User(std::string pName) {
     name = pName;
     group = User::USER;
+    id = counter;
+    ++counter;
+}
+
+unsigned int User::getID() {
+    return id;
 }
 
 void User::setName(std::string pName){

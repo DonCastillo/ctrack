@@ -6,6 +6,7 @@
 class User {
  public:
      enum Group {DEVELOPER, TESTER, MANAGER, USER};
+     static unsigned int counter;
 
      User(std::string pName);
      virtual ~User() {}
@@ -15,6 +16,8 @@ class User {
 
      void setGroup(unsigned int pInt);
      std::string getGroup();
+
+     unsigned int getID();
 
 
  private:
