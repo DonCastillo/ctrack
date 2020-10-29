@@ -13,10 +13,10 @@ Issue::Issue(std::string pTitle, User* pIssuer) {
 
 Issue::~Issue() {
     delete issuer;
-    for (User* u : assigned)
-        delete u;
-    for (Comment* c : comments)
-        delete c;
+    for (int i = 0; i < assigned.size(); ++i)
+        delete assigned[i];
+    for (int i = 0; i < comments.size(); ++i)
+        delete comments[i];
 }
 
 void Issue::setTitle(std::string pTitle) {
@@ -107,12 +107,12 @@ std::string Issue::getStatus() {
 
 void Issue::assignTo(User* pUser) {
     assigned.push_back(pUser);
-    status = Status::ASSIGNED;
+    status = Issue::ASSIGNED;
 }
 
 std::vector<User*> Issue::getAssignedUsers() {
     if (assigned.empty()) {
-        status = Status::NEW;
+        status = Issue::NEW;
     }
     return assigned;
 }
