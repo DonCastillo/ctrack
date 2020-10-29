@@ -29,6 +29,8 @@ class Issue {
 
      void addAssignee(User* pUser);
      std::vector<User*> getAssignees();
+     User* getAssignee(unsigned int pId);
+     bool deleteAssignee(unsigned int pId);
 
      Comment* getDescription();
 

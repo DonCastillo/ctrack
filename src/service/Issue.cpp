@@ -119,6 +119,24 @@ std::vector<User*> Issue::getAssignees() {
     return assignees;
 }
 
+User* Issue::getAssignee(unsigned int pId) {
+    for (User* u : assignees) {
+        if (u->getID() == pId)
+            return u;
+    }
+    return nullptr;
+}
+
+bool Issue::deleteAssignee(unsigned int pId) {
+    for (int i = 0; i < assignees.size(); ++i) {
+        if (assignees[i]->getID() == pId) {
+            assignees.erase(assignees.begin() + i);
+            return true;
+        }
+    }
+    return false;
+}
+
 Comment* Issue::getDescription() {
     if (!comments.empty()) {
         return comments[0];
