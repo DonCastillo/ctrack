@@ -133,3 +133,22 @@ void Issue::addComment(Comment* pComment) {
 std::vector<Comment*> Issue::getComments() {
     return comments;
 }
+
+Comment* Issue::getComment(unsigned int pId) {
+    for(Comment* c : comments) {
+        if (c->getID() == pId)
+            return c;
+    }
+    return nullptr;
+}
+
+bool Issue::deleteComment(unsigned int pId) {
+    for (int i = 0; i < comments.size(); ++i) {
+        if (c->getID() == pID) {
+            comments.erase(comments.begin() + i);
+            return true;
+        }
+    }
+    return false;
+}
+

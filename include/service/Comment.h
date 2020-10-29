@@ -19,7 +19,6 @@ class Comment {
 
      unsigned int getID();
 
-
  private:
      unsigned int id;
      std::string comment;

@@ -34,6 +34,9 @@ class Issue {
 
      void addComment(Comment* pComment);
      std::vector<Comment*> getComments();
+     Comment* getComment(unsigned int pId);
+     bool deleteComment(unsigned int pId);
+
 
      unsigned int getID();
 
