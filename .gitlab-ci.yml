@@ -1,0 +1,62 @@
+build-tests:
+    stage: build
+    script:
+        - make tests
+
+build-server:
+   stage: build
+   script:
+      - make server
+   artifacts:
+      paths:
+         - calcServer
+
+build-client:
+   stage: build
+   script:
+      - make client
+   artifacts:
+      paths:
+         - calcClient
+
+coverage:
+    stage: test
+    script:
+      - make coverage
+    only:
+      - master
+    dependencies:
+      - build-tests
+    coverage: '/Lines executed:\d+ of \d+/'
+
+static:
+    stage: test
+    script:
+        - make static
+    only:
+      - master
+
+style:
+    stage: test
+    script:
+        - make style
+    only:
+      - master
+
+memcheck:
+    stage: test
+    script:
+        make memcheck
+    only:
+      - master
+
+docs:
+    stage: deploy
+    script:
+        - make docs
+    artifacts:
+        paths:
+           - doxygen/html
+        expire_in: 14 days
+    only:
+        - master
