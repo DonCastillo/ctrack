@@ -15,7 +15,7 @@ TEST(TestUser, setting_and_getting_title) {
 
     // change title
     title = "Header section is small.";
-    issue1->setTitle(title, jane);
+    issue1->setTitle(title);
     EXPECT_EQ(issue1->getTitle(), title);
 
     delete jane;
