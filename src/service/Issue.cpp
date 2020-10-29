@@ -56,11 +56,16 @@ void Issue::setStatus(unsigned int pInt) {
             status = Status::NEW;
             break;
         case 1:
-            status = Status::FIXED;
+            status = Status::ASSIGNED;
             break;
         case 2:
-        default:
+            status = Status::FIXED;
+            break;
+        case 3:
             status = Status::WONTFIX;
+            break;
+        default:
+            status = Status::NEW;
             break;
     }
 }
@@ -87,9 +92,13 @@ std::string Issue::getStatus() {
 
 void Issue::assignTo(User* pUser) {
     assigned.push_back(pUser);
+    status = Status::ASSIGNED;
 }
 
 std::vector<User*> Issue::getAssignedUsers() {
+    if (assigned.empty()) {
+        status = Status::NEW;
+    }
     return assigned;
 }
 
