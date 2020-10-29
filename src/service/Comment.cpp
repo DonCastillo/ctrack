@@ -2,11 +2,10 @@
 #include "User.h"
 #include <string>
 
-Comment::Comment(User* pCommenter, std::string pComment) {
+Comment::Comment(unsigned int pId, User* pCommenter, std::string pComment) {
+    id = pId;
     commenter = pCommenter;
     comment = pComment;
-    id = counter;
-    ++counter;
 }
 
 Comment::~Comment() {}

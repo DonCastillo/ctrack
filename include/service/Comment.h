@@ -8,7 +8,7 @@
 class Comment {
  public:
 
-     Comment(User* pCommenter, std::string pComment);
+     Comment(unsigned int pId, User* pCommenter, std::string pComment);
      virtual ~Comment();
 
      void setComment(std::string pComment);
@@ -18,9 +18,6 @@ class Comment {
      User* getCommenter();
 
      unsigned int getID();
-     static unsigned int counter;
-
-
 
 
  private:
