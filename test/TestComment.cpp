@@ -43,7 +43,6 @@ TEST(TestComment, setting_and_getting_commenter) {
     myComment->setCommenter(bob);
     EXPECT_EQ(myComment->getCommenter()->getName(), "Bob");
 
-
     delete myComment;
     delete jane;
     delete bob;
