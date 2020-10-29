@@ -143,7 +143,7 @@ TEST(TestIssue, getting_description) {
     comment = "Low security";
     myIssue->addComment(new Comment(karen, comment));
     EXPECT_EQ(myIssue->getDescription()->getComment(), comment);
-    EXPECT_EQ(myIssue->getDescription()->getCommenter(), "Karen");
+    EXPECT_EQ(myIssue->getDescription()->getCommenter()->getName(), "Karen");
 
     delete myIssue;
     delete karen;
