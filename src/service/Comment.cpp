@@ -5,7 +5,8 @@
 Comment::Comment(User* pCommenter, std::string pComment) {
     commenter = pCommenter;
     comment = pComment;
-    ++id;
+    id = counter;
+    ++counter;
 }
 
 Comment::~Comment() {}
