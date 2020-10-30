@@ -113,9 +113,6 @@ void Issue::addAssignee(User* pUser) {
 }
 
 std::vector<User*> Issue::getAssignees() {
-    if (assignees.empty()) {
-        status = Issue::NEW;
-    }
     return assignees;
 }
 
@@ -128,13 +125,18 @@ User* Issue::getAssignee(unsigned int pId) {
 }
 
 bool Issue::deleteAssignee(unsigned int pId) {
+    bool isSuccessful = false;
     for (int i = 0; i < assignees.size(); ++i) {
         if (assignees[i]->getID() == pId) {
             assignees.erase(assignees.begin() + i);
-            return true;
+            isSuccessful = true;
         }
     }
-    return false;
+    // change the card back to new
+    if (assignees.empty()) {
+        status = Issue::NEW;
+    }
+    return isSuccessful;
 }
 
 Comment* Issue::getDescription() {

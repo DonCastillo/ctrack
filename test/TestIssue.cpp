@@ -155,6 +155,42 @@ TEST(TestIssue, adding_assignee) {
     delete daryll;
 }
 
+TEST(TestIssue, getting_removing_specific_assignee) {
+    User* trump = new User(0, "Trump");
+    User* biden = new User(1, "Biden");
+    User* harris = new User(2, "Harris");
+    User* pence = new User(3, "Pence");
+    User* pelosi = new User(4, "Pelosi");
+
+    Issue* zoomIssue = new Issue(0, "Cannot sign in to my account", pelosi);
+
+    // no assignee yet
+    EXPECT_EQ(zoomIssue->getType(), "task");
+    EXPECT_EQ(zoomIssue->getStatus(), "new");
+    EXPECT_EQ(zoomIssue->getAssignee(0), nullptr);
+    EXPECT_FALSE(zoomIssue->deleteAssignee(0));
+
+    // with assignees
+    zoomIssue->addAssignee(trump);
+    zoomIssue->addAssignee(biden);
+    zoomIssue->addAssignee(harris);
+    zoomIssue->addAssignee(pence);
+    EXPECT_EQ(zoomIssue->getStatus(), "assigned");
+    EXPECT_NE(zoomIssue->getAssignee(0), nullptr);
+    EXPECT_EQ(zoomIssue->getAssignee(0)->getName(), trump->getName());
+    EXPECT_FALSE(zoomIssue->deleteAssignee(4)); // pelosi isnt one of the assignees
+    EXPECT_FALSE(zoomIssue->deleteAssignee(5)); // out of range
+    EXPECT_TRUE(zoomIssue->deleteAssignee(0));
+    EXPECT_EQ(zoomIssue->getAssignee(0), nullptr);
+
+    // removed all assignees
+    zoomIssue->deleteAssignee(1);
+    zoomIssue->deleteAssignee(2);
+    zoomIssue->deleteAssignee(3);
+    EXPECT_EQ(zoomIssue->getStatus(), "new");
+    delete zoomIssue;
+}
+
 
 TEST(TestIssue, getting_description) {
     User* karen = new User(0, "Karen");
