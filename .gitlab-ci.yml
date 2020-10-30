@@ -9,7 +9,7 @@ build-server:
       - make server
    artifacts:
       paths:
-         - calcServer
+         - czarServer
 
 build-client:
    stage: build
@@ -17,7 +17,7 @@ build-client:
       - make client
    artifacts:
       paths:
-         - calcClient
+         - czarClient
 
 coverage:
     stage: test
