@@ -5,6 +5,7 @@
 
 class User {
  public:
+     /** group categories */
      enum Group {DEVELOPER, TESTER, MANAGER, USER};
 
      /*!
@@ -58,8 +59,13 @@ class User {
 
 
  private:
+     /** user name */
      std::string name;
+
+     /** user id */
      unsigned int id;
+
+     /** user group */
      Group group;
 };
 
