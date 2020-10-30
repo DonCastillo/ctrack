@@ -63,21 +63,68 @@ void get_method_handler(const std::shared_ptr<restbed::Session>& session) {
     // compute(exp, session);
 }
 
-void readDB(std::vector<User*>* users, std::vector<Issue*>* issues) {
+void readDB(std::map<int, User*>* users, std::map<int, Issue*>* issues, 
+                                            int* userIDX, int* issueIDX) {
     json j;
     std::fstream f("./db.json");
     j = json::parse(f);
 
+    *userIDX = j["userIDX"];
+    *issueIDX = j["issueIDX"];
+
     for(auto &u:j["users"]) {
-        
+        User* user = new User(u["id"], u["name"]);
+        user->setGroup(u["group"]);
+        users->insert(std::make_pair(u["id"], user));
+    }
+    for(auto &i:j["issues"]) {
+        Issue* issue = new Issue(i["id"], i["title"], (*users)[i["author"]]);
+        issue->setType(i["type"]);
+        issue->setStatus(i["status"]);
+        // issue->setDescription(i["description"]);
+        // issue->setCommentIDX(i["commentIDX"]);
+
+        for(auto &a:i["assignees"])
+            issue->addAssignee((*users)[a]);
+
+        for(auto &c:i["comments"])
+            issue->addComment(new Comment(c["id"], (*users)[c["author"]], c["comment"]));
+
+        issues->insert(std::make_pair(i["id"], issue));
     }
 }
 
 int main(const int, const char**) {
-    std::vector<User*> users;
-    std::vector<Issue*> issues;
+    std::map<int, User*> users;
+    std::map<int, Issue*> issues;
+    int userIDX, issueIDX;
 
-    readDB(&users, &issues);
+    readDB(&users, &issues, &userIDX, &issueIDX);
+
+    // TESTING READ
+    std::cout<<"USERS"<<std::endl;
+    for(auto i:users) {
+        User* u = i.second;
+        std::cout<<u->getID()<<" "<<u->getName()<<": "<<u->getGroup()
+                 <<std::endl;
+    }
+    std::cout<<"ISSUES"<<std::endl;
+    for(auto i:issues) {
+        Issue* s = i.second;
+        std::cout<<s->getID()<<" "<<s->getIssuer()->getName()<<": "
+                 <<s->getTitle()<<"\n"/*<<s->getDescription()*/<<"\n"
+                 <<s->getStatus()<<std::endl;
+        
+        std::cout<<"Assignees:"<<std::endl;
+        for(auto a:s->getAssignees())
+            std::cout<<a->getName()<<std::endl;
+        
+        std::cout<<"Comments:"<<std::endl;
+        for(auto c:s->getComments()) {
+            std::cout<<c->getID()<<" "<<c->getComment()<<" "
+                     /*<<c->getCommenter()*/<<std::endl;
+        }
+    }
 
     // Setup service and request handlers
     auto resource = std::make_shared<restbed::Resource>();
