@@ -32,7 +32,19 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="main.cpp" />
+		<Unit filename="include/service/Comment.h" />
+		<Unit filename="include/service/Issue.h" />
+		<Unit filename="include/service/User.h" />
+		<Unit filename="src/client/main.cpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/server/main.cpp" />
+		<Unit filename="src/service/Comment.cpp" />
+		<Unit filename="src/service/Issue.cpp" />
+		<Unit filename="src/service/User.cpp" />
+		<Unit filename="test/TestComment.cpp" />
+		<Unit filename="test/TestIssue.cpp" />
+		<Unit filename="test/TestUser.cpp" />
+		<Unit filename="test/main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
