@@ -46,7 +46,7 @@ void post_request(const std::shared_ptr<restbed::Session >&
     parse(data, &exp);
     std::string resultStr = exp.name + " " + exp.issueMessage;
     nlohmann::json resultJSON;
-    resultJSON["result"] = resultStr;
+    resultJSON["issues"] = resultStr;
     std::string response = resultJSON.dump();
 
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
@@ -61,8 +61,6 @@ void post_issue_handler(const std::shared_ptr<restbed::Session>& session) {
 
 void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
     const auto request = session->get_request();
-
-    issue exp;
 
     // if (request->has_query_parameter("name")) {
     //     exp.name = request->get_query_parameter("name");

@@ -44,8 +44,7 @@ std::shared_ptr<restbed::Request> create_post_request(const std::string& operati
     return request;
 }
 
-std::shared_ptr<restbed::Request> create_get_request(const std::string& operation,
-      const std::string& issue) {
+std::shared_ptr<restbed::Request> create_get_request() {
     // Create the URI string
     std::string uri_str;
     uri_str.append("http://");
@@ -60,8 +59,8 @@ std::shared_ptr<restbed::Request> create_get_request(const std::string& operatio
     request->set_method("GET");
 
     // Set the parameters
-    request->set_query_parameter("name", operation);
-    request->set_query_parameter("issueMessage", issue);
+    // request->set_query_parameter("name", operation);
+    // request->set_query_parameter("issueMessage", issue);
 
     return request;
 }
@@ -76,9 +75,9 @@ void handle_response(std::shared_ptr<restbed::Response> response) {
         std::string responseStr(reinterpret_cast<char*>(response->get_body().data()), length);
 
         nlohmann::json resultJSON = nlohmann::json::parse(responseStr);
-        std::string result = resultJSON["result"];
+        // std::string result = resultJSON["issues"];
 
-        std::cout << result << std::endl;
+        std::cout << resultJSON["issues"] << std::endl;
         break;
     }
     default:
@@ -94,7 +93,7 @@ int main(const int, const char**) {
     handle_response(response);
 
 
-    request = create_get_request(NAME, ISSUEMESSAGE);
+    request = create_get_request();
     response = restbed::Http::sync(request);
     handle_response(response);
 
