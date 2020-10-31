@@ -11,7 +11,7 @@ unsigned int User::getID() {
     return id;
 }
 
-void User::setName(std::string pName){
+void User::setName(std::string pName) {
     name = pName;
 }
 

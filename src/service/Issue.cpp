@@ -54,7 +54,7 @@ void Issue::setType(unsigned int pInt) {
 
 std::string Issue::getType() {
     std::string typeLabel = "";
-    switch(type) {
+    switch (type) {
         case Issue::FEATURE:
             typeLabel = "feature";
             break;
@@ -155,7 +155,7 @@ std::vector<Comment*> Issue::getComments() {
 }
 
 Comment* Issue::getComment(unsigned int pId) {
-    for(Comment* c : comments) {
+    for (Comment* c : comments) {
         if (c->getID() == pId)
             return c;
     }
