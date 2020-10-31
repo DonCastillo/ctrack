@@ -6,3 +6,4 @@ czar.cbp
 czar.layout
 *.gch
 Makefile
+db.json
