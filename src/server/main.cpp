@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <fstream>
+#include <iostream>
 #include <nlohmann/json.hpp>
 #include "../../include/service/Comment.h"
 #include "../../include/service/Issue.h"
