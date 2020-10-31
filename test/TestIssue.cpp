@@ -188,6 +188,11 @@ TEST(TestIssue, getting_removing_specific_assignee) {
     zoomIssue->deleteAssignee(2);
     zoomIssue->deleteAssignee(3);
     EXPECT_EQ(zoomIssue->getStatus(), "new");
+    delete trump;
+    delete biden;
+    delete harris;
+    delete pence;
+    delete pelosi;
     delete zoomIssue;
 }
 
