@@ -1,9 +1,10 @@
 CXX_9=g++9.1
 CXX=g++
-CXXFLAGS= -std=c++11 -g -fprofile-arcs -ftest-coverage
+#CXXFLAGS= -std=c++11 -g -fprofile-arcs -ftest-coverage
+CXXFLAGS= -g -fprofile-arcs -ftest-coverage
 
 LINKFLAGS = -lrestbed -lpthread
-LINKFLAGS_TEST = -lgtest
+LINKFLAGS_TEST = -lgtest -lpthread
 
 SRC_DIR_SERVER = src/server
 SRC_DIR_CLIENT = src/client
@@ -56,11 +57,11 @@ stopServer:
 	kill -9 ${PROGRAM_SERVER}
 
 $(PROGRAM_SERVER): $(SRC_DIR_SERVER) $(SRC_DIR_SERVICE)
-	$(CXX) $(CXXFLAGS) -o $(PROGRAM_SERVER) $(SERVICE_INCLUDE) \
+	$(CXX_9) $(CXXFLAGS) -o $(PROGRAM_SERVER) $(SERVICE_INCLUDE) \
 	$(SRC_DIR_SERVER)/*.cpp $(SRC_DIR_SERVICE)/*.cpp $(LINKFLAGS)
 
 $(PROGRAM_CLIENT): $(SRC_DIR_CLIENT)
-	$(CXX) $(CXXFLAGS) -o $(PROGRAM_CLIENT) \
+	$(CXX_9) $(CXXFLAGS) -o $(PROGRAM_CLIENT) \
 	$(SRC_DIR_CLIENT)/*.cpp $(LINKFLAGS)
 
 $(PROGRAM_TEST): $(TEST_DIR) $(SRC_DIR_SERVICE)
