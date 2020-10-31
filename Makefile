@@ -1,7 +1,7 @@
 CXX_9=g++9.1
 CXX=g++
-#CXXFLAGS= -std=c++11 -g -fprofile-arcs -ftest-coverage
-CXXFLAGS= -g -fprofile-arcs -ftest-coverage
+CXXFLAGS= -std=c++11 -g -fprofile-arcs -ftest-coverage
+#CXXFLAGS= -g -fprofile-arcs -ftest-coverage
 
 LINKFLAGS = -lrestbed -lpthread
 LINKFLAGS_TEST = -lgtest -lpthread
