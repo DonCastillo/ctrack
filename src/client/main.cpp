@@ -7,10 +7,11 @@
 #include <cstdlib>
 #include <iostream>
 
-
+/** Service information */
 const char* HOST = "localhost";
 const int PORT = 1234;
 
+/** Server operations */
 const char* NAME = "Billy";
 const char* ISSUEMESSAGE = "I dont know how to use restbed";
 
