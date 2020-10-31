@@ -1,4 +1,3 @@
-#include <nlohmann/json.hpp>
 #include <restbed>
 #include <cstring>
 #include <cstdlib>
@@ -8,6 +7,7 @@
 #include <iostream>
 #include <utility>
 #include <map>
+#include <nlohmann/json.hpp>
 #include "../../include/service/Comment.h"
 #include "../../include/service/Issue.h"
 #include "../../include/service/User.h"
@@ -24,6 +24,10 @@ struct issue {
     std::string name;
     std::string issueMessage;
 };
+
+std::map<int, User*> users;
+std::map<int, Issue*> issues;
+int userIDX, issueIDX;
 
 void parse(const char* data, issue* expr) {
     char* data_mutable = const_cast<char*>(data);
@@ -49,27 +53,31 @@ void post_request(const std::shared_ptr<restbed::Session >&
 }
 
 
-void post_method_handler(const std::shared_ptr<restbed::Session>& session) {
+void post_issue_handler(const std::shared_ptr<restbed::Session>& session) {
     const auto request = session->get_request();
     size_t content_length = request->get_header("Content-Length", 0);
     session->fetch(content_length, &post_request);
 }
 
-void get_method_handler(const std::shared_ptr<restbed::Session>& session) {
+void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
     const auto request = session->get_request();
 
     issue exp;
 
-    if (request->has_query_parameter("name")) {
-        exp.name = request->get_query_parameter("name");
-        if (request->has_query_parameter("issueMessage")) {
-            exp.issueMessage = request->get_query_parameter("issueMessage");
-        }
-    }
+    // if (request->has_query_parameter("name")) {
+    //     exp.name = request->get_query_parameter("name");
+    //     if (request->has_query_parameter("issueMessage")) {
+    //         exp.issueMessage = request->get_query_parameter("issueMessage");
+    //     }
+    // }
 
-    std::string resultStr = exp.name + "\n" + exp.issueMessage;
-    nlohmann::json resultJSON;
-    resultJSON["result"] =  resultStr;
+    json j;
+    std::fstream f("./db.json");
+    j = json::parse(f);
+
+    json resultJSON;
+    resultJSON["issues"] = j["issues"];
+
     std::string response = resultJSON.dump();
 
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
@@ -77,43 +85,38 @@ void get_method_handler(const std::shared_ptr<restbed::Session>& session) {
 
 
 
-void readDB(std::map<int, User*>* users, std::map<int, Issue*>* issues,
-                                            int* userIDX, int* issueIDX) {
+void readDB() {
     json j;
     std::fstream f("./db.json");
     j = json::parse(f);
 
-    *userIDX = j["userIDX"];
-    *issueIDX = j["issueIDX"];
+    userIDX = j["userIDX"];
+    issueIDX = j["issueIDX"];
 
     for (auto &u : j["users"]) {
         User* user = new User(u["id"], u["name"]);
         user->setGroup(u["group"]);
-        users->insert(std::make_pair(u["id"], user));
+        users.insert(std::make_pair(u["id"], user));
     }
     for (auto &i : j["issues"]) {
-        Issue* issue = new Issue(i["id"], i["title"], (*users)[i["author"]]);
+        Issue* issue = new Issue(i["id"], i["title"], users[i["author"]]);
         issue->setType(i["type"]);
         issue->setStatus(i["status"]);
         // issue->setDescription(i["description"]);
         // issue->setCommentIDX(i["commentIDX"]);
 
         for (auto &a : i["assignees"])
-            issue->addAssignee((*users)[a]);
+            issue->addAssignee(users[a]);
 
         for (auto &c : i["comments"])
-            issue->addComment(new Comment(c["id"], (*users)[c["author"]], c["comment"]));
+            issue->addComment(new Comment(c["id"], users[c["author"]], c["comment"]));
 
-        issues->insert(std::make_pair(i["id"], issue));
+        issues.insert(std::make_pair(i["id"], issue));
     }
 }
 
 int main(const int, const char**) {
-    std::map<int, User*> users;
-    std::map<int, Issue*> issues;
-    int userIDX, issueIDX;
-
-    readDB(&users, &issues, &userIDX, &issueIDX);
+    readDB();
 
     // TESTING READ
     std::cout << "USERS" << std::endl;
@@ -159,8 +162,8 @@ int main(const int, const char**) {
     // Setup service and request handlers
     auto resource = std::make_shared<restbed::Resource>();
     resource->set_path("/issues");
-    resource->set_method_handler("POST", post_method_handler);
-    resource->set_method_handler("GET", get_method_handler);
+    resource->set_method_handler("POST", post_issue_handler);
+    resource->set_method_handler("GET", get_issue_handler);
 
     auto settings = std::make_shared<restbed::Settings>();
     settings->set_port(1234);
