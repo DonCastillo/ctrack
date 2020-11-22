@@ -1,6 +1,7 @@
 #include "User.h"
 #include "gtest/gtest.h"
 #include <string>
+#include <iostream>
 
 
 TEST(TestUser, user_id) {
@@ -61,3 +62,27 @@ TEST(TestUser, setting_and_getting_group) {
 
     delete jane;
 }
+
+TEST(TestUser, operator_overload) {
+    User* jane = new User(0, "Jane");
+    User* john = new User(1, "John");
+
+    // same user
+    EXPECT_TRUE(jane == jane);
+    EXPECT_FALSE(jane != jane);
+
+    // different user
+    EXPECT_TRUE(jane != john);
+    EXPECT_FALSE(jane == john);
+
+    // cout
+    std::cout << *jane;
+    std::cout << *john;
+
+}
+
+
+
+
+
+

@@ -31,7 +31,7 @@ class User {
         \brief  Gets the name of the user.
         \return returns the name of the user (string)
      */
-     std::string getName();
+     std::string getName() const;
 
      /*!
         \brief  Sets the user to a group
@@ -49,13 +49,36 @@ class User {
         \brief  Gets the group which the user belongs to.
         \return returns the group name (string)
      */
-     std::string getGroup();
+     std::string getGroup() const;
 
      /*!
         \brief  Gets the user's id
         \return returns the user's id (unsigned int)
      */
-     unsigned int getID();
+     unsigned int getID() const;
+
+     /*!
+        \brief  Compares two users if they have equal id
+        \param  a   first user
+                b   second user
+        \return returns true if they are equal, otherwise false
+     */
+     friend bool operator==(const User& a, const User& b);
+
+     /*!
+        \brief  Compares two users if they have unequal id
+        \param  a   first user
+                b   second user
+        \return returns true if they are unequal, otherwise false
+     */
+     friend bool operator!=(const User& a, const User& b);
+
+     /*!
+        \brief  prints user information
+        \param  os  ostream
+                u   user
+     */
+     friend std::ostream& operator<<(std::ostream& os, const User& u);
 
 
  private:
