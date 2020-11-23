@@ -54,24 +54,24 @@ class Comment {
 
           /*!
         \brief  Compares two comments if they have equal id
-        \param  a   first comment (Comment)
-        \param  b   second comment (Comment)
+        \param  a         - first comment (Comment)
+        \param  b         - second comment (Comment)
         \return returns true if they are equal, otherwise false (bool)
      */
      friend bool operator==(const Comment& a, const Comment& b);
 
      /*!
         \brief  Compares two comments if they have unequal id
-        \param  a   first comment (Comment)
-        \param  b   second comment (Comment)
+        \param  a         - first comment (Comment)
+        \param  b         - second comment (Comment)
         \return returns true if they are unequal, otherwise false (bool)
      */
      friend bool operator!=(const Comment& a, const Comment& b);
 
      /*!
         \brief  prints comment information
-        \param  os  ostream (ostream)
-        \param  c   comment (Comment)
+        \param  os        - ostream (ostream)
+        \param  c         - comment (Comment)
      */
      friend std::ostream& operator<<(std::ostream& os, const Comment& c);
 
