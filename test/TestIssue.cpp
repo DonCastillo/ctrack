@@ -197,22 +197,21 @@ TEST(TestIssue, getting_removing_specific_assignee) {
 }
 
 
-TEST(TestIssue, getting_description) {
-    User* karen = new User(0, "Karen");
-    Issue* myIssue = new Issue(0, "Slow response", karen);
-    std::string comment = "";
+TEST(TestIssue, getting_setting_description) {
+     User* karen = new User(0, "Karen");
+     Issue* myIssue = new Issue(0, "Slow response", karen);
+     std::string desc = "";
 
-    // no description
-    EXPECT_EQ(myIssue->getDescription(), nullptr);
+     // no description
+     EXPECT_EQ(myIssue->getDescription(), desc);
 
-    // add a description
-    comment = "Low security";
-    myIssue->addComment(new Comment(0, karen, comment));
-    EXPECT_EQ(myIssue->getDescription()->getComment(), comment);
-    EXPECT_EQ(myIssue->getDescription()->getCommenter()->getName(), "Karen");
+     // add a description
+     desc = "This is a description";
+     myIssue->setDescription(desc);
+     EXPECT_EQ(myIssue->getDescription(), desc);
 
-    delete myIssue;
-    delete karen;
+     delete myIssue;
+     delete karen;
 }
 
 
@@ -329,12 +328,3 @@ TEST(TestIssue, operator_overload) {
     delete john;
     delete jane;
 }
-
-
-
-
-
-
-
-
-

@@ -122,9 +122,15 @@ class Issue {
 
      /*!
         \brief  Gets the issue's description.
-        \return returns the description or the first comment (Comment*)
+        \return returns the description (string)
      */
-     Comment* getDescription() const;
+     std::string getDescription() const;
+
+     /*!
+        \brief  Sets the issue's description
+        \param  pDesc     - description (string)
+     */
+     void setDescription(std::string pDesc);
 
      /*!
         \brief  Adds a comment to this issue.
@@ -206,6 +212,9 @@ class Issue {
 
      /** comments added to this issue*/
      std::vector<Comment*> comments;
+
+     /** issue description */
+     std::string description;
 };
 
 

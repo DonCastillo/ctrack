@@ -8,11 +8,12 @@
 #include <iomanip>
 
 Issue::Issue(unsigned int pId, std::string pTitle, User* pIssuer) {
-    id = pId;
-    title = pTitle;
-    issuer = pIssuer;
-    type = Issue::TASK;
-    status = Issue::NEW;
+    id              = pId;
+    title           = pTitle;
+    issuer          = pIssuer;
+    type            = Issue::TASK;
+    status          = Issue::NEW;
+    description     = "";
 }
 
 Issue::~Issue() {
@@ -142,11 +143,12 @@ bool Issue::deleteAssignee(unsigned int pId) {
     return isSuccessful;
 }
 
-Comment* Issue::getDescription() const {
-    if (!comments.empty()) {
-        return comments[0];
-    }
-    return nullptr;
+std::string Issue::getDescription() const {
+    return description;
+}
+
+void Issue::setDescription(std::string pDesc) {
+    description = pDesc;
 }
 
 void Issue::addComment(Comment* pComment) {
