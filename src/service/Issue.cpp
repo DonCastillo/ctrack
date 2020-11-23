@@ -192,6 +192,7 @@ std::ostream& operator<<(std::ostream& os, const Issue& i) {
 
     os << ui->formatRow("ISSUE ID",         std::to_string(i.id));
     os << ui->formatRow("TITLE",            i.title);
+    os << ui->formatRow("DESCRIPTION",      i.description);
 
     left  = i.issuer->getID();
     right = i.issuer->getName();

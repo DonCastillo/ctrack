@@ -304,6 +304,7 @@ TEST(TestIssue, operator_overload) {
     // assign issues
     issueA->addAssignee(john);
     issueA->addComment(commentA);
+    issueA->setDescription("Here is a description");
 
     issueB->addAssignee(john);
     issueB->addAssignee(jane);
