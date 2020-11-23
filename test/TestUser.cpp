@@ -79,6 +79,8 @@ TEST(TestUser, operator_overload) {
     std::cout << *jane;
     std::cout << *john;
 
+    delete john;
+    delete jane;
 }
 
 

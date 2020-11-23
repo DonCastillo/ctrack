@@ -39,7 +39,7 @@ class Issue {
         \brief  Gets the title of the issue.
         \return returns the title of the issue (string)
      */
-     std::string getTitle();
+     std::string getTitle() const;
 
      /*!
         \brief  Sets the issuer.
@@ -51,7 +51,7 @@ class Issue {
         \brief  Gets the issuer.
         \return returns the issuer (User*)
      */
-     User* getIssuer();
+     User* getIssuer() const;
 
      /*!
         \brief  Sets the issue type.
@@ -68,7 +68,7 @@ class Issue {
         \brief  Gets the issue type.
         \return returns the type of the issue (string)
      */
-     std::string getType();
+     std::string getType() const;
 
      /*!
         \brief  Sets the issue status.
@@ -86,7 +86,7 @@ class Issue {
         \brief  Gets the status of the issue.
         \return returns the status of the issue (string)
      */
-     std::string getStatus();
+     std::string getStatus() const;
 
      /*!
         \brief  Adds a user to the list of users assigned to this issue.
@@ -98,14 +98,14 @@ class Issue {
         \brief  Gets all the users assigned to this issue.
         \return returns all the users assigned to this issue (vector<User*>)
      */
-     std::vector<User*> getAssignees();
+     std::vector<User*> getAssignees() const;
 
      /*!
         \brief  Gets the specific user assigned to this issue.
         \param  pId     - id of the user to be returned (unsigned int)
         \return returns the assigned user based on the id (User*)
      */
-     User* getAssignee(unsigned int pId);
+     User* getAssignee(unsigned int pId) const;
 
      /*!
         \brief  Deletes a specific user assigned to this issue.
@@ -123,7 +123,7 @@ class Issue {
         \brief  Gets the issue's description.
         \return returns the description or the first comment (Comment*)
      */
-     Comment* getDescription();
+     Comment* getDescription() const;
 
      /*!
         \brief  Adds a comment to this issue.
@@ -135,14 +135,14 @@ class Issue {
         \brief  Gets all the comments of this issue.
         \return returns all the comments of this issue (vector<Comment*>)
      */
-     std::vector<Comment*> getComments();
+     std::vector<Comment*> getComments() const;
 
      /*!
         \brief  Gets a specific comment from this issue.
         \param  pId       - id of the comment you want returned (unsigned int)
         \return returns the comment based on the id (Comment*)
      */
-     Comment* getComment(unsigned int pId);
+     Comment* getComment(unsigned int pId) const;
 
      /*!
         \brief  Deletes a specific comment of this issue.
@@ -159,7 +159,30 @@ class Issue {
         \brief  Gets the issue's id
         \return returns the issues's id (unsigned int)
      */
-     unsigned int getID();
+     unsigned int getID() const;
+
+    /*!
+        \brief  Compares two issues if they have equal id
+        \param  a   first issue
+                b   second issue
+        \return returns true if they are equal, otherwise false
+     */
+     friend bool operator==(const Issue& a, const Issue& b);
+
+     /*!
+        \brief  Compares two issues if they have unequal id
+        \param  a   first issue
+                b   second issue
+        \return returns true if they are unequal, otherwise false
+     */
+     friend bool operator!=(const Issue& a, const Issue& b);
+
+     /*!
+        \brief  prints issue information
+        \param  os  ostream
+                u   user
+     */
+     friend std::ostream& operator<<(std::ostream& os, const Issue& i);
 
  private:
      /** issue title */

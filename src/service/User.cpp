@@ -1,4 +1,5 @@
 #include "User.h"
+#include "CTrackUI.h"
 #include <string>
 #include <iostream>
 
@@ -68,12 +69,9 @@ bool operator!= (const User& a, const User& b) {
 }
 
 std::ostream& operator<<(std::ostream& os, const User& u) {
-    os << "========\n";
-    os << "USER\n";
-    os << "========\n";
-    os << "ID:    " << std::to_string(u.id) << "\n";
-    os << "NAME:  " << u.name << "\n";
-    os << "GROUP: " << u.getGroup() << "\n";
+    os << CTrackUI::formatRow("USER ID",    std::to_string(u.id));
+    os << CTrackUI::formatRow("USER NAME",  u.name);
+    os << CTrackUI::formatRow("USER GROUP", u.getGroup());
     os << "\n";
     return os;
 }

@@ -31,7 +31,7 @@ class Comment {
         \brief  Gets the comment.
         \return returns the comment (string)
      */
-     std::string getComment();
+     std::string getComment() const;
 
      /*!
         \brief  Sets the commenter.
@@ -43,13 +43,36 @@ class Comment {
         \brief  Gets the commenter.
         \return returns the commenter (User*)
      */
-     User* getCommenter();
+     User* getCommenter() const;
 
      /*!
         \brief  Gets the comment's id
         \return returns the comment's id (unsigned int)
      */
-     unsigned int getID();
+     unsigned int getID() const;
+
+          /*!
+        \brief  Compares two comments if they have equal id
+        \param  a   first user
+                b   second user
+        \return returns true if they are equal, otherwise false
+     */
+     friend bool operator==(const Comment& a, const Comment& b);
+
+     /*!
+        \brief  Compares two comments if they have unequal id
+        \param  a   first user
+                b   second user
+        \return returns true if they are unequal, otherwise false
+     */
+     friend bool operator!=(const Comment& a, const Comment& b);
+
+     /*!
+        \brief  prints comment information
+        \param  os  ostream
+                u   user
+     */
+     friend std::ostream& operator<<(std::ostream& os, const Comment& c);
 
  private:
      /** comment id */

@@ -292,6 +292,47 @@ TEST(TestIssue, getting_removing_specific_comment) {
     delete donna;
 }
 
+TEST(TestIssue, operator_overload) {
+    User* jane = new User(0, "Jane");
+    User* john = new User(1, "John");
+    User* alice = new User(2, "Alice");
+    Comment* commentA = new Comment(0, jane, "first comment from jane");
+    Comment* commentB = new Comment(1, alice, "second comment from alice");
+    Comment* commentC = new Comment(2, alice, "another comment from alice");
+    Issue* issueA = new Issue(0, "Blue screen", jane);
+    Issue* issueB = new Issue(1, "Laptop sound is broken", alice);
+
+    // assign issues
+    issueA->addAssignee(john);
+    issueA->addComment(commentA);
+
+    issueB->addAssignee(john);
+    issueB->addAssignee(jane);
+    issueB->addComment(commentB);
+    issueB->addComment(commentC);
+
+    // same issues
+    EXPECT_TRUE(issueA == issueA);
+    EXPECT_FALSE(issueA != issueA);
+
+    // different issues
+    EXPECT_TRUE(issueA != issueB);
+    EXPECT_FALSE(issueA == issueB);
+
+    // cout
+    std::cout << *issueA;
+    std::cout << *issueB;
+
+    delete issueA;
+    delete issueB;
+    delete alice;
+    delete john;
+    delete jane;
+}
+
+
+
+
 
 
 

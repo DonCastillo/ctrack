@@ -2,6 +2,7 @@
 #include "User.h"
 #include "gtest/gtest.h"
 #include <string>
+#include <iostream>
 
 TEST(TestComment, comment_id) {
     User* jane = new User(0, "Jane");
@@ -69,3 +70,29 @@ TEST(TestComment, setting_and_getting_commenter) {
     delete jane;
     delete bob;
 }
+
+TEST(TestComment, operator_overload) {
+    User* jane = new User(0, "Jane");
+    User* john = new User(1, "John");
+    Comment* commentA = new Comment(0, jane, "comment from jane");
+    Comment* commentB = new Comment(1, john, "comment from john");
+
+    // same comment
+    EXPECT_TRUE(commentA == commentA);
+    EXPECT_FALSE(commentA != commentA);
+
+    // different user
+    EXPECT_TRUE(commentA != commentB);
+    EXPECT_FALSE(commentA == commentB);
+
+    // cout
+    std::cout << *commentA;
+    std::cout << *commentB;
+
+    delete commentA;
+    delete commentB;
+    delete john;
+    delete jane;
+}
+
+
