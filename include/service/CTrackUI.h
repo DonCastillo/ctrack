@@ -52,7 +52,7 @@ class CTrackUI {
     */
     std::string formatRow(std::string left, std::string right);
 
-    /*
+    /*!
        \brief   formats text with number in the left side and string
                 in the right side
        \param   id            - text to be displayed in the left side
@@ -64,7 +64,7 @@ class CTrackUI {
     */
     std::string formatIDRow(unsigned int id, std::string right);
 
-    /*
+    /*!
        \brief   formats text with a string in the left side and string
                 in the right side
        \param   left          - text to be displayed in the left side
