@@ -91,17 +91,20 @@ void readDB() {
     userIDX = j["userIDX"];
     issueIDX = j["issueIDX"];
 
+    // create user objects
     for (auto &u : j["users"]) {
         User* user = new User(u["id"], u["name"]);
         user->setGroup(u["group"]);
         users.insert(std::make_pair(u["id"], user));
     }
+
+    // create issue objects
     for (auto &i : j["issues"]) {
         Issue* issue = new Issue(i["id"], i["title"], users[i["author"]]);
         issue->setType(i["type"]);
         issue->setStatus(i["status"]);
-        // issue->setDescription(i["description"]);
-        // issue->setCommentIDX(i["commentIDX"]);
+        issue->setDescription(i["description"]);
+        //issue->setCommentIDX(i["commentIDX"]);
 
         for (auto &a : i["assignees"])
             issue->addAssignee(users[a]);
@@ -112,6 +115,7 @@ void readDB() {
         issues.insert(std::make_pair(i["id"], issue));
     }
 }
+
 
 int main(const int, const char**) {
     readDB();
