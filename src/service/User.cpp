@@ -75,5 +75,3 @@ std::ostream& operator<<(std::ostream& os, const User& u) {
     os << "\n";
     return os;
 }
-
-

@@ -13,6 +13,7 @@ SRC_DIR_SERVICE = src/service
 TEST_DIR = test
 
 SERVICE_INCLUDE = -I include/service
+SRC_INCLUDE = include/service
 
 GCOV_9 = gcov9.1
 GCOV = gcov
@@ -91,5 +92,5 @@ style: ${SRC_DIR_SERVICE} ${SRC_INCLUDE}
 style-local: ${SRC_DIR_SERVICE} ${SRC_INCLUDE}
 	${STYLE_CHECK_LOCAL} $(SRC_INCLUDE)/*.h $(SRC_DIR_SERVICE)/*.cpp $(SRC_DIR_CLIENT)/*.cpp $(SRC_DIR_SERVER)/*.cpp
 
-docs:
+docs: ${SRC_INCLUDE}
 	doxygen doxygen/doxyfile

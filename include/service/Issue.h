@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+/** Issue class */
 class Issue {
  public:
      /** type categories */
@@ -163,24 +164,24 @@ class Issue {
 
     /*!
         \brief  Compares two issues if they have equal id
-        \param  a   first issue
-                b   second issue
-        \return returns true if they are equal, otherwise false
+        \param  a   first issue (Issue)
+        \param  b   second issue (Issue)
+        \return returns true if they are equal, otherwise false (bool)
      */
      friend bool operator==(const Issue& a, const Issue& b);
 
      /*!
         \brief  Compares two issues if they have unequal id
-        \param  a   first issue
-                b   second issue
-        \return returns true if they are unequal, otherwise false
+        \param  a   first issue (Issue)
+        \param  b   second issue (Issue)
+        \return returns true if they are unequal, otherwise false (bool)
      */
      friend bool operator!=(const Issue& a, const Issue& b);
 
      /*!
         \brief  prints issue information
-        \param  os  ostream
-                u   user
+        \param  os  ostream (ostream)
+        \param  i   issue (Issue)
      */
      friend std::ostream& operator<<(std::ostream& os, const Issue& i);
 

@@ -3,6 +3,7 @@
 
 #include <string>
 
+/** User class */
 class User {
  public:
      /** group categories */
@@ -59,24 +60,24 @@ class User {
 
      /*!
         \brief  Compares two users if they have equal id
-        \param  a   first user
-                b   second user
-        \return returns true if they are equal, otherwise false
+        \param  a   first user (User)
+        \param  b   second user (User)
+        \return returns true if they are equal, otherwise false (bool)
      */
      friend bool operator==(const User& a, const User& b);
 
      /*!
         \brief  Compares two users if they have unequal id
-        \param  a   first user
-                b   second user
-        \return returns true if they are unequal, otherwise false
+        \param  a   first user (User)
+        \param  b   second user (User)
+        \return returns true if they are unequal, otherwise false (bool)
      */
      friend bool operator!=(const User& a, const User& b);
 
      /*!
         \brief  prints user information
-        \param  os  ostream
-                u   user
+        \param  os  ostream (ostream)
+        \param  u   user (User)
      */
      friend std::ostream& operator<<(std::ostream& os, const User& u);
 
