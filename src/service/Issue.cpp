@@ -184,27 +184,27 @@ bool operator!= (const Issue& a, const Issue& b) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Issue& i) {
+    CTrackUI* ui = new CTrackUI();
     unsigned int left;
     std::string right = "";
 
-    os << CTrackUI::formatRow("ISSUE ID",   std::to_string(i.id));
-    os << CTrackUI::formatRow("TITLE",      i.title);
+    os << ui->formatRow("ISSUE ID",         std::to_string(i.id));
+    os << ui->formatRow("TITLE",            i.title);
 
     left  = i.issuer->getID();
     right = i.issuer->getName();
-    os << CTrackUI::formatRow("CREATED BY", CTrackUI::formatIDRow(left, right));
+    os << ui->formatRow("CREATED BY",       ui->formatIDRow(left, right));
 
-    os << CTrackUI::formatRow("TYPE",       i.getType());
-    os << CTrackUI::formatRow("STATUS",     i.getStatus());
+    os << ui->formatRow("TYPE",             i.getType());
+    os << ui->formatRow("STATUS",           i.getStatus());
 
     for (User* x : i.assignees) {
         left  = x->getID();
         right = x->getName();
-        os << CTrackUI::formatRow("ASSIGNED TO",
-                                  CTrackUI::formatIDRow(left, right));
+        os << ui->formatRow("ASSIGNED TO",  ui->formatIDRow(left, right));
     }
 
-    os << CTrackUI::formatRow("COMMENTS",   "");
+    os << ui->formatRow("COMMENTS",         "");
 
     for (Comment* x : i.comments) {
         std::string top     = "POSTED BY: " + x->getCommenter()->getName();
@@ -214,6 +214,7 @@ std::ostream& operator<<(std::ostream& os, const Issue& i) {
     }
 
     os << "\n";
+    delete ui;
     return os;
 }
 

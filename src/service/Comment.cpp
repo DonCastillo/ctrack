@@ -42,14 +42,14 @@ bool operator!= (const Comment& a, const Comment& b) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Comment& c) {
-    os << CTrackUI::formatRow("COMMENT ID",    std::to_string(c.id));
+    CTrackUI* ui = new CTrackUI();
+    os << ui->formatRow("COMMENT ID",  std::to_string(c.id));
 
     unsigned int left = (c.commenter)->getID();
     std::string right = (c.commenter)->getName();
-    os << CTrackUI::formatRow("POSTED BY",
-                              CTrackUI::formatIDRow(left, right));
-
-    os << CTrackUI::formatRow("COMMENT",     c.comment);
+    os << ui->formatRow("POSTED BY",  ui->formatIDRow(left, right));
+    os << ui->formatRow("COMMENT",    c.comment);
     os << "\n";
+    delete ui;
     return os;
 }
