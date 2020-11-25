@@ -81,8 +81,6 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
 
-
-
 void readDB() {
     json j;
     std::fstream f("./db.json");
@@ -114,8 +112,62 @@ void readDB() {
 
         issues.insert(std::make_pair(i["id"], issue));
     }
+
+    f.close();
 }
 
+void writeDB() {
+    json j;
+    std::ofstream f("./db.json");
+
+    // Add indexing to JSON object
+    j["userIDX"] = userIDX;
+    j["issueIDX"] = issueIDX;
+    j["users"] = json::array();
+    j["issues"] = json::array();
+
+    // Add users to JSON object
+    for (auto &u : users) {
+        json user;
+        user["id"] = u.second->getID();
+        user["name"] = u.second->getName();
+        user["group"] = u.second->getGroup();
+        j["users"].push_back(user);
+    }
+
+    // Add Issues to JSON object
+    for (auto &i : issues) {
+        json issue;
+        issue["id"] = i.second->getID();
+        issue["title"] = i.second->getTitle();
+        issue["description"] = i.second->getDescription();
+        issue["author"] = i.second->getIssuer()->getID();
+        issue["type"] = i.second->getType();
+        issue["status"] = i.second->getStatus();
+        issue["assignees"] = json::array();
+        issue["comments"] = json::array();
+
+        // Adding assignees to issue
+        for (auto a : i.second->getAssignees())
+            issue["assignees"].push_back(a->getID());
+
+        // Adding comments to issue
+        for (auto c : i.second->getComments()) {
+            json comment;
+            comment["id"] = c->getID();
+            comment["comment"] = c->getComment();
+            comment["author"] = c->getCommenter()->getID();
+            issue["comments"].push_back(comment);
+        }
+
+        j["issues"].push_back(issue);
+    }
+
+    // Write to file
+    std::cout << "SERVER WRITING DATA" << std::endl;
+    f << j;
+    f.close();
+}
 
 int main(const int, const char**) {
     readDB();
