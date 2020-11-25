@@ -29,24 +29,30 @@ std::map<int, User*> users;
 std::map<int, Issue*> issues;
 int userIDX, issueIDX;
 
-void parse(const char* data, issue* expr) {
+void parse(const char* data, User*& user) {
     char* data_mutable = const_cast<char*>(data);
-    char* a = strtok_r(nullptr, "\n", &data_mutable);
-    char* b = strtok_r(nullptr, "\n", &data_mutable);
+    char* name          = strtok_r(data_mutable, "\n", &data_mutable);
+    char* group         = strtok_r(nullptr, "\n", &data_mutable);
+    unsigned int id     = users.size();
 
-    expr->name = a;
-    expr->issueMessage = b;
+    user = new User(id, name);
+    user->setGroup( std::stoul(group) );
 }
 
 
 void post_request(const std::shared_ptr<restbed::Session >&
                   session, const restbed::Bytes & body) {
-    issue exp;
+    User* u;
     const char* data = reinterpret_cast<const char*>(body.data());
-    parse(data, &exp);
-    std::string resultStr = exp.name + " " + exp.issueMessage;
+    parse(data, u);
+
     nlohmann::json resultJSON;
-    resultJSON["issues"] = resultStr;
+    resultJSON["id"]    = u->getID();
+    resultJSON["name"]  = u->getName();
+    resultJSON["group"] = u->group;
+    // resultJSON["id"]    = 0;
+    // resultJSON["name"]  = "Don";
+    // resultJSON["group"] = 0;
     std::string response = resultJSON.dump();
 
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
@@ -54,8 +60,9 @@ void post_request(const std::shared_ptr<restbed::Session >&
 
 
 void post_issue_handler(const std::shared_ptr<restbed::Session>& session) {
-    const auto request = session->get_request();
-    size_t content_length = request->get_header("Content-Length", 0);
+    const auto request      = session->get_request();
+    size_t content_length   = request->get_header("Content-Length", 0);
+
     session->fetch(content_length, &post_request);
 }
 
@@ -74,9 +81,9 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
     j = json::parse(f);
 
     json resultJSON;
-    resultJSON["issues"] = j["issues"];
+    resultJSON["users"] = j["users"];
 
-    std::string response = resultJSON.dump();
+    std::string response = resultJSON.dump(4);
 
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
@@ -121,49 +128,20 @@ int main(const int, const char**) {
     readDB();
 
     // TESTING READ
-    std::cout << "USERS" << std::endl;
+    // std::cout << "\n";
+    // for (auto i : users) {
+    //     User* u = i.second;
+    //     std::cout << *u;
+    // }
 
-    for (auto i : users) {
-        User* u = i.second;
-        std::cout << u->getID()
-                  << " "
-                  << u->getName()
-                  << ": "
-                  <<u->getGroup()
-                  <<std::endl;
-    }
-
-    std::cout << "ISSUES" << std::endl;
-
-    for (auto i : issues) {
-        Issue* s = i.second;
-        std::cout << s->getID()
-                  << " "
-                  <<s->getIssuer()->getName()
-                  << ": "
-                  << s->getTitle()
-                  << "\n"
-                  << "\n"
-                  <<s->getStatus()
-                  <<std::endl;
-
-        std::cout << "Assignees:" << std::endl;
-        for (auto a : s->getAssignees())
-            std::cout << a->getName() <<std::endl;
-
-        std::cout << "Comments:" << std::endl;
-        for (auto c : s->getComments()) {
-            std::cout << c->getID()
-                      << " "
-                      << c->getComment()
-                      << " "
-                      << std::endl;
-        }
-    }
+    // for (auto i : issues) {
+    //     Issue* s = i.second;
+    //     std::cout << *s;
+    // }
 
     // Setup service and request handlers
     auto resource = std::make_shared<restbed::Resource>();
-    resource->set_path("/issues");
+    resource->set_path("/users");
     resource->set_method_handler("POST", post_issue_handler);
     resource->set_method_handler("GET", get_issue_handler);
 

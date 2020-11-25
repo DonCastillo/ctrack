@@ -81,6 +81,8 @@ class User {
      */
      friend std::ostream& operator<<(std::ostream& os, const User& u);
 
+     /** user group */
+     Group group;
 
  private:
      /** user name */
@@ -88,9 +90,6 @@ class User {
 
      /** user id */
      unsigned int id;
-
-     /** user group */
-     Group group;
 };
 
 
