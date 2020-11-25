@@ -54,7 +54,31 @@ std::shared_ptr<restbed::Request> create_user_post_request(User* user) {
 
 
 
-std::shared_ptr<restbed::Request> create_user_get_request(User* user) {
+std::shared_ptr<restbed::Request> get_request_all() {
+    // Create the URI string
+    std::string uri = create_uri("users" );
+
+    //Configure request headers
+    auto request = std::make_shared<restbed::Request>(restbed::Uri(uri));
+    request->set_method("GET");
+
+    return request;
+}
+
+
+std::shared_ptr<restbed::Request> get_request_specific(unsigned int pID) {
+    // Create the URI string
+    std::string uri = create_uri("users/" + std::to_string(pID));
+
+    //Configure request headers
+    auto request = std::make_shared<restbed::Request>(restbed::Uri(uri));
+    request->set_method("GET");
+
+    return request;
+}
+
+// vary
+std::shared_ptr<restbed::Request> get_request_param(User* pUser) {
     // Create the URI string
     std::string uri = create_uri("users");
 
@@ -63,9 +87,7 @@ std::shared_ptr<restbed::Request> create_user_get_request(User* user) {
     request->set_method("GET");
 
     // Set the parameters
-    request->set_query_parameter("id",      std::to_string(user->getID()));
-    request->set_query_parameter("name",    user->getName());
-    request->set_query_parameter("group",   user->getGroup());
+    request->set_query_parameter( "group",  pUser->getGroup() );
 
     return request;
 }
@@ -89,7 +111,7 @@ void handle_response(std::shared_ptr<restbed::Response> response) {
         break;
     }
     default:
-        fprintf(stderr, "My milk shakes bring all the boys to the yard\n");
+        fprintf(stderr, "There is an error connecting to the server. \n");
         break;
     }
 }
@@ -98,14 +120,27 @@ void handle_response(std::shared_ptr<restbed::Response> response) {
 
 
 int main(const int, const char**) {
-    User* user = new User(0, "Don Castillo");
-    std::shared_ptr<restbed::Request> request = create_user_post_request(user);
+    // Create new user record
+    User* dummyUser = new User(0, "Don Castillo");
+    std::shared_ptr<restbed::Request> request = create_user_post_request(dummyUser);
     auto response = restbed::Http::sync(request);
     handle_response(response);
 
-   request = create_user_get_request(user);
+   // list all users
+   request = get_request_all();
    response = restbed::Http::sync(request);
    handle_response(response);
+
+   // look for a specific user
+   request = get_request_specific(0);
+   response = restbed::Http::sync(request);
+   handle_response(response);
+
+   // list users that match a query
+   request = get_request_param(dummyUser);
+   response = restbed::Http::sync(request);
+   handle_response(response);
+
 
    return EXIT_SUCCESS;
 }

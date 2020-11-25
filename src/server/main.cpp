@@ -50,10 +50,8 @@ void post_request(const std::shared_ptr<restbed::Session >&
     resultJSON["id"]    = u->getID();
     resultJSON["name"]  = u->getName();
     resultJSON["group"] = u->group;
-    // resultJSON["id"]    = 0;
-    // resultJSON["name"]  = "Don";
-    // resultJSON["group"] = 0;
     std::string response = resultJSON.dump();
+    // @todo store new user to the map or file?
 
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
@@ -66,27 +64,59 @@ void post_issue_handler(const std::shared_ptr<restbed::Session>& session) {
     session->fetch(content_length, &post_request);
 }
 
+
+
 void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
     const auto request = session->get_request();
-
-    // if (request->has_query_parameter("name")) {
-    //     exp.name = request->get_query_parameter("name");
-    //     if (request->has_query_parameter("issueMessage")) {
-    //         exp.issueMessage = request->get_query_parameter("issueMessage");
-    //     }
-    // }
-
-    json j;
     std::fstream f("./db.json");
-    j = json::parse(f);
-
+    json j = json::parse(f);
     json resultJSON;
-    resultJSON["users"] = j["users"];
+
+    /**
+        GET     /users              lists all users
+        POST    /users              creates a new user
+        GET     /users/{id}         views user info based on id
+        PUT     /users/{id}         updates user info based on id
+        DELETE  /users/{id}         deletes user info based on id
+        GET     /users?group=val    lists all users in a particular group
+    */
+
+
+    if ( request->has_path_parameter("id") ) {
+        std::string targetID = request->get_path_parameter("id");
+
+        // search user based on id
+        for (auto &u : j["users"]) {
+            if( u["id"] == std::stoi(targetID) ) {
+                resultJSON = u;
+                break;
+            }
+        }
+
+    } else {
+
+        if ( request->has_query_parameter("group") ) {
+            // search for all users that belong in a specified group
+            std::string targetGroup = request->get_query_parameter("group"); // developer
+            json collection = json::array(); // initialize to empty array
+            for (auto &u : j["users"]) {
+                std::string userGroup = User::getGroup(u["group"]);
+                if( targetGroup == userGroup )
+                    collection.push_back(u);
+            }
+            resultJSON["users"] = collection;
+        } else {
+            // if no id or query is specified, get all users
+            resultJSON["users"] = j["users"];
+        }
+
+    }
 
     std::string response = resultJSON.dump(4);
 
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
+
 
 
 
@@ -141,9 +171,10 @@ int main(const int, const char**) {
 
     // Setup service and request handlers
     auto resource = std::make_shared<restbed::Resource>();
-    resource->set_path("/users");
+    resource->set_paths( { "/users", "/users/{id: .*}" } );
     resource->set_method_handler("POST", post_issue_handler);
     resource->set_method_handler("GET", get_issue_handler);
+
 
     auto settings = std::make_shared<restbed::Settings>();
     settings->set_port(1234);

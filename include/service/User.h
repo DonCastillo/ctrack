@@ -8,6 +8,7 @@ class User {
  public:
      /** group categories */
      enum Group {DEVELOPER, TESTER, MANAGER, USER};
+     static std::string getGroup(unsigned int pInt);
 
      /*!
         \brief  Constructor

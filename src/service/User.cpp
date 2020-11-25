@@ -39,6 +39,7 @@ void User::setGroup(unsigned int pInt) {
     }
 }
 
+
 std::string User::getGroup() const {
     std::string groupLabel = "";
 
@@ -59,6 +60,29 @@ std::string User::getGroup() const {
 
     return groupLabel;
 }
+
+
+std::string User::getGroup(unsigned int pInt) {
+   std::string groupLabel = "";
+
+   switch (pInt) {
+        case 0:
+            groupLabel = "developer";
+            break;
+        case 1:
+            groupLabel = "tester";
+            break;
+        case 2:
+            groupLabel = "manager";
+            break;
+        case 3:
+        default:
+            groupLabel = "user";
+            break;
+    }
+    return groupLabel;
+}
+
 
 bool operator== (const User& a, const User& b) {
     return (a.id == b.id);
