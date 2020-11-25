@@ -36,7 +36,7 @@ void parse(const char* data, User*& user) {
     unsigned int id     = users.size();
 
     user = new User(id, name);
-    user->setGroup( std::stoul(group) );
+    user->setGroup(std::stoul(group));
 }
 
 
@@ -87,21 +87,20 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
 
         // search user based on id
         for (auto &u : j["users"]) {
-            if( u["id"] == std::stoi(targetID) ) {
+            if (u["id"] == std::stoi(targetID)) {
                 resultJSON = u;
                 break;
             }
         }
 
     } else {
-
-        if ( request->has_query_parameter("group") ) {
+        if (request->has_query_parameter("group")) {
             // search for all users that belong in a specified group
             std::string targetGroup = request->get_query_parameter("group"); // developer
             json collection = json::array(); // initialize to empty array
             for (auto &u : j["users"]) {
                 std::string userGroup = User::getGroup(u["group"]);
-                if( targetGroup == userGroup )
+                if (targetGroup == userGroup)
                     collection.push_back(u);
             }
             resultJSON["users"] = collection;
@@ -109,7 +108,6 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
             // if no id or query is specified, get all users
             resultJSON["users"] = j["users"];
         }
-
     }
 
     std::string response = resultJSON.dump(4);
@@ -223,7 +221,7 @@ int main(const int, const char**) {
 
     // Setup service and request handlers
     auto resource = std::make_shared<restbed::Resource>();
-    resource->set_paths( { "/users", "/users/{id: .*}" } );
+    resource->set_paths({ "/users", "/users/{id: .*}" });
     resource->set_method_handler("POST", post_issue_handler);
     resource->set_method_handler("GET", get_issue_handler);
 

@@ -63,9 +63,8 @@ std::string User::getGroup() const {
 
 
 std::string User::getGroup(unsigned int pInt) {
-   std::string groupLabel = "";
-
-   switch (pInt) {
+    std::string groupLabel = "";
+    switch (pInt) {
         case 0:
             groupLabel = "developer";
             break;

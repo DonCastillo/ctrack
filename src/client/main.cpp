@@ -29,7 +29,7 @@ std::string create_uri(std::string endpoint) {
 }
 
 
-std::shared_ptr<restbed::Request> create_user_post_request(User* user) {
+std::shared_ptr<restbed::Request> create_user_post_request(const User* user) {
     // Create the URI string
     std::string uri = create_uri("users");
 
@@ -41,9 +41,9 @@ std::shared_ptr<restbed::Request> create_user_post_request(User* user) {
 
     // Create the message
     std::string message;
-    message.append( user->getName() );
+    message.append(user->getName());
     message.append("\n");
-    message.append( std::to_string(user->group) );
+    message.append(std::to_string(user->group));
 
     // Set the message
     request->set_header("Content-Length", std::to_string(message.length()));
@@ -56,7 +56,7 @@ std::shared_ptr<restbed::Request> create_user_post_request(User* user) {
 
 std::shared_ptr<restbed::Request> get_request_all() {
     // Create the URI string
-    std::string uri = create_uri("users" );
+    std::string uri = create_uri("users");
 
     //Configure request headers
     auto request = std::make_shared<restbed::Request>(restbed::Uri(uri));
@@ -87,7 +87,7 @@ std::shared_ptr<restbed::Request> get_request_param(User* pUser) {
     request->set_method("GET");
 
     // Set the parameters
-    request->set_query_parameter( "group",  pUser->getGroup() );
+    request->set_query_parameter("group",  pUser->getGroup());
 
     return request;
 }
@@ -126,21 +126,21 @@ int main(const int, const char**) {
     auto response = restbed::Http::sync(request);
     handle_response(response);
 
-   // list all users
-   request = get_request_all();
-   response = restbed::Http::sync(request);
-   handle_response(response);
+    // list all users
+    request = get_request_all();
+    response = restbed::Http::sync(request);
+    handle_response(response);
 
-   // look for a specific user
-   request = get_request_specific(0);
-   response = restbed::Http::sync(request);
-   handle_response(response);
+    // look for a specific user
+    request = get_request_specific(0);
+    response = restbed::Http::sync(request);
+    handle_response(response);
 
-   // list users that match a query
-   request = get_request_param(dummyUser);
-   response = restbed::Http::sync(request);
-   handle_response(response);
+    // list users that match a query
+    request = get_request_param(dummyUser);
+    response = restbed::Http::sync(request);
+    handle_response(response);
 
 
-   return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
