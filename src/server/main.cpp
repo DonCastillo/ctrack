@@ -20,14 +20,20 @@ using json = nlohmann::json;
 // Response header to close connection
 #define CLOSE_CONNECTION { "Connection", "close" }
 
-struct issue {
-    std::string name;
-    std::string issueMessage;
-};
+// functions
+void parse(const char* data, User*& user);
+void post_request(const std::shared_ptr<restbed::Session >& session, const restbed::Bytes & body);
+void post_issue_handler(const std::shared_ptr<restbed::Session>& session);
+void get_issue_handler(const std::shared_ptr<restbed::Session>& session);
+void readDB();
+void writeDB();
 
+
+// variables
 std::map<int, User*> users;
 std::map<int, Issue*> issues;
 int userIDX, issueIDX;
+
 
 void parse(const char* data, User*& user) {
     char* data_mutable = const_cast<char*>(data);
@@ -50,8 +56,13 @@ void post_request(const std::shared_ptr<restbed::Session >&
     resultJSON["id"]    = u->getID();
     resultJSON["name"]  = u->getName();
     resultJSON["group"] = u->group;
+
+    // info to be sent back to the client
     std::string response = resultJSON.dump();
-    // @todo store new user to the map or file?
+
+    // info to be stored in the server
+    users.insert(std::make_pair(u->getID(), u));
+    writeDB();
 
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
