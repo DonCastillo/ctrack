@@ -51,7 +51,12 @@ class User {
         \brief  Gets the group which the user belongs to.
         \return returns the group name (string)
      */
-     std::string getGroup() const;
+     Group getGroup() const;
+
+     std::string getGroupString() const;
+
+
+
 
      /*!
         \brief  Gets the user's id
@@ -82,10 +87,12 @@ class User {
      */
      friend std::ostream& operator<<(std::ostream& os, const User& u);
 
+
+
+ private:
      /** user group */
      Group group;
 
- private:
      /** user name */
      std::string name;
 

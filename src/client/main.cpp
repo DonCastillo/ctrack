@@ -43,7 +43,7 @@ std::shared_ptr<restbed::Request> create_user_post_request(const User* user) {
     std::string message;
     message.append(user->getName());
     message.append("\n");
-    message.append(std::to_string(user->group));
+    message.append(std::to_string(user->getGroup()));
 
     // Set the message
     request->set_header("Content-Length", std::to_string(message.length()));
@@ -87,7 +87,7 @@ std::shared_ptr<restbed::Request> get_request_param(User* pUser) {
     request->set_method("GET");
 
     // Set the parameters
-    request->set_query_parameter("group",  pUser->getGroup());
+    request->set_query_parameter("group",  pUser->getGroupString());
 
     return request;
 }
@@ -120,6 +120,9 @@ void handle_response(std::shared_ptr<restbed::Response> response) {
 
 
 int main(const int, const char**) {
+
+    // @todo create a ui to enable clients to dynamically CRUD records
+
     // Create new user record
     User* dummyUser = new User(0, "Don Castillo");
     std::shared_ptr<restbed::Request> request = create_user_post_request(dummyUser);

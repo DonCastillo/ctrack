@@ -14,28 +14,34 @@
 
 using json = nlohmann::json;
 
-// Response header to prevent a cross-site validation problem
+/** Response header to prevent a cross-site validation problem */
 #define ALLOW_ALL { "Access-Control-Allow-Origin", "*" }
 
-// Response header to close connection
+/** Response header to close connection */
 #define CLOSE_CONNECTION { "Connection", "close" }
 
-// functions
-void parse(const char* data, User*& user);
-void post_request(const std::shared_ptr<restbed::Session >& session, const restbed::Bytes & body);
-void post_issue_handler(const std::shared_ptr<restbed::Session>& session);
-void get_issue_handler(const std::shared_ptr<restbed::Session>& session);
+/******************************************************/
+/************* Function declaration *******************/
+/******************************************************/
+void parse_user(const char* data, User*& user);
+void post_user_request(const std::shared_ptr<restbed::Session >& session, const restbed::Bytes & body);
+void post_user_handler(const std::shared_ptr<restbed::Session>& session);
+void get_user_handler(const std::shared_ptr<restbed::Session>& session);
 void readDB();
 void writeDB();
 
-
-// variables
+/******************************************************/
+/****************** Variables *************************/
+/******************************************************/
 std::map<int, User*> users;
 std::map<int, Issue*> issues;
 int userIDX, issueIDX;
 
+/*******************************************************/
+/************* Function definitions ********************/
+/*******************************************************/
 
-void parse(const char* data, User*& user) {
+void parse_user(const char* data, User*& user) {
     char* data_mutable = const_cast<char*>(data);
     char* name          = strtok_r(data_mutable, "\n", &data_mutable);
     char* group         = strtok_r(nullptr, "\n", &data_mutable);
@@ -46,38 +52,38 @@ void parse(const char* data, User*& user) {
 }
 
 
-void post_request(const std::shared_ptr<restbed::Session >&
+void post_user_request(const std::shared_ptr<restbed::Session >&
                   session, const restbed::Bytes & body) {
     User* u;
     const char* data = reinterpret_cast<const char*>(body.data());
-    parse(data, u);
+    parse_user(data, u);
 
     nlohmann::json resultJSON;
     resultJSON["id"]    = u->getID();
     resultJSON["name"]  = u->getName();
-    resultJSON["group"] = u->group;
+    resultJSON["group"] = u->getGroup();
 
     // info to be sent back to the client
     std::string response = resultJSON.dump();
 
     // info to be stored in the server
     users.insert(std::make_pair(u->getID(), u));
+    ++userIDX;
     writeDB();
 
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
 
 
-void post_issue_handler(const std::shared_ptr<restbed::Session>& session) {
+void post_user_handler(const std::shared_ptr<restbed::Session>& session) {
     const auto request      = session->get_request();
     size_t content_length   = request->get_header("Content-Length", 0);
-
-    session->fetch(content_length, &post_request);
+    session->fetch(content_length, &post_user_request);
 }
 
 
 
-void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
+void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
     const auto request = session->get_request();
     std::fstream f("./db.json");
     json j = json::parse(f);
@@ -132,7 +138,7 @@ void readDB() {
     std::fstream f("./db.json");
     j = json::parse(f);
 
-    userIDX = j["userIDX"];
+    userIDX  = j["userIDX"];
     issueIDX = j["issueIDX"];
 
     // create user objects
@@ -148,7 +154,6 @@ void readDB() {
         issue->setType(i["type"]);
         issue->setStatus(i["status"]);
         issue->setDescription(i["description"]);
-        //issue->setCommentIDX(i["commentIDX"]);
 
         for (auto &a : i["assignees"])
             issue->addAssignee(users[a]);
@@ -167,16 +172,16 @@ void writeDB() {
     std::ofstream f("./db.json");
 
     // Add indexing to JSON object
-    j["userIDX"] = userIDX;
+    j["userIDX"]  = userIDX;
     j["issueIDX"] = issueIDX;
-    j["users"] = json::array();
-    j["issues"] = json::array();
+    j["users"]    = json::array();
+    j["issues"]   = json::array();
 
     // Add users to JSON object
     for (auto &u : users) {
         json user;
-        user["id"] = u.second->getID();
-        user["name"] = u.second->getName();
+        user["id"]    = u.second->getID();
+        user["name"]  = u.second->getName();
         user["group"] = u.second->getGroup();
         j["users"].push_back(user);
     }
@@ -184,14 +189,14 @@ void writeDB() {
     // Add Issues to JSON object
     for (auto &i : issues) {
         json issue;
-        issue["id"] = i.second->getID();
-        issue["title"] = i.second->getTitle();
+        issue["id"]          = i.second->getID();
+        issue["title"]       = i.second->getTitle();
         issue["description"] = i.second->getDescription();
-        issue["author"] = i.second->getIssuer()->getID();
-        issue["type"] = i.second->getType();
-        issue["status"] = i.second->getStatus();
-        issue["assignees"] = json::array();
-        issue["comments"] = json::array();
+        issue["author"]      = i.second->getIssuer()->getID();
+        issue["type"]        = i.second->getType();
+        issue["status"]      = i.second->getStatus();
+        issue["assignees"]   = json::array();
+        issue["comments"]    = json::array();
 
         // Adding assignees to issue
         for (auto a : i.second->getAssignees())
@@ -200,9 +205,9 @@ void writeDB() {
         // Adding comments to issue
         for (auto c : i.second->getComments()) {
             json comment;
-            comment["id"] = c->getID();
-            comment["comment"] = c->getComment();
-            comment["author"] = c->getCommenter()->getID();
+            comment["id"]       = c->getID();
+            comment["comment"]  = c->getComment();
+            comment["author"]   = c->getCommenter()->getID();
             issue["comments"].push_back(comment);
         }
 
@@ -215,27 +220,20 @@ void writeDB() {
     f.close();
 }
 
+
+/*******************************************************/
+/******************** Main Function ********************/
+/*******************************************************/
+
 int main(const int, const char**) {
+    // parse JSON data to actual objects
     readDB();
-
-    // TESTING READ
-    // std::cout << "\n";
-    // for (auto i : users) {
-    //     User* u = i.second;
-    //     std::cout << *u;
-    // }
-
-    // for (auto i : issues) {
-    //     Issue* s = i.second;
-    //     std::cout << *s;
-    // }
 
     // Setup service and request handlers
     auto resource = std::make_shared<restbed::Resource>();
     resource->set_paths({ "/users", "/users/{id: .*}" });
-    resource->set_method_handler("POST", post_issue_handler);
-    resource->set_method_handler("GET", get_issue_handler);
-
+    resource->set_method_handler("POST", post_user_handler);
+    resource->set_method_handler("GET", get_user_handler);
 
     auto settings = std::make_shared<restbed::Settings>();
     settings->set_port(1234);

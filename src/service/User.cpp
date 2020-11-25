@@ -40,7 +40,7 @@ void User::setGroup(unsigned int pInt) {
 }
 
 
-std::string User::getGroup() const {
+std::string User::getGroupString() const {
     std::string groupLabel = "";
 
     switch (group) {
@@ -59,6 +59,10 @@ std::string User::getGroup() const {
     }
 
     return groupLabel;
+}
+
+Group User::getGroup() const {
+    return group;
 }
 
 
@@ -95,7 +99,7 @@ std::ostream& operator<<(std::ostream& os, const User& u) {
     CTrackUI* ui = new CTrackUI();
     os << ui->formatRow("USER ID",    std::to_string(u.id));
     os << ui->formatRow("USER NAME",  u.name);
-    os << ui->formatRow("USER GROUP", u.getGroup());
+    os << ui->formatRow("USER GROUP", u.getGroupString());
     os << "\n";
     delete ui;
     return os;
