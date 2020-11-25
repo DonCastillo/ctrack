@@ -29,57 +29,94 @@ std::map<int, User*> users;
 std::map<int, Issue*> issues;
 int userIDX, issueIDX;
 
-void parse(const char* data, issue* expr) {
+void parse(const char* data, User*& user) {
     char* data_mutable = const_cast<char*>(data);
-    char* a = strtok_r(nullptr, "\n", &data_mutable);
-    char* b = strtok_r(nullptr, "\n", &data_mutable);
+    char* name          = strtok_r(data_mutable, "\n", &data_mutable);
+    char* group         = strtok_r(nullptr, "\n", &data_mutable);
+    unsigned int id     = users.size();
 
-    expr->name = a;
-    expr->issueMessage = b;
+    user = new User(id, name);
+    user->setGroup( std::stoul(group) );
 }
 
 
 void post_request(const std::shared_ptr<restbed::Session >&
                   session, const restbed::Bytes & body) {
-    issue exp;
+    User* u;
     const char* data = reinterpret_cast<const char*>(body.data());
-    parse(data, &exp);
-    std::string resultStr = exp.name + " " + exp.issueMessage;
+    parse(data, u);
+
     nlohmann::json resultJSON;
-    resultJSON["issues"] = resultStr;
+    resultJSON["id"]    = u->getID();
+    resultJSON["name"]  = u->getName();
+    resultJSON["group"] = u->group;
     std::string response = resultJSON.dump();
+    // @todo store new user to the map or file?
 
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
 
 
 void post_issue_handler(const std::shared_ptr<restbed::Session>& session) {
-    const auto request = session->get_request();
-    size_t content_length = request->get_header("Content-Length", 0);
+    const auto request      = session->get_request();
+    size_t content_length   = request->get_header("Content-Length", 0);
+
     session->fetch(content_length, &post_request);
 }
 
+
+
 void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
     const auto request = session->get_request();
-
-    // if (request->has_query_parameter("name")) {
-    //     exp.name = request->get_query_parameter("name");
-    //     if (request->has_query_parameter("issueMessage")) {
-    //         exp.issueMessage = request->get_query_parameter("issueMessage");
-    //     }
-    // }
-
-    json j;
     std::fstream f("./db.json");
-    j = json::parse(f);
-
+    json j = json::parse(f);
     json resultJSON;
-    resultJSON["issues"] = j["issues"];
 
-    std::string response = resultJSON.dump();
+    /**
+        GET     /users              lists all users
+        POST    /users              creates a new user
+        GET     /users/{id}         views user info based on id
+        PUT     /users/{id}         updates user info based on id
+        DELETE  /users/{id}         deletes user info based on id
+        GET     /users?group=val    lists all users in a particular group
+    */
+
+
+    if ( request->has_path_parameter("id") ) {
+        std::string targetID = request->get_path_parameter("id");
+
+        // search user based on id
+        for (auto &u : j["users"]) {
+            if( u["id"] == std::stoi(targetID) ) {
+                resultJSON = u;
+                break;
+            }
+        }
+
+    } else {
+
+        if ( request->has_query_parameter("group") ) {
+            // search for all users that belong in a specified group
+            std::string targetGroup = request->get_query_parameter("group"); // developer
+            json collection = json::array(); // initialize to empty array
+            for (auto &u : j["users"]) {
+                std::string userGroup = User::getGroup(u["group"]);
+                if( targetGroup == userGroup )
+                    collection.push_back(u);
+            }
+            resultJSON["users"] = collection;
+        } else {
+            // if no id or query is specified, get all users
+            resultJSON["users"] = j["users"];
+        }
+
+    }
+
+    std::string response = resultJSON.dump(4);
 
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
+
 
 void readDB() {
     json j;
@@ -173,51 +210,23 @@ int main(const int, const char**) {
     readDB();
 
     // TESTING READ
-    std::cout << "USERS" << std::endl;
+    // std::cout << "\n";
+    // for (auto i : users) {
+    //     User* u = i.second;
+    //     std::cout << *u;
+    // }
 
-    for (auto i : users) {
-        User* u = i.second;
-        std::cout << u->getID()
-                  << " "
-                  << u->getName()
-                  << ": "
-                  <<u->getGroup()
-                  <<std::endl;
-    }
-
-    std::cout << "ISSUES" << std::endl;
-
-    for (auto i : issues) {
-        Issue* s = i.second;
-        std::cout << s->getID()
-                  << " "
-                  <<s->getIssuer()->getName()
-                  << ": "
-                  << s->getTitle()
-                  << "\n"
-                  << "\n"
-                  <<s->getStatus()
-                  <<std::endl;
-
-        std::cout << "Assignees:" << std::endl;
-        for (auto a : s->getAssignees())
-            std::cout << a->getName() <<std::endl;
-
-        std::cout << "Comments:" << std::endl;
-        for (auto c : s->getComments()) {
-            std::cout << c->getID()
-                      << " "
-                      << c->getComment()
-                      << " "
-                      << std::endl;
-        }
-    }
+    // for (auto i : issues) {
+    //     Issue* s = i.second;
+    //     std::cout << *s;
+    // }
 
     // Setup service and request handlers
     auto resource = std::make_shared<restbed::Resource>();
-    resource->set_path("/issues");
+    resource->set_paths( { "/users", "/users/{id: .*}" } );
     resource->set_method_handler("POST", post_issue_handler);
     resource->set_method_handler("GET", get_issue_handler);
+
 
     auto settings = std::make_shared<restbed::Settings>();
     settings->set_port(1234);

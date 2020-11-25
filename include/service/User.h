@@ -8,6 +8,7 @@ class User {
  public:
      /** group categories */
      enum Group {DEVELOPER, TESTER, MANAGER, USER};
+     static std::string getGroup(unsigned int pInt);
 
      /*!
         \brief  Constructor
@@ -81,6 +82,8 @@ class User {
      */
      friend std::ostream& operator<<(std::ostream& os, const User& u);
 
+     /** user group */
+     Group group;
 
  private:
      /** user name */
@@ -88,9 +91,6 @@ class User {
 
      /** user id */
      unsigned int id;
-
-     /** user group */
-     Group group;
 };
 
 

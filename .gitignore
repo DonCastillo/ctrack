@@ -7,3 +7,4 @@ czar.layout
 *.gch
 Makefile
 db.json
+*.code-workspace
