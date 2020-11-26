@@ -15,10 +15,11 @@ class CTrackUI {
        \brief   Destructor
     */
     virtual ~CTrackUI() {}
+    void welcome();
+    unsigned int menu();
+    bool continueUsing();
 
-   void menu();
-
-   bool choiceValid(std::string choice, unsigned int choicesSize);
+    bool choiceValid(std::string choice, unsigned int choicesSize);
 
 
 

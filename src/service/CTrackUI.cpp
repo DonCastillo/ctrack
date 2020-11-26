@@ -4,29 +4,57 @@
 #include <iomanip>
 #include <sstream>
 #include <cctype>
+#include <vector>
 
-
-void CTrackUI::menu() {  
-  printTitle("MENU");
-  println("Enter the number of the corresponding\naction that you want to do.");
-  printRow("0", "Create an Issue");
-  printRow("1", "View an Issue");
-  printRow("2", "Delete an Issue");
-  printRow("3", "Edit an Issue");
-  printRow("4", "Create a User");
-  printRow("5", "View a User");
-  printRow("6", "Delete a User");
-  
-  bool isValid = false;
-  std::string choice;
-  const unsigned int NUM_OF_CHOICES = 7;
-
-  do {
-    print("Choice: ");
-    std::getline(std::cin, choice);
-    isValid = choiceValid(choice, NUM_OF_CHOICES);
-  } while(isValid == false);
+void CTrackUI::welcome() {
+    printTitle("C-TRACK");
+    println("A text-based issue tracking system");
 }
+
+bool CTrackUI::continueUsing() {
+    println("Do you want to continue using C-Track?");
+    printRow("0", "No");
+    printRow("1", "Yes");
+
+    bool isValid = false;
+    std::string choice;
+    const unsigned int NUM_OF_CHOICES = 2;
+
+
+    do {
+        print("Choice: ");
+        std::getline(std::cin, choice);
+        isValid = choiceValid(choice, NUM_OF_CHOICES);
+    } while (isValid == false);
+
+    return std::stoi(choice, nullptr, 10);
+}
+
+unsigned int CTrackUI::menu() {
+    printTitle("MENU");
+    println("Enter the number of the corresponding\naction that you want to do.");
+    printRow("0", "Create an Issue");
+    printRow("1", "View an Issue");
+    printRow("2", "Delete an Issue");
+    printRow("3", "Edit an Issue");
+    printRow("4", "Create a User");
+    printRow("5", "View a User");
+    printRow("6", "Delete a User");
+
+    bool isValid = false;
+    std::string choice;
+    const unsigned int NUM_OF_CHOICES = 7;
+
+    do {
+        print("Choice: ");
+        std::getline(std::cin, choice);
+        isValid = choiceValid(choice, NUM_OF_CHOICES);
+    } while (isValid == false);
+
+    return std::stoul(choice, nullptr, 10);
+}
+
+
 
 bool CTrackUI::choiceValid(std::string choice, unsigned int choicesSize) {
     if (choice == "")
