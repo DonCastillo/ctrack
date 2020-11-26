@@ -56,7 +56,7 @@ void Issue::setType(unsigned int pInt) {
     }
 }
 
-std::string Issue::getType() const {
+std::string Issue::getTypeString() const {
     std::string typeLabel = "";
     switch (type) {
         case Issue::FEATURE:
@@ -69,6 +69,10 @@ std::string Issue::getType() const {
             typeLabel = "task";
     }
     return typeLabel;
+}
+
+Issue::Type Issue::getType() const {
+    return type;
 }
 
 void Issue::setStatus(unsigned int pInt) {
@@ -92,7 +96,7 @@ void Issue::setStatus(unsigned int pInt) {
 }
 
 
-std::string Issue::getStatus() const {
+std::string Issue::getStatusString() const {
     std::string statusLabel = "";
     switch (status) {
         case Issue::NEW:
@@ -109,6 +113,10 @@ std::string Issue::getStatus() const {
             break;
     }
     return statusLabel;
+}
+
+Issue::Status Issue::getStatus() const {
+    return status;
 }
 
 void Issue::addAssignee(User* pUser) {
@@ -198,8 +206,8 @@ std::ostream& operator<<(std::ostream& os, const Issue& i) {
     right = i.issuer->getName();
     os << ui->formatRow("CREATED BY",       ui->formatIDRow(left, right));
 
-    os << ui->formatRow("TYPE",             i.getType());
-    os << ui->formatRow("STATUS",           i.getStatus());
+    os << ui->formatRow("TYPE",             i.getTypeString());
+    os << ui->formatRow("STATUS",           i.getStatusString());
 
     for (User* x : i.assignees) {
         left  = x->getID();

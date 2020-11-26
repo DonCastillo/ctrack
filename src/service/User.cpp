@@ -61,7 +61,7 @@ std::string User::getGroupString() const {
     return groupLabel;
 }
 
-Group User::getGroup() const {
+User::Group User::getGroup() const {
     return group;
 }
 

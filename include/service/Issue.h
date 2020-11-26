@@ -69,7 +69,9 @@ class Issue {
         \brief  Gets the issue type.
         \return returns the type of the issue (string)
      */
-     std::string getType() const;
+     std::string getTypeString() const;
+
+     Type getType() const;
 
      /*!
         \brief  Sets the issue status.
@@ -87,7 +89,9 @@ class Issue {
         \brief  Gets the status of the issue.
         \return returns the status of the issue (string)
      */
-     std::string getStatus() const;
+     std::string getStatusString() const;
+
+     Status getStatus() const;
 
      /*!
         \brief  Adds a user to the list of users assigned to this issue.
