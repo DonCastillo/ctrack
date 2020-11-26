@@ -82,9 +82,9 @@ std::shared_ptr<restbed::Request> get_request_by_user_query(User* pUser) {
 }
 
 
-std::shared_ptr<restbed::Request> delete_request_by_user_id(unsigned int pID) {
+std::shared_ptr<restbed::Request> delete_request_by_user_id(std::string path) {
     // Create the URI string
-    std::string uri = create_uri("users/" + std::to_string(pID));
+    std::string uri = create_uri(path);
 
     //Configure request headers
     auto request = std::make_shared<restbed::Request>(restbed::Uri(uri));
@@ -172,10 +172,10 @@ int main(const int, const char**) {
             path = ui->viewUser();
             request = get_request_by_path(path);
             }
-
             break;
         case 6:
-            //ui->deleteUser();
+            path = ui->deleteUser();
+            request = delete_request_by_user_id(path);
             break;
         }
 

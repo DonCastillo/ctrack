@@ -28,6 +28,7 @@ class CTrackUI {
 
     User* createUser();
     std::string viewUser();
+    std::string deleteUser();
     std::string generateUrl();
     unsigned int askForID();
     

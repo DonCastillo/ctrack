@@ -137,6 +137,7 @@ unsigned int CTrackUI::askForID() {
     return std::stoul(choice, nullptr, 10);
 }
 
+
 std::string CTrackUI::viewUser() {
     println("Do you want to...");
     std::vector<std::string> choices;
@@ -155,6 +156,12 @@ std::string CTrackUI::viewUser() {
         }   break;
     }
     return url;
+}
+
+std::string CTrackUI::deleteUser() {
+    println("Enter the ID of the user you want to delete.");
+    unsigned int id = askForID();
+    return "/users/" + std::to_string(id);
 }
 
 
