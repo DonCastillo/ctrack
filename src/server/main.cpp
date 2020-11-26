@@ -21,11 +21,11 @@ using json = nlohmann::json;
 #define CLOSE_CONNECTION { "Connection", "close" }
 
 
-/******************************************************/
-/************* Function declaration *******************/
-/******************************************************/
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/*             Function declaration                   */
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 void parse_user(const char* data, User*& user);
-void post_user_request(const std::shared_ptr<restbed::Session >& session, 
+void post_user_request(const std::shared_ptr<restbed::Session >& session,
                        const restbed::Bytes & body);
 void post_user_handler(const std::shared_ptr<restbed::Session>& session);
 void get_user_handler(const std::shared_ptr<restbed::Session>& session);
@@ -33,16 +33,16 @@ void readDB();
 void writeDB();
 
 
-/******************************************************/
-/****************** Variables *************************/
-/******************************************************/
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/*                  Variables                         */
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 std::map<int, User*> users;
 std::map<int, Issue*> issues;
 int userIDX, issueIDX;
 
 
-/*******************************************************/
-/************* Function definitions ********************/
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/*             Function definitions                    */
 /*******************************************************/
 
 
@@ -51,18 +51,30 @@ int userIDX, issueIDX;
     User functions
 +++++++++++++++++++++++++++++++++++++ */
 
+/**
+ * @brief parses the string data and convert it to actual USER object   
+ * @param data  actual data sent from the client
+ * @param user  USER object to be filled with data members
+ */
 void parse_user(const char* data, User*& user) {
     char* data_mutable = const_cast<char*>(data);
     char* name          = strtok_r(data_mutable, "\n", &data_mutable);
     char* group         = strtok_r(nullptr, "\n", &data_mutable);
-    ++userIDX;                      // increment userIDX
-    unsigned int id     = userIDX;  // new user gets an ID based on value of userID 
+    
+    // new user gets an ID based on value of userID
+    unsigned int id     = ++userIDX;  
 
     user = new User(id, name);
     user->setGroup(std::stoul(group));
 }
 
 
+/**
+ * @brief creates a new USER object and inserts it into the users map
+ *        closes the session after      
+ * @param session   current session between server and client
+ * @param body      body of the request
+ */
 void post_user_request(const std::shared_ptr<restbed::Session >&
                        session, const restbed::Bytes & body) {
     User* u;
@@ -80,11 +92,15 @@ void post_user_request(const std::shared_ptr<restbed::Session >&
 
     // update db
     writeDB();
-
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
 
 
+
+/**
+ * @brief handles the POST request for the USER
+ * @param session   current session between server and client 
+ */
 void post_user_handler(const std::shared_ptr<restbed::Session>& session) {
     const auto request      = session->get_request();
     size_t content_length   = request->get_header("Content-Length", 0);
@@ -92,13 +108,18 @@ void post_user_handler(const std::shared_ptr<restbed::Session>& session) {
 }
 
 
+
+/**
+ * @brief handles the DELETE request for the USER
+ * @param session   current session between server and client
+ */
 void delete_user_handler(const std::shared_ptr<restbed::Session>& session) {
     const auto request      = session->get_request();
     std::map<int, User*>::iterator it;
     std::string message;
     json resultJSON;
 
-    if ( request->has_path_parameter("id") ) {
+    if (request->has_path_parameter("id")) {
         std::string paramID = request->get_path_parameter("id");
         int targetID        = std::stoi(paramID);
 
@@ -114,30 +135,24 @@ void delete_user_handler(const std::shared_ptr<restbed::Session>& session) {
     } else {
         message = "User not found";
     }
-    
+
     resultJSON["result"]    = message;
     std::string response    = resultJSON.dump();
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
 
 
-
+/**
+ * @brief handles the GET request for the USER
+ * @param session   current session between server and client
+ */
 void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
     const auto request = session->get_request();
     std::fstream f("./db.json");
     json j = json::parse(f);
     json resultJSON;
 
-    /**
-        GET     /users              lists all users
-        POST    /users              creates a new user
-        GET     /users/{id}         views user info based on id
-        PUT     /users/{id}         updates user info based on id
-        DELETE  /users/{id}         deletes user info based on id
-        GET     /users?group=val    lists all users in a particular group
-    */
-
-    if ( request->has_path_parameter("id") ) {
+    if (request->has_path_parameter("id")) {
         std::string targetID = request->get_path_parameter("id");
 
         // search user based on id
@@ -148,12 +163,13 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
             }
         }
         // if the user based on id is not found
-        resultJSON["result"] = "No user found";
+        if (resultJSON.empty())
+            resultJSON["result"] = "No user found";
 
     } else {
         if (request->has_query_parameter("group")) {
             std::string targetGroup = request->get_query_parameter("group");
-            json collection         = json::array(); 
+            json collection         = json::array();
 
             for (auto &u : j["users"]) {
                 std::string userGroup = User::getGroup(u["group"]);
@@ -172,7 +188,18 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
 
+/* ++++++++++++++++++++++++++++++++++
+    End of User functions
++++++++++++++++++++++++++++++++++++++ */
 
+
+
+
+
+/*!
+   \brief   reads the JSON file
+   \pre     call this function in the main function to load all the objects
+*/
 void readDB() {
     json j;
     std::fstream f("./db.json");
@@ -207,6 +234,14 @@ void readDB() {
     f.close();
 }
 
+
+
+
+/*!
+   \brief   updates the JSON file
+   \pre     call this function every time a user or issue
+            object is added, deleted, or updated
+*/
 void writeDB() {
     json j;
     std::ofstream f("./db.json");
@@ -255,19 +290,27 @@ void writeDB() {
     }
 
     // Write to file
-    std::cout << "SERVER WRITING DATA" << std::endl;
+    std::cout << "SERVER UPDATING DATA" << std::endl;
     f << j;
     f.close();
 }
 
 
-/*******************************************************/
-/******************** Main Function ********************/
-/*******************************************************/
+
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/*                    MAIN FUNCTION                     */
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 int main(const int, const char**) {
-    // parse JSON data to actual objects
     readDB();
+
+    /**
+        GET     /users              lists all users
+        POST    /users              creates a new user
+        GET     /users/{id}         views user info based on id
+        DELETE  /users/{id}         deletes user info based on id
+        GET     /users?group=val    lists all users in a particular group
+    */
 
     // Setup service and request handlers
     auto resource_users = std::make_shared<restbed::Resource>();
