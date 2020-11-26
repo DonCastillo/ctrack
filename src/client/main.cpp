@@ -164,13 +164,15 @@ int main(const int, const char**) {
             //ui->editIssue();
             break;
         case 4: {
-            dummyUser   = ui->createUser();
-            std::cout << *dummyUser;
+            dummyUser = ui->createUser();
             request = create_user_post_request(dummyUser);
             }
             break;
-        case 5:
-            //ui->viewUser();
+        case 5: {
+            path = ui->viewUser();
+            request = get_request_by_path(path);
+            }
+
             break;
         case 6:
             //ui->deleteUser();

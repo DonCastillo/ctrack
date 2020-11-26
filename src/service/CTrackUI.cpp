@@ -8,52 +8,52 @@
 #include <sstream>
 #include <cctype>
 #include <vector>
+#include <list>
 
 void CTrackUI::welcome() {
     printTitle("C-TRACK");
     println("A text-based issue tracking system");
 }
 
-bool CTrackUI::continueUsing() {
-    println("Do you want to continue using C-Track?");
-    printRow("0", "No");
-    printRow("1", "Yes");
 
-    bool isValid = false;
+bool CTrackUI::continueUsing() {
+    println("\nDo you want to continue using C-Track?");
+    std::vector<std::string> choices;
+    choices.push_back("No");
+    choices.push_back("Yes");
+    return choose(choices);
+}
+
+
+unsigned int CTrackUI::choose(std::vector<std::string> choices) {
     std::string choice;
-    const unsigned int NUM_OF_CHOICES = 2;
+
+    // print options
+    for (int i = 0; i < choices.size(); ++i) {
+        std::string index = std::to_string(i);
+        printRow(index, choices.at(i));
+    }
 
     do {
-        print("Choice: ");
+        std::cout << "Select a choice: ";
         std::getline(std::cin, choice);
-        isValid = choiceValid(choice, NUM_OF_CHOICES);
-    } while (isValid == false);
+    }while( !choiceValid(choice, choices.size()) );
 
-    return std::stoi(choice, nullptr, 10);
+    return std::stoul(choice, nullptr, 10);
 }
 
 unsigned int CTrackUI::menu() {
     printTitle("MENU");
     println("Enter the number of the corresponding\naction that you want to do.");
-    printRow("0", "Create an Issue");
-    printRow("1", "View an Issue");
-    printRow("2", "Delete an Issue");
-    printRow("3", "Edit an Issue");
-    printRow("4", "Create a User");
-    printRow("5", "View a User");
-    printRow("6", "Delete a User");
-
-    bool isValid = false;
-    std::string choice;
-    const unsigned int NUM_OF_CHOICES = 7;
-
-    do {
-        print("Choice: ");
-        std::getline(std::cin, choice);
-        isValid = choiceValid(choice, NUM_OF_CHOICES);
-    } while (isValid == false);
-
-    return std::stoul(choice, nullptr, 10);
+    std::vector<std::string> choices;
+    choices.push_back("Create an Issue");
+    choices.push_back("View an Issue");
+    choices.push_back("Delete an Issue");
+    choices.push_back("Edit an Issue");
+    choices.push_back("Create a User");
+    choices.push_back("View a User");
+    choices.push_back("Delete a User");
+    return choose(choices);
 }
 
 
@@ -74,6 +74,7 @@ bool CTrackUI::choiceValid(std::string choice, unsigned int choicesSize) {
 
     return true;
 }
+
 
 void CTrackUI::sanitizeString(std::string &text) {
   std::string newString = "";
@@ -108,6 +109,7 @@ void CTrackUI::sanitizeString(std::string &text) {
   text = newString;
 }
 
+
 bool CTrackUI::stringValid(std::string text) {
     bool validA = !text.empty();
     bool validB = (text != " ") ? true : false;
@@ -123,37 +125,63 @@ bool CTrackUI::stringValid(std::string text) {
     return  validA && validB && validC;
 }
 
+
+unsigned int CTrackUI::askForID() {
+    std::string choice = "";
+    bool isValid = false;
+    do {
+        print("Enter ID: ");
+        std::getline(std::cin, choice);
+        isValid = choiceValid(choice, 9999);
+    } while(isValid == false);
+    return std::stoul(choice, nullptr, 10);
+}
+
+std::string CTrackUI::viewUser() {
+    println("Do you want to...");
+    std::vector<std::string> choices;
+    choices.push_back("View all users");
+    choices.push_back("View user by ID");
+
+    unsigned int targetChoice = choose(choices);
+    std::string url = "";
+    switch(targetChoice) {
+        case 0:
+            url = "/users";
+            break;
+        case 1: {
+            unsigned int id = askForID();
+            url = "/users/" + std::to_string(id); 
+        }   break;
+    }
+    return url;
+}
+
+
 User* CTrackUI::createUser() {
     std::string name;
     unsigned int group;
     bool isValid;
+    // ask name
     do {
-        println("Enter Name (required): ");
+        println("Enter Name: ");
         std::getline(std::cin, name);
         sanitizeString(name);
         isValid = stringValid(name);
     } while(isValid == false);
-    
 
+    // ask which group
+    std::vector<std::string> choices;
     println("Which group?");
-    printRow("0", "Developer");
-    printRow("1", "Tester");
-    printRow("2", "Manager");
-    printRow("3", "User");
+    choices.push_back("Developer");
+    choices.push_back("Tester");
+    choices.push_back("Manager");
+    choices.push_back("User");
 
-    std::string choice = "";
-    const unsigned int NUM_OF_CHOICES = 4;
-    do {
-        print("Enter Group ID: ");
-        std::getline(std::cin, choice);
-        isValid = choiceValid(choice, NUM_OF_CHOICES);
-    } while (isValid == false);
-
-    group = std::stoul(choice, nullptr, 10);
-
+    group = choose(choices);
     User* dummyUser = new User(0, name);
     dummyUser->setGroup(group);
-  return dummyUser;
+    return dummyUser;
 }
 
 

@@ -24,7 +24,12 @@ class CTrackUI {
     bool choiceValid(std::string choice, unsigned int choicesSize);
     bool stringValid(std::string text);
     void sanitizeString(std::string &text);
+    unsigned int choose(std::vector<std::string> choices);
+
     User* createUser();
+    std::string viewUser();
+    std::string generateUrl();
+    unsigned int askForID();
     
 
 
