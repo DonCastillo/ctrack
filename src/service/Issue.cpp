@@ -1,11 +1,12 @@
-#include "../../include/service/Issue.h"
-#include "../../include/service/Comment.h"
-#include "../../include/service/User.h"
-#include "../../include/service/CTrackUI.h"
 #include <string>
 #include <vector>
 #include <iostream>
 #include <iomanip>
+#include "../../include/service/Issue.h"
+#include "../../include/service/Comment.h"
+#include "../../include/service/User.h"
+#include "../../include/service/CTrackUI.h"
+
 
 Issue::Issue(unsigned int pId, std::string pTitle, User* pIssuer) {
     id              = pId;

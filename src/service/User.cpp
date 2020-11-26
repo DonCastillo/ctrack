@@ -1,7 +1,7 @@
-#include "../../include/service/User.h"
-#include "../../include/service/CTrackUI.h"
 #include <string>
 #include <iostream>
+#include "../../include/service/User.h"
+#include "../../include/service/CTrackUI.h"
 
 User::User(unsigned int pId, std::string pName) {
     id = pId;

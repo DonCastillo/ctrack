@@ -1,8 +1,9 @@
+#include <string>
+#include <iostream>
 #include "../../include/service/Comment.h"
 #include "../../include/service/User.h"
 #include "../../include/service/CTrackUI.h"
-#include <string>
-#include <iostream>
+
 
 Comment::Comment(unsigned int pId, User* pCommenter, std::string pComment) {
     id = pId;
