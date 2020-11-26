@@ -45,7 +45,8 @@ void parse_user(const char* data, User*& user) {
     char* data_mutable = const_cast<char*>(data);
     char* name          = strtok_r(data_mutable, "\n", &data_mutable);
     char* group         = strtok_r(nullptr, "\n", &data_mutable);
-    unsigned int id     = users.size();
+    ++userIDX;  // increment userIDX
+    unsigned int id     = userIDX; // new user gets an ID based on value of userID 
 
     user = new User(id, name);
     user->setGroup(std::stoul(group));
@@ -53,22 +54,21 @@ void parse_user(const char* data, User*& user) {
 
 
 void post_user_request(const std::shared_ptr<restbed::Session >&
-                  session, const restbed::Bytes & body) {
+                       session, const restbed::Bytes & body) {
     User* u;
     const char* data = reinterpret_cast<const char*>(body.data());
     parse_user(data, u);
 
     nlohmann::json resultJSON;
-    resultJSON["id"]    = u->getID();
-    resultJSON["name"]  = u->getName();
-    resultJSON["group"] = u->getGroup();
+    resultJSON["result"]    = "New user is added";
 
     // info to be sent back to the client
     std::string response = resultJSON.dump();
 
     // info to be stored in the server
     users.insert(std::make_pair(u->getID(), u));
-    ++userIDX;
+
+    // update db
     writeDB();
 
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });

@@ -114,7 +114,7 @@ int main(const int, const char**) {
     unsigned int id;
 
     // Create new user record
-    User* dummyUser = new User(0, "Billy Hughson");
+    User* dummyUser = new User(0, "Dustin Ward");
     std::shared_ptr<restbed::Request> request = create_user_post_request(dummyUser);
     auto response = restbed::Http::sync(request);
     handle_response(response);
