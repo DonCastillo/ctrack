@@ -52,7 +52,7 @@ int userIDX, issueIDX;
 +++++++++++++++++++++++++++++++++++++ */
 
 /**
- * @brief parses the string data and convert it to actual USER object   
+ * @brief parses the string data and convert it to actual USER object
  * @param data  actual data sent from the client
  * @param user  USER object to be filled with data members
  */
@@ -60,9 +60,9 @@ void parse_user(const char* data, User*& user) {
     char* data_mutable = const_cast<char*>(data);
     char* name          = strtok_r(data_mutable, "\n", &data_mutable);
     char* group         = strtok_r(nullptr, "\n", &data_mutable);
-    
+
     // new user gets an ID based on value of userID
-    unsigned int id     = ++userIDX;  
+    unsigned int id     = userIDX++;
 
     user = new User(id, name);
     user->setGroup(std::stoul(group));
@@ -71,7 +71,7 @@ void parse_user(const char* data, User*& user) {
 
 /**
  * @brief creates a new USER object and inserts it into the users map
- *        closes the session after      
+ *        closes the session after
  * @param session   current session between server and client
  * @param body      body of the request
  */
@@ -99,7 +99,7 @@ void post_user_request(const std::shared_ptr<restbed::Session >&
 
 /**
  * @brief handles the POST request for the USER
- * @param session   current session between server and client 
+ * @param session   current session between server and client
  */
 void post_user_handler(const std::shared_ptr<restbed::Session>& session) {
     const auto request      = session->get_request();
@@ -303,6 +303,9 @@ void writeDB() {
 
 int main(const int, const char**) {
     readDB();
+    std::cout << "users: " << std::to_string(users.size()) << std::endl;
+    std::cout << "issues: " << std::to_string(issues.size()) << std::endl;
+
 
     /**
         GET     /users                      lists all users
