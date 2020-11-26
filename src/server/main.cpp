@@ -24,7 +24,8 @@ using json = nlohmann::json;
 /************* Function declaration *******************/
 /******************************************************/
 void parse_user(const char* data, User*& user);
-void post_user_request(const std::shared_ptr<restbed::Session >& session, const restbed::Bytes & body);
+void post_user_request(const std::shared_ptr<restbed::Session >& session, 
+                       const restbed::Bytes & body);
 void post_user_handler(const std::shared_ptr<restbed::Session>& session);
 void get_user_handler(const std::shared_ptr<restbed::Session>& session);
 void readDB();
@@ -40,7 +41,6 @@ int userIDX, issueIDX;
 /*******************************************************/
 /************* Function definitions ********************/
 /*******************************************************/
-
 void parse_user(const char* data, User*& user) {
     char* data_mutable = const_cast<char*>(data);
     char* name          = strtok_r(data_mutable, "\n", &data_mutable);

@@ -120,7 +120,6 @@ void handle_response(std::shared_ptr<restbed::Response> response) {
 
 
 int main(const int, const char**) {
-
     // @todo create a ui to enable clients to dynamically CRUD records
 
     // Create new user record
