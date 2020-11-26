@@ -9,6 +9,7 @@
 #include "../../include/service/Comment.h"
 #include "../../include/service/Issue.h"
 #include "../../include/service/User.h"
+#include "../../include/service/CTrackUI.h"
 
 /** Service information */
 const char* HOST = "localhost";
@@ -130,42 +131,91 @@ void handle_response(std::shared_ptr<restbed::Response> response) {
 
 
 int main(const int, const char**) {
-    // @todo create a ui to enable clients to dynamically CRUD records
 
-    std::string path;
-    unsigned int id;
+// @todo create a ui to enable clients to dynamically CRUD records
 
-    // Create new user record
-    User* dummyUser = new User(0, "Dustin Ward");
-    std::shared_ptr<restbed::Request> request = create_user_post_request(dummyUser);
-    auto response = restbed::Http::sync(request);
-    handle_response(response);
+   std::string path;
+   unsigned int id;
 
-    // list all users
-    path = "/users";
-    request = get_request_by_path(path);
-    response = restbed::Http::sync(request);
-    handle_response(response);
+    User* dummyUser         = nullptr;
+    Issue* dummyIssue       = nullptr;
+    Comment* dummyComment   = nullptr;
+    CTrackUI* ui = new CTrackUI();
 
-    // look for a specific user
-    id = 0;
-    path = "/users/"+std::to_string(id);
-    request = get_request_by_path(path);
-    response = restbed::Http::sync(request);
-    handle_response(response);
+    unsigned int choice;
+    bool cont = false;
+    std::shared_ptr<restbed::Request> request;
 
-    // list users that match a query
-    request = get_request_by_user_query(dummyUser);
-    response = restbed::Http::sync(request);
-    handle_response(response);
+    do {
+        ui->welcome();
+        choice = ui->menu();
 
-    // delete a user based on specified ID
-    id = 0;
-    request = delete_request_by_user_id(id);
-    response = restbed::Http::sync(request);
-    handle_response(response);
+        switch(choice) {
+        case 0:
+            //ui->createIssue();
+            break;
+        case 1:
+            //ui->viewIssue();
+            break;
+        case 2:
+            //ui->deleteIssue();
+            break;
+        case 3:
+            //ui->editIssue();
+            break;
+        case 4: {
+            dummyUser   = ui->createUser();
+            std::cout << *dummyUser;
+            request = create_user_post_request(dummyUser);
+            }
+            break;
+        case 5:
+            //ui->viewUser();
+            break;
+        case 6:
+            //ui->deleteUser();
+            break;
+        }
+
+        auto response = restbed::Http::sync(request);
+        handle_response(response);
+        cont = ui->continueUsing();
+
+    } while (cont);
 
 
 
-    return EXIT_SUCCESS;
+
+
+   // Create new user record
+//   User* dummyUser = new User(0, "Dustin Ward");
+//   std::shared_ptr<restbed::Request> request = create_user_post_request(dummyUser);
+//   auto response = restbed::Http::sync(request);
+//   handle_response(response);
+
+   // list all users
+   // path = "/users";
+   // request = get_request_by_path(path);
+   // response = restbed::Http::sync(request);
+   // handle_response(response);
+
+   // look for a specific user
+   // id = 0;
+   // path = "/users/"+std::to_string(id);
+   // request = get_request_by_path(path);
+   // response = restbed::Http::sync(request);
+   // handle_response(response);
+
+   // list users that match a query
+   // request = get_request_by_user_query(dummyUser);
+   // response = restbed::Http::sync(request);
+   // handle_response(response);
+
+   // delete a user based on specified ID
+//   id = 7;
+//   std::shared_ptr<restbed::Request> request = delete_request_by_user_id(id);
+//   auto response = restbed::Http::sync(request);
+//   handle_response(response);
+
+   return EXIT_SUCCESS;
 }

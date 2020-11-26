@@ -125,19 +125,35 @@ bool CTrackUI::stringValid(std::string text) {
 
 User* CTrackUI::createUser() {
     std::string name;
-    User::Group group;
+    unsigned int group;
     bool isValid;
     do {
-        println("Name (required): ");
+        println("Enter Name (required): ");
         std::getline(std::cin, name);
         sanitizeString(name);
         isValid = stringValid(name);
     } while(isValid == false);
-    std::cout << name << std::endl;
+    
 
-    // name (required)
-    // group (optional)
-  return nullptr;
+    println("Which group?");
+    printRow("0", "Developer");
+    printRow("1", "Tester");
+    printRow("2", "Manager");
+    printRow("3", "User");
+
+    std::string choice = "";
+    const unsigned int NUM_OF_CHOICES = 4;
+    do {
+        print("Enter Group ID: ");
+        std::getline(std::cin, choice);
+        isValid = choiceValid(choice, NUM_OF_CHOICES);
+    } while (isValid == false);
+
+    group = std::stoul(choice, nullptr, 10);
+
+    User* dummyUser = new User(0, name);
+    dummyUser->setGroup(group);
+  return dummyUser;
 }
 
 
