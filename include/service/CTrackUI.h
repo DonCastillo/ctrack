@@ -1,6 +1,9 @@
 #ifndef CTRACKUI_H_INCLUDED
 #define CTRACKUI_H_INCLUDED
 
+#include "../../include/service/User.h"
+#include "../../include/service/Issue.h"
+#include "../../include/service/Comment.h"
 #include <string>
 
 /** UI class */
@@ -18,8 +21,11 @@ class CTrackUI {
     void welcome();
     unsigned int menu();
     bool continueUsing();
-
     bool choiceValid(std::string choice, unsigned int choicesSize);
+    bool stringValid(std::string text);
+    void sanitizeString(std::string &text);
+    User* createUser();
+    
 
 
 

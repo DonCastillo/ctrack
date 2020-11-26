@@ -1,4 +1,7 @@
 #include "../../include/service/CTrackUI.h"
+#include "../../include/service/User.h"
+#include "../../include/service/Issue.h"
+#include "../../include/service/Comment.h"
 #include <string>
 #include <iostream>
 #include <iomanip>
@@ -19,7 +22,6 @@ bool CTrackUI::continueUsing() {
     bool isValid = false;
     std::string choice;
     const unsigned int NUM_OF_CHOICES = 2;
-
 
     do {
         print("Choice: ");
@@ -55,7 +57,6 @@ unsigned int CTrackUI::menu() {
 }
 
 
-
 bool CTrackUI::choiceValid(std::string choice, unsigned int choicesSize) {
     if (choice == "")
       return false;
@@ -72,6 +73,71 @@ bool CTrackUI::choiceValid(std::string choice, unsigned int choicesSize) {
         return false;
 
     return true;
+}
+
+void CTrackUI::sanitizeString(std::string &text) {
+  std::string newString = "";
+  int startIndex = 0;
+  int endIndex = text.length() - 1;
+
+  // scan from the beginning
+  for (int i = 0; i < text.length(); ++i) {
+    if (text[i] == ' ') {
+        continue;
+    } else {
+        startIndex = i;
+        break;
+    }
+  }
+
+  // scan from the end
+  for (int i = text.length() - 1; i >= 0; --i) {
+      if(text[i] == ' ') {
+          continue;
+      } else {
+          endIndex = i;
+          break;
+      }
+  }
+
+  // only push non space characters
+  for (int i = startIndex; i <= endIndex; ++i) {
+      newString += text[i];
+  }
+
+  text = newString;
+}
+
+bool CTrackUI::stringValid(std::string text) {
+    bool validA = !text.empty();
+    bool validB = (text != " ") ? true : false;
+    bool validC = false;
+    for (int i = 0; i < text.length(); ++i) {
+        if (text[i] == ' ') {
+            validC = false;
+        } else {
+            validC = true;
+            break;
+        }
+    }
+    return  validA && validB && validC;
+}
+
+User* CTrackUI::createUser() {
+    std::string name;
+    User::Group group;
+    bool isValid;
+    do {
+        println("Name (required): ");
+        std::getline(std::cin, name);
+        sanitizeString(name);
+        isValid = stringValid(name);
+    } while(isValid == false);
+    std::cout << name << std::endl;
+
+    // name (required)
+    // group (optional)
+  return nullptr;
 }
 
 
