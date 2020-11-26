@@ -305,11 +305,27 @@ int main(const int, const char**) {
     readDB();
 
     /**
-        GET     /users              lists all users
-        POST    /users              creates a new user
-        GET     /users/{id}         views user info based on id
-        DELETE  /users/{id}         deletes user info based on id
-        GET     /users?group=val    lists all users in a particular group
+        GET     /users                      lists all users
+        POST    /users                      creates a new user
+        GET     /users/{id}                 views user info based on id
+        DELETE  /users/{id}                 deletes user info based on id
+        GET     /users?group=val            lists all users in a particular group
+
+        GET     /issues                     lists all issues
+        POST    /issues                     creates a new issue
+        GET     /issues/{id}                views issue based on id
+        DELETE  /issues/{id}                deletes issue based on id
+        PUT     /issues/{id}                updates issue based on id
+        GET     /issues/{id}/comments       lists all comments of an id-specified issue
+        POST    /issues/{id}/comments       adds a comment for an issue
+        GET     /issues/{id}/comments/{id}  views a specific comment of an issue based on id
+        PUT     /issues/{id}/comments/{id}  updates a comment of an id-specified issue
+        DELETE  /issues/{id}/comments/{id}  deletes a comment of an id-specified issue
+        GET     /issues?type=val
+                /issues?status=val
+                /issues?start=0&end=0       if start == end, then /issues/{id}
+                /issues?start=3&end=0       if start > end, then return result : "No issues found"
+                /issues?start=0&end=2       returns issues with id 0 through 2
     */
 
     // Setup service and request handlers

@@ -8,3 +8,6 @@ czar.layout
 Makefile
 db.json
 *.code-workspace
+*.gcda
+czarClient
+czarServer

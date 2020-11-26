@@ -16,6 +16,14 @@ class CTrackUI {
     */
     virtual ~CTrackUI() {}
 
+   void menu();
+
+   bool choiceValid(std::string choice, unsigned int choicesSize);
+
+
+
+
+
     /*!
        \brief   prints text in a new line
        \param   message       - text to be printed (string)
