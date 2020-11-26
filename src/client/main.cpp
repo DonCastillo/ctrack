@@ -14,8 +14,6 @@
 const char* HOST = "localhost";
 const int PORT = 1234;
 
-/** Server operations */
-
 
 std::string create_uri(std::string endpoint) {
     std::string uri_str;
@@ -27,6 +25,7 @@ std::string create_uri(std::string endpoint) {
     uri_str.append(endpoint);
     return uri_str;
 }
+
 
 
 std::shared_ptr<restbed::Request> create_user_post_request(const User* user) {
@@ -54,9 +53,9 @@ std::shared_ptr<restbed::Request> create_user_post_request(const User* user) {
 
 
 
-std::shared_ptr<restbed::Request> get_request_all() {
+std::shared_ptr<restbed::Request> get_request_by_path(std::string path) {
     // Create the URI string
-    std::string uri = create_uri("users");
+    std::string uri = create_uri(path);
 
     //Configure request headers
     auto request = std::make_shared<restbed::Request>(restbed::Uri(uri));
@@ -66,19 +65,8 @@ std::shared_ptr<restbed::Request> get_request_all() {
 }
 
 
-std::shared_ptr<restbed::Request> get_request_specific(unsigned int pID) {
-    // Create the URI string
-    std::string uri = create_uri("users/" + std::to_string(pID));
 
-    //Configure request headers
-    auto request = std::make_shared<restbed::Request>(restbed::Uri(uri));
-    request->set_method("GET");
-
-    return request;
-}
-
-// vary
-std::shared_ptr<restbed::Request> get_request_param(User* pUser) {
+std::shared_ptr<restbed::Request> get_request_by_user_query(User* pUser) {
     // Create the URI string
     std::string uri = create_uri("users");
 
@@ -122,24 +110,30 @@ void handle_response(std::shared_ptr<restbed::Response> response) {
 int main(const int, const char**) {
     // @todo create a ui to enable clients to dynamically CRUD records
 
+    std::string path;
+    unsigned int id;
+
     // Create new user record
-    User* dummyUser = new User(0, "Don Castillo");
+    User* dummyUser = new User(0, "Billy Hughson");
     std::shared_ptr<restbed::Request> request = create_user_post_request(dummyUser);
     auto response = restbed::Http::sync(request);
     handle_response(response);
 
     // list all users
-    request = get_request_all();
+    path = "/users";
+    request = get_request_by_path(path);
     response = restbed::Http::sync(request);
     handle_response(response);
 
     // look for a specific user
-    request = get_request_specific(0);
+    id = 0;
+    path = "/users/" + std::to_string(id); 
+    request = get_request_by_path(path);
     response = restbed::Http::sync(request);
     handle_response(response);
 
     // list users that match a query
-    request = get_request_param(dummyUser);
+    request = get_request_by_user_query(dummyUser);
     response = restbed::Http::sync(request);
     handle_response(response);
 
