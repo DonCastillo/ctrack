@@ -81,6 +81,18 @@ std::shared_ptr<restbed::Request> get_request_by_user_query(User* pUser) {
 }
 
 
+std::shared_ptr<restbed::Request> delete_request_by_user_id(unsigned int pID) {
+    // Create the URI string
+    std::string uri = create_uri("users/" + std::to_string(pID));
+
+    //Configure request headers
+    auto request = std::make_shared<restbed::Request>(restbed::Uri(uri));
+    request->set_method("DELETE");
+
+    return request;
+}
+
+
 
 
 void handle_response(std::shared_ptr<restbed::Response> response) {
@@ -88,14 +100,24 @@ void handle_response(std::shared_ptr<restbed::Response> response) {
     auto length     = response->get_header("Content-Length", 0);
 
     std::cout << std::to_string(status_code);
-
+    /**
+        200     OK
+        400     BAD REQUEST
+        404     NOT FOUND
+        500     INTERNAL SERVER ERROR
+    */
     switch (status_code) {
     case 200: {
         restbed::Http::fetch(length, response);
         std::string responseStr(reinterpret_cast<char*>(response->get_body().data()), length);
-
         nlohmann::json resultJSON = nlohmann::json::parse(responseStr);
         std::cout << resultJSON;
+        break;
+    }
+    case 400:
+    case 404: {
+        restbed::Http::fetch(length, response);
+        fprintf(stderr, "Error: %.*s\n", length, response->get_body().data());
         break;
     }
     default:
@@ -136,6 +158,13 @@ int main(const int, const char**) {
     request = get_request_by_user_query(dummyUser);
     response = restbed::Http::sync(request);
     handle_response(response);
+
+    // delete a user based on specified ID
+    id = 0;
+    request = delete_request_by_user_id(id);
+    response = restbed::Http::sync(request);
+    handle_response(response);
+
 
 
     return EXIT_SUCCESS;

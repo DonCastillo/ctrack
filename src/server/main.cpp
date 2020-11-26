@@ -20,6 +20,7 @@ using json = nlohmann::json;
 /** Response header to close connection */
 #define CLOSE_CONNECTION { "Connection", "close" }
 
+
 /******************************************************/
 /************* Function declaration *******************/
 /******************************************************/
@@ -31,6 +32,7 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session);
 void readDB();
 void writeDB();
 
+
 /******************************************************/
 /****************** Variables *************************/
 /******************************************************/
@@ -38,15 +40,23 @@ std::map<int, User*> users;
 std::map<int, Issue*> issues;
 int userIDX, issueIDX;
 
+
 /*******************************************************/
 /************* Function definitions ********************/
 /*******************************************************/
+
+
+
+/* ++++++++++++++++++++++++++++++++++
+    User functions
++++++++++++++++++++++++++++++++++++++ */
+
 void parse_user(const char* data, User*& user) {
     char* data_mutable = const_cast<char*>(data);
     char* name          = strtok_r(data_mutable, "\n", &data_mutable);
     char* group         = strtok_r(nullptr, "\n", &data_mutable);
-    ++userIDX;  // increment userIDX
-    unsigned int id     = userIDX; // new user gets an ID based on value of userID 
+    ++userIDX;                      // increment userIDX
+    unsigned int id     = userIDX;  // new user gets an ID based on value of userID 
 
     user = new User(id, name);
     user->setGroup(std::stoul(group));
@@ -82,6 +92,35 @@ void post_user_handler(const std::shared_ptr<restbed::Session>& session) {
 }
 
 
+void delete_user_handler(const std::shared_ptr<restbed::Session>& session) {
+    const auto request      = session->get_request();
+    std::map<int, User*>::iterator it;
+    std::string message;
+    json resultJSON;
+
+    if ( request->has_path_parameter("id") ) {
+        std::string paramID = request->get_path_parameter("id");
+        int targetID        = std::stoi(paramID);
+
+        it = users.find(targetID);
+        if (it != users.end()) {
+            users.erase(it);
+            message = "User successfully delete";
+            writeDB();
+        } else {
+            message = "User not found";
+        }
+
+    } else {
+        message = "User not found";
+    }
+    
+    resultJSON["result"]    = message;
+    std::string response    = resultJSON.dump();
+    session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
+}
+
+
 
 void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
     const auto request = session->get_request();
@@ -98,7 +137,6 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
         GET     /users?group=val    lists all users in a particular group
     */
 
-
     if ( request->has_path_parameter("id") ) {
         std::string targetID = request->get_path_parameter("id");
 
@@ -109,17 +147,20 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
                 break;
             }
         }
+        // if the user based on id is not found
+        resultJSON["result"] = "No user found";
 
     } else {
         if (request->has_query_parameter("group")) {
-            // search for all users that belong in a specified group
-            std::string targetGroup = request->get_query_parameter("group"); // developer
-            json collection = json::array(); // initialize to empty array
+            std::string targetGroup = request->get_query_parameter("group");
+            json collection         = json::array(); 
+
             for (auto &u : j["users"]) {
                 std::string userGroup = User::getGroup(u["group"]);
                 if (targetGroup == userGroup)
                     collection.push_back(u);
             }
+            // get all users in the same group
             resultJSON["users"] = collection;
         } else {
             // if no id or query is specified, get all users
@@ -128,7 +169,6 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
     }
 
     std::string response = resultJSON.dump(4);
-
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
 
@@ -230,17 +270,25 @@ int main(const int, const char**) {
     readDB();
 
     // Setup service and request handlers
-    auto resource = std::make_shared<restbed::Resource>();
-    resource->set_paths({ "/users", "/users/{id: .*}" });
-    resource->set_method_handler("POST", post_user_handler);
-    resource->set_method_handler("GET", get_user_handler);
+    auto resource_users = std::make_shared<restbed::Resource>();
+    resource_users->set_path("/users");
+    resource_users->set_method_handler("POST", post_user_handler);
+    resource_users->set_method_handler("GET", get_user_handler);
+
+    auto resource_user_by_id = std::make_shared<restbed::Resource>();
+    resource_user_by_id->set_path("/users/{id: .*}");
+    resource_user_by_id->set_method_handler("GET", get_user_handler);
+    resource_user_by_id->set_method_handler("DELETE", delete_user_handler);
+
+
 
     auto settings = std::make_shared<restbed::Settings>();
     settings->set_port(1234);
 
     // Publish and start service
     restbed::Service service;
-    service.publish(resource);
+    service.publish(resource_users);
+    service.publish(resource_user_by_id);
 
     service.start(settings);
     return EXIT_SUCCESS;
