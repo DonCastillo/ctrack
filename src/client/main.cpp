@@ -127,7 +127,7 @@ int main(const int, const char**) {
 
     // look for a specific user
     id = 0;
-    path = "/users/" + std::to_string(id); 
+    path = "/users/"+std::to_string(id);
     request = get_request_by_path(path);
     response = restbed::Http::sync(request);
     handle_response(response);
