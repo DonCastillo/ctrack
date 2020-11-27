@@ -267,35 +267,6 @@ unsigned int CTrackUI::askIssueStatus() {
     return choose(choices);
 }
 
-// Issue* CTrackUI::createIssue() {
-//     std::string title = "";
-//     std::string description = "";
-//     User* issuer = nullptr;
-//     unsigned int type = 2;
-//     unsigned int status = 0;
-//     std::vector<std::string> assignees;
-//     std::vector<Comment*> comments;
-
-//     // ask title
-//     title = askIssueTitle();
-
-//     // ask description
-//     description = askIssueDescription();
-
-//     // ask issuer
-//     // issuer = askWhichUser();
-
-//     // ask type
-//     type = askIssueType();
-
-//     // ask status
-//     status = askIssueStatus();
-
-//     // ask assignees (optional)
-    
-//     // ask comments (optional)
-//     return nullptr;
-// }
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /*          USER-RELATED I/O FUNCTIONS                 */
