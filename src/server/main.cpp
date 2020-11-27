@@ -126,7 +126,7 @@ void delete_user_handler(const std::shared_ptr<restbed::Session>& session) {
         it = users.find(targetID);
         if (it != users.end()) {
             users.erase(it);
-            message = "User successfully delete";
+            message = "User successfully deleted";
             writeDB();
         } else {
             message = "User not found";
