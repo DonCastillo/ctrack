@@ -11,10 +11,10 @@ class Issue {
  public:
      /** type categories */
      enum Type {FEATURE, BUG, TASK};
-
+     static std::string getTypeT(unsigned int pInt);
      /** status categories */
      enum Status {NEW, ASSIGNED, FIXED, WONTFIX};
-
+     static std::string getStatusT(unsigned int sInt);
      /*!
         \brief  Constructor
         \brief  Initializes issue id, title, and the issuer

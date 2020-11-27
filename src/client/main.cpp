@@ -146,44 +146,44 @@ int main(const int, const char**) {
     bool cont = false;
     std::shared_ptr<restbed::Request> request;
 
-    do {
-        ui->welcome();
-        choice = ui->menu();
-
-        switch(choice) {
-        case 0:
-            //ui->createIssue();
-            break;
-        case 1:
-            //ui->viewIssue();
-            break;
-        case 2:
-            //ui->deleteIssue();
-            break;
-        case 3:
-            //ui->editIssue();
-            break;
-        case 4: {
-            dummyUser = ui->createUser();
-            request = create_user_post_request(dummyUser);
-            }
-            break;
-        case 5: {
-            path = ui->viewUser();
-            request = get_request_by_path(path);
-            }
-            break;
-        case 6:
-            path = ui->deleteUser();
-            request = delete_request_by_user_id(path);
-            break;
-        }
-
-        auto response = restbed::Http::sync(request);
-        handle_response(response);
-        cont = ui->continueUsing();
-
-    } while (cont);
+    // do {
+    //     ui->welcome();
+    //     choice = ui->menu();
+    //
+    //     switch(choice) {
+    //     case 0:
+    //         //ui->createIssue();
+    //         break;
+    //     case 1:
+    //         //ui->viewIssue();
+    //         break;
+    //     case 2:
+    //         //ui->deleteIssue();
+    //         break;
+    //     case 3:
+    //         //ui->editIssue();
+    //         break;
+    //     case 4: {
+    //         dummyUser = ui->createUser();
+    //         request = create_user_post_request(dummyUser);
+    //         }
+    //         break;
+    //     case 5: {
+    //         path = ui->viewUser();
+    //         request = get_request_by_path(path);
+    //         }
+    //         break;
+    //     case 6:
+    //         path = ui->deleteUser();
+    //         request = delete_request_by_user_id(path);
+    //         break;
+    //     }
+    //
+    //     auto response = restbed::Http::sync(request);
+    //     handle_response(response);
+    //     cont = ui->continueUsing();
+    //
+    // } while (cont);
 
 
 
@@ -195,18 +195,18 @@ int main(const int, const char**) {
 //   auto response = restbed::Http::sync(request);
 //   handle_response(response);
 
-   // list all users
-   // path = "/users";
-   // request = get_request_by_path(path);
-   // response = restbed::Http::sync(request);
-   // handle_response(response);
+   //list all users
+   path = "/issues";
+   request = get_request_by_path(path);
+   auto response = restbed::Http::sync(request);
+   handle_response(response);
 
-   // look for a specific user
-   // id = 0;
-   // path = "/users/"+std::to_string(id);
-   // request = get_request_by_path(path);
-   // response = restbed::Http::sync(request);
-   // handle_response(response);
+   //look for a specific user
+   id = 0;
+   path = "/issues/"+std::to_string(id);
+   request = get_request_by_path(path);
+   response = restbed::Http::sync(request);
+   handle_response(response);
 
    // list users that match a query
    // request = get_request_by_user_query(dummyUser);

@@ -76,6 +76,24 @@ Issue::Type Issue::getType() const {
     return type;
 }
 
+
+std::string Issue::getTypeT(unsigned int pInt) {
+  std::string typeLabel = "";
+  switch (pInt) {
+    case 0:
+      typeLabel = "feature";
+      break;
+    case 1:
+      typeLabel = "bug";
+      break;
+    case 2:
+    default:
+        typeLabel = "task";
+        break;
+  }
+  return typeLabel;
+}
+
 void Issue::setStatus(unsigned int pInt) {
     switch (pInt) {
         case 0:
@@ -120,9 +138,29 @@ Issue::Status Issue::getStatus() const {
     return status;
 }
 
+std::string Issue::getStatusT(unsigned int pInt) {
+  std::string statusLabel = "";
+  switch (pInt) {
+    case 0:
+      statusLabel = "new";
+      break;
+    case 1:
+      statusLabel = "assigned";
+      break;
+    case 2:
+      statusLabel = "fixed";
+      break;
+    case 3:
+    default:
+      statusLabel = "won't fix";
+      break;
+  }
+  return statusLabel;
+}
+
 void Issue::addAssignee(User* pUser) {
     assignees.push_back(pUser);
-    status = Issue::ASSIGNED;
+    //status = Issue::ASSIGNED;
 }
 
 std::vector<User*> Issue::getAssignees() const {
@@ -229,4 +267,3 @@ std::ostream& operator<<(std::ostream& os, const Issue& i) {
     delete ui;
     return os;
 }
-

@@ -151,8 +151,8 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
     std::fstream f("./db.json");
     json j = json::parse(f);
     json resultJSON;
-
-    if (request->has_path_parameter("id")) {
+    if (request->has_query_parameter("users")) {
+      if (request->has_path_parameter("id")) {
         std::string targetID = request->get_path_parameter("id");
 
         // search user based on id
@@ -166,23 +166,60 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
         if (resultJSON.empty())
             resultJSON["result"] = "No user found";
 
-    } else {
-        if (request->has_query_parameter("group")) {
-            std::string targetGroup = request->get_query_parameter("group");
-            json collection         = json::array();
-
-            for (auto &u : j["users"]) {
-                std::string userGroup = User::getGroup(u["group"]);
-                if (targetGroup == userGroup)
-                    collection.push_back(u);
-            }
-            // get all users in the same group
-            resultJSON["users"] = collection;
-        } else {
-            // if no id or query is specified, get all users
-            resultJSON["users"] = j["users"];
         }
+      }
+    if (request->has_query_parameter("group")) {
+      std::string targetGroup = request->get_query_parameter("group");
+      json collection         = json::array();
+
+      for (auto &u : j["users"]) {
+        std::string userGroup = User::getGroup(u["group"]);
+          if (targetGroup == userGroup)
+            collection.push_back(u);
+          }
+      // get all users in the same group
+      resultJSON["users"] = collection;
     }
+    if (!(request->has_query_parameter("users") || request->has_query_parameter("group"))) {
+      // if no id or query is specified, get all users
+      resultJSON["users"] = j["users"];
+    }
+
+    if (request->has_query_parameter("issues")) {
+      json collectionStatus         = json::array();
+      if (request->has_path_parameter("id")) {
+        std::string targetID = request->get_path_parameter("id");
+
+        // search user based on id
+        for (auto &u : j["issues"]) {
+          if (u["id"] == std::stoi(targetID)) {
+            resultJSON = u;
+            break;
+          }
+        }
+      }
+      if (request->has_path_parameter("status")) {
+        std::string targetStatus = request->get_path_parameter("status");
+        for (auto &u : j["issues"]) {
+          std::string issueStatus = Issue::getStatusT(u["status"]);
+          if (issueStatus == targetStatus) {
+            collectionStatus.push_back(u);
+          }
+        }
+      }
+      if (request->has_path_parameter("type")) {
+          std::string targetType = request->get_path_parameter("type");
+          for (auto &u : j["issues"]) {
+            std::string issueType = Issue::getTypeT(u["type"]);
+            if (issueType == targetType) {
+              collectionStatus.push_back(u);
+            }
+          }
+        }
+        resultJSON["issues"] = collectionStatus;
+      } else {
+        resultJSON["issues"] = j["issues"];
+      }
 
     std::string response = resultJSON.dump(4);
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
@@ -342,6 +379,15 @@ int main(const int, const char**) {
     resource_user_by_id->set_method_handler("GET", get_user_handler);
     resource_user_by_id->set_method_handler("DELETE", delete_user_handler);
 
+    auto resource_issue = std::make_shared<restbed::Resource>();
+    resource_issue->set_path("/issues");
+    resource_issue->set_method_handler("POST", post_user_handler);
+    resource_issue->set_method_handler("GET", get_user_handler);
+
+    auto resource_issue_by_id = std::make_shared<restbed::Resource>();
+    resource_issue_by_id->set_path("/issues/{id: .*}");
+    resource_issue_by_id->set_method_handler("GET", get_user_handler);
+    resource_issue_by_id->set_method_handler("DELETE", delete_user_handler);
 
 
     auto settings = std::make_shared<restbed::Settings>();
@@ -351,6 +397,8 @@ int main(const int, const char**) {
     restbed::Service service;
     service.publish(resource_users);
     service.publish(resource_user_by_id);
+    service.publish(resource_issue);
+    service.publish(resource_issue_by_id);
 
     service.start(settings);
     return EXIT_SUCCESS;
