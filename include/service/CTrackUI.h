@@ -5,6 +5,8 @@
 #include "../../include/service/Issue.h"
 #include "../../include/service/Comment.h"
 #include <string>
+#include <vector>
+#include <map>
 
 /** UI class */
 class CTrackUI {
@@ -27,13 +29,21 @@ class CTrackUI {
     unsigned int choose(std::vector<std::string> choices);
 
     User* createUser();
+   //  Issue* createIssue();
     std::string viewUser();
     std::string deleteUser();
     std::string generateUrl();
     unsigned int askForID();
     
 
-
+    std::string askIssueTitle();
+    std::string askIssueDescription();
+    unsigned int askIssueType();
+    unsigned int askIssueStatus();
+    std::vector<User*> askIssueAssignees(std::vector<User*> users);
+    User* askWhichUser(std::vector<User*> usersOptions);
+    bool isAmongChoices(unsigned int choice, std::vector<unsigned int> choices);
+    unsigned int choose(std::map<unsigned int, std::string> mapChoices);
 
 
 
@@ -99,7 +109,7 @@ class CTrackUI {
 
  protected:
     /** line width */
-    const unsigned int LINE_WIDTH = 35;
+    const unsigned int LINE_WIDTH = 40;
 
     /** character fillers in the title */
     const char TITLE_FILL = '=';

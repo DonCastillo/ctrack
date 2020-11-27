@@ -122,7 +122,7 @@ Issue::Status Issue::getStatus() const {
 
 void Issue::addAssignee(User* pUser) {
     assignees.push_back(pUser);
-    status = Issue::ASSIGNED;
+    //status = Issue::ASSIGNED;
 }
 
 std::vector<User*> Issue::getAssignees() const {
