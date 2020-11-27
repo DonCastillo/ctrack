@@ -11,3 +11,5 @@ db.json
 *.gcda
 czarClient
 czarServer
+*.exe
+libs/
