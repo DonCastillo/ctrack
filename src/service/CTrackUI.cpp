@@ -129,7 +129,7 @@ unsigned int CTrackUI::menu() {
 
 
 bool CTrackUI::continueUsing() {
-    println("\nDo you want to continue using C-Track?");
+    println("Do you want to continue using C-Track?");
     std::vector<std::string> choices;
     choices.push_back("No");
     choices.push_back("Yes");
@@ -191,7 +191,7 @@ std::string CTrackUI::askIssueTitle() {
     std::string title = "";
     bool isValid = false;
     do {
-        println("\nEnter title of the issue: ");
+        println("Enter title of the issue: ");
         std::getline(std::cin, title);
         sanitizeString(title);
         isValid = stringValid(title);
@@ -203,7 +203,7 @@ std::string CTrackUI::askIssueDescription() {
     std::string description = "";
     bool isValid = false;
     do {
-        println("\nEnter a short description of the issue: ");
+        println("Enter a short description of the issue: ");
         std::getline(std::cin, description);
         sanitizeString(description);
         isValid = stringValid(description);
@@ -215,7 +215,7 @@ User* CTrackUI::askWhichUser(std::vector<User*> usersOptions) {
     std::vector<unsigned int> indexes;
     std::map<unsigned int, std::string> mapUsers;
     
-    println("\nEnter the ID of the user you want to add: ");
+    println("Enter the ID of the user you want to add: ");
     for (User* u : usersOptions) {
         unsigned int index = u->getID();
         std::string name   = u->getName();
@@ -225,7 +225,7 @@ User* CTrackUI::askWhichUser(std::vector<User*> usersOptions) {
     unsigned int choice = choose(mapUsers);
     
     // create dummy user
-    User* dummyUser = new User(choice, "dummy user");
+    User* dummyUser = new User(choice, mapUsers.find(choice)->second);
     return dummyUser;
 }
 
@@ -249,7 +249,7 @@ std::vector<User*> CTrackUI::askIssueAssignees(std::vector<User*> users) {
 }
 
 unsigned int CTrackUI::askIssueType() {
-    println("\nEnter the type of this issue.");
+    println("Enter the type of this issue.");
     std::vector<std::string> choices;
     choices.push_back("Feature");
     choices.push_back("Bug");
@@ -258,13 +258,43 @@ unsigned int CTrackUI::askIssueType() {
 }
 
 unsigned int CTrackUI::askIssueStatus() {
-    println("\nEnter the status of this issue.");
+    println("Enter the status of this issue.");
     std::vector<std::string> choices;
     choices.push_back("New");
     choices.push_back("Assigned");
     choices.push_back("Fixed");
     choices.push_back("Wont't Fixed");
     return choose(choices);
+}
+
+std::string CTrackUI::askComment() {
+    std::string comment = "";
+    bool isValid = false;
+    do {
+        println("Write a comment: ");
+        std::getline(std::cin, comment);
+        sanitizeString(comment);
+        isValid = stringValid(comment);
+    } while(isValid == false);
+    return comment;
+}
+
+std::vector<Comment*> CTrackUI::askIssueComments(std::vector<User*> users) {
+    std::vector<Comment*> comments;
+    std::vector<std::string> choices;
+    choices.push_back("No");
+    choices.push_back("Yes");
+    unsigned int choice;
+    do {
+        // ask the commenter
+        User* dummyUser = askWhichUser(users);
+        std::string comment = askComment();
+        Comment* dummyComment = new Comment(0, dummyUser, comment);
+        comments.push_back(dummyComment);
+        println("Add more comment?");
+        choice = choose(choices); 
+    } while (choice == 1);
+    return comments;
 }
 
 
@@ -330,7 +360,8 @@ std::string CTrackUI::viewUser() {
 /*                   UI FORMATS                        */
 /*******************************************************/
 void CTrackUI::println(std::string message) {
-  std::cout << message
+  std::cout << std::endl
+            << message
             << std::endl;
 }
 

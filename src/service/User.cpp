@@ -97,7 +97,7 @@ bool operator!= (const User& a, const User& b) {
 
 std::ostream& operator<<(std::ostream& os, const User& u) {
     CTrackUI* ui = new CTrackUI();
-    os << ui->formatRow("USER ID",    std::to_string(u.id));
+    //os << ui->formatRow("USER ID",    std::to_string(u.id));
     os << ui->formatRow("USER NAME",  u.name);
     os << ui->formatRow("USER GROUP", u.getGroupString());
     os << "\n";

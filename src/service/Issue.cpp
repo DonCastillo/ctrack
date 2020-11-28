@@ -15,6 +15,7 @@ Issue::Issue(unsigned int pId, std::string pTitle, User* pIssuer) {
     type            = Issue::TASK;
     status          = Issue::NEW;
     description     = "";
+    numOfComments   = 0;
 }
 
 Issue::~Issue() {
@@ -70,6 +71,22 @@ std::string Issue::getTypeString() const {
             typeLabel = "task";
     }
     return typeLabel;
+}
+
+
+unsigned int Issue::getTypeInt() const {
+    unsigned int typeInt;
+    switch (type) {
+        case Issue::FEATURE:
+            typeInt = 0;
+            break;
+        case Issue::BUG:
+            typeInt = 1;
+            break;
+        case Issue::TASK:
+            typeInt = 2;
+    }
+    return typeInt;
 }
 
 Issue::Type Issue::getType() const {
@@ -132,6 +149,25 @@ std::string Issue::getStatusString() const {
             break;
     }
     return statusLabel;
+}
+
+unsigned int Issue::getStatusInt() const {
+    unsigned int statusInt;
+    switch (status) {
+        case Issue::NEW:
+            statusInt = 0;
+            break;
+        case Issue::ASSIGNED:
+            statusInt = 1;
+            break;
+        case Issue::FIXED:
+            statusInt = 2;
+            break;
+        case Issue::WONTFIX:
+            statusInt = 3;
+            break;
+    }
+    return statusInt;
 }
 
 Issue::Status Issue::getStatus() const {
@@ -200,6 +236,7 @@ void Issue::setDescription(std::string pDesc) {
 
 void Issue::addComment(Comment* pComment) {
     comments.push_back(pComment);
+    numOfComments++;
 }
 
 std::vector<Comment*> Issue::getComments() const {
@@ -224,6 +261,14 @@ bool Issue::deleteComment(unsigned int pId) {
     return false;
 }
 
+void Issue::setNumOfComments(unsigned int pInt) {
+    numOfComments = pInt;
+}
+
+unsigned int Issue::getNumOfComments() const {
+    return numOfComments;
+}
+
 bool operator== (const Issue& a, const Issue& b) {
     return (a.id == b.id);
 }
@@ -237,7 +282,7 @@ std::ostream& operator<<(std::ostream& os, const Issue& i) {
     unsigned int left;
     std::string right = "";
 
-    os << ui->formatRow("ISSUE ID",         std::to_string(i.id));
+    //os << ui->formatRow("ISSUE ID",         std::to_string(i.id));
     os << ui->formatRow("TITLE",            i.title);
     os << ui->formatRow("DESCRIPTION",      i.description);
 

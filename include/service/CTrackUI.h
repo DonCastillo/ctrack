@@ -104,6 +104,8 @@ class CTrackUI {
     User* askWhichUser(std::vector<User*> usersOptions);
     bool isAmongChoices(unsigned int choice, std::vector<unsigned int> choices);
     unsigned int choose(std::map<unsigned int, std::string> mapChoices);
+    std::string askComment();
+    std::vector<Comment*> askIssueComments(std::vector<User*> users);
 
 
 

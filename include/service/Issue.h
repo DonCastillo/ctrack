@@ -71,6 +71,8 @@ class Issue {
      */
      std::string getTypeString() const;
 
+     unsigned int getTypeInt() const;
+
      Type getType() const;
 
      /*!
@@ -90,6 +92,8 @@ class Issue {
         \return returns the status of the issue (string)
      */
      std::string getStatusString() const;
+
+     unsigned int getStatusInt() const;
 
      Status getStatus() const;
 
@@ -172,6 +176,10 @@ class Issue {
      */
      unsigned int getID() const;
 
+     unsigned int getNumOfComments() const;
+
+     void setNumOfComments(unsigned int pInt);
+
     /*!
         \brief  Compares two issues if they have equal id
         \param  a         - first issue (Issue)
@@ -216,6 +224,8 @@ class Issue {
 
      /** comments added to this issue*/
      std::vector<Comment*> comments;
+
+     unsigned int numOfComments;
 
      /** issue description */
      std::string description;
