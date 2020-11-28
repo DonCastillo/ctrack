@@ -11,3 +11,6 @@ db.json
 *.gcda
 czarClient
 czarServer
+/lib/*
+/json/*
+/restbed/*

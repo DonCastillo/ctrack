@@ -189,13 +189,24 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
       json collectionStatus         = json::array();
       if (request->has_path_parameter("id")) {
         std::string targetID = request->get_path_parameter("id");
-
+        std::string commentId = request->get_path_parameter("comments_id");
         // search user based on id
         for (auto &u : j["issues"]) {
           if (u["id"] == std::stoi(targetID)) {
             resultJSON = u;
+            if (request->has_query_parameter("comments")) {
+              for (auto &h : j["comments"]) {
+                if (h["comments_id"] == commentId) {
+                  resultJSON = h;
+                  break;
+                }
+              }
+            }
             break;
           }
+        }
+        if (request->has_path_parameter("comments") && resultJSON != j["comments_id"]) {
+          resultJSON["comments"] = j["comments"];
         }
       }
       if (request->has_path_parameter("status")) {
@@ -389,6 +400,14 @@ int main(const int, const char**) {
     resource_issue_by_id->set_method_handler("GET", get_user_handler);
     resource_issue_by_id->set_method_handler("DELETE", delete_user_handler);
 
+    auto resource_comments_by_id = std::make_shared<restbed::Resource>();
+    resource_comments_by_id->set_path("/issues/{id: .*}/comments/{comments_id: .*}");
+    resource_comments_by_id->set_method_handler("GET", get_user_handler);
+
+    auto resource_comments = std::make_shared<restbed::Resource>();
+    resource_comments->set_path("/issues/{id: .*}/comments");
+    resource_comments->set_method_handler("GET", get_user_handler);
+
 
     auto settings = std::make_shared<restbed::Settings>();
     settings->set_port(1234);
@@ -399,6 +418,8 @@ int main(const int, const char**) {
     service.publish(resource_user_by_id);
     service.publish(resource_issue);
     service.publish(resource_issue_by_id);
+    service.publish(resource_comments_by_id);
+    service.publish(resource_comments);
 
     service.start(settings);
     return EXIT_SUCCESS;
