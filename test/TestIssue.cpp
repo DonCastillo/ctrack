@@ -44,6 +44,21 @@ TEST(TestIssue, getTitle) {
     delete issue1;
 }
 
+TEST(TestIssue, setIssuer) {
+    User* InitialIssuer = new User(4, "Micheal");
+    User* UpdatedIssuer = new User(5, "Harold");
+    Issue* issue1 = new Issue(1, "Title of Issue", InitialIssuer);
+
+    EXPECT_EQ(InitialIssuer, issue1->getIssuer());
+
+    issue1->setIssuer(UpdatedIssuer);
+    EXPECT_EQ(UpdatedIssuer, issue1->getIssuer());
+
+    delete InitialIssuer;
+    delete UpdatedIssuer;
+    delete issue1;
+}
+
 //TEST(TestIssue, issue_id) {
 //    User* jane = new User(0, "Jane");
 //    Issue* issue1 = new Issue(0, "Not working properly", jane);
