@@ -389,11 +389,37 @@ int main(const int, const char**) {
 
                     switch (propertyID) {
                         case 0: {
-                                ui->println("Update Title");
-                                std::string title = dummyIssue->getTitle();
-                                ui->println("Current title :" + title);
-                                break;
+                                ui->print("UPDATING TITLE\n");
+                                ui->printRow("Current title", dummyIssue->getTitle());
+                                std::string newTitle = ui->askIssueTitle();
+                                dummyIssue->setTitle(newTitle);
+                                ui->printRow("New title", dummyIssue->getTitle());
                                 }
+                            break;
+                        case 1: {
+                                ui->print("UPDATING DESCRIPTION\n");
+                                ui->println("Current description: " + dummyIssue->getDescription());
+                                std::string newDesc = ui->askIssueDescription();
+                                dummyIssue->setDescription(newDesc);
+                                ui->println("New description: " + dummyIssue->getDescription());
+                                }
+                            break;
+                        case 2: {
+                                ui->print("UPDATING STATUS\n");
+                                ui->println("Current status: " + dummyIssue->getStatusString());
+                                unsigned int newStatus = ui->askIssueStatus();
+                                dummyIssue->setStatus(newStatus);
+                                ui->println("New status: " + dummyIssue->getStatusString());
+                                }
+                            break;
+                        case 3: {
+                                ui->print("UPDATING TYPE\n");
+                                ui->println("Current type: " + dummyIssue->getTypeString());
+                                unsigned int newType = ui->askIssueType();
+                                dummyIssue->setType(newType);
+                                ui->println("New type: " + dummyIssue->getTypeString());
+                                }
+                            break;
 
 
 
