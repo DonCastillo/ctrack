@@ -234,9 +234,14 @@ void Issue::setDescription(std::string pDesc) {
     description = pDesc;
 }
 
+void Issue::clearComments() {
+    comments.clear();
+    numOfComments = 0;
+}
+
 void Issue::addComment(Comment* pComment) {
+    pComment->setID(numOfComments++);
     comments.push_back(pComment);
-    numOfComments++;
 }
 
 std::vector<Comment*> Issue::getComments() const {

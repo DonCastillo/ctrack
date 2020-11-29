@@ -106,6 +106,12 @@ class CTrackUI {
     unsigned int choose(std::map<unsigned int, std::string> mapChoices);
     std::string askComment();
     std::vector<Comment*> askIssueComments(std::vector<User*> users);
+    Issue* askWhichIssue(std::vector<Issue*> issueOptions);
+    unsigned int askWhichIssueProperty();
+    unsigned int updateCommentAction();
+    bool continueAddingComment();
+    Comment* askWhichComment(std::vector<Comment*> commentOptions);
+    std::vector<Comment*> askIssueCommentsWithID(unsigned int numOfComments, std::vector<User*> users);
 
 
 

@@ -180,6 +180,8 @@ class Issue {
 
      void setNumOfComments(unsigned int pInt);
 
+     void clearComments();
+
     /*!
         \brief  Compares two issues if they have equal id
         \param  a         - first issue (Issue)

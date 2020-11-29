@@ -6,7 +6,6 @@ czar.cbp
 czar.layout
 *.gch
 Makefile
-db.json
 *.code-workspace
 *.gcda
 czarClient
