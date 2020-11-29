@@ -1,10 +1,21 @@
+#include <string>
+#include <vector>
 #include "Issue.h"
 #include "Comment.h"
 #include "User.h"
 #include "gtest/gtest.h"
-#include <string>
-#include <vector>
 
+TEST(TestIssue, setTitle) {
+    User* Alex = new User(0, "Alex");
+    Issue* issue1 = new Issue(1, "Cat on roof", Alex);
+
+    std::string newTitle1 = "Cat on ground";
+    issue1->setTitle(newTitle1);
+    EXPECT_EQ(issue1->getTitle(), newTitle1);
+
+    delete Alex;
+    delete issue1;
+}
 
 //TEST(TestIssue, issue_id) {
 //    User* jane = new User(0, "Jane");

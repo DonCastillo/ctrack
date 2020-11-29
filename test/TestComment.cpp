@@ -1,9 +1,8 @@
+#include <string>
+#include <iostream>
 #include "Comment.h"
 #include "User.h"
 #include "gtest/gtest.h"
-#include <string>
-#include <iostream>
-
 
 TEST(TestComment, getID) {
     User* Bob = new User(0, "Bob");
@@ -18,6 +17,13 @@ TEST(TestComment, getID) {
     EXPECT_EQ(comment3->getID(), 4000);
     EXPECT_EQ(comment4->getID(), 12);
     EXPECT_EQ(comment5->getID(), 100);
+
+    delete Bob;
+    delete comment1;
+    delete comment2;
+    delete comment3;
+    delete comment4;
+    delete comment5;
 }
 
 TEST(TestComment, setComment) {
@@ -39,6 +45,9 @@ TEST(TestComment, setComment) {
     std::string newComment4 = "I'm a new comment";
     comment1->setComment(newComment4);
     EXPECT_EQ(comment1->getComment(), newComment4);
+
+    delete John;
+    delete comment1;
 }
 
 //Need to redo this test.
@@ -46,4 +55,7 @@ TEST(TestComment, setCommenter) {
     User* Fred = new User(15, "Fred");
     Comment* comment1 = new Comment(10, Fred, "Testing setCommenter");
     EXPECT_EQ(comment1->getCommenter(), Fred);
+
+    delete Fred;
+    delete comment1;
 }
