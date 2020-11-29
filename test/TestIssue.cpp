@@ -13,7 +13,34 @@ TEST(TestIssue, setTitle) {
     issue1->setTitle(newTitle1);
     EXPECT_EQ(issue1->getTitle(), newTitle1);
 
+    std::string newTitle2 = "Cat in box";
+    issue1->setTitle(newTitle2);
+    EXPECT_EQ(issue1->getTitle(), newTitle2);
+
+    std::string newTitle3 = "asdfgjlkfdslf";
+    issue1->setTitle(newTitle3);
+    EXPECT_EQ(issue1->getTitle(), newTitle3);
+
+    std::string newTitle4 = "-----123131231";
+    issue1->setTitle(newTitle4);
+    EXPECT_EQ(issue1->getTitle(), newTitle4);
+
+    std::string newTitle5 = "";
+    issue1->setTitle(newTitle5);
+    EXPECT_EQ(issue1->getTitle(), newTitle5);
+
     delete Alex;
+    delete issue1;
+}
+
+TEST(TestIssue, getTitle) {
+    User* George = new User(0, "George");
+    Issue* issue1 = new Issue(1, "On button turns things off", George);
+
+    std::string value = issue1->getTitle();
+    EXPECT_EQ(value, "On button turns things off");
+
+    delete George;
     delete issue1;
 }
 
