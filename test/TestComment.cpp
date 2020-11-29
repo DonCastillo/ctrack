@@ -59,3 +59,32 @@ TEST(TestComment, setCommenter) {
     delete Fred;
     delete comment1;
 }
+
+TEST(TestComment, setID) {
+    User* nUser = new User(1, "user1");
+    Comment* comment1 = new Comment(10, nUser, "This comment");
+
+    EXPECT_EQ(comment1->getID(), 10);
+    comment1->setID(5);
+    EXPECT_EQ(comment1->getID(), 5);
+
+    delete nUser;
+    delete comment1;
+}
+
+TEST(TestComment, setCommentator) {
+    User* user1 = new User(16, "user");
+    User* user2 = new User(1, "user2");
+    Comment* comment1 = new Comment(5, user1, "Hello World!");
+
+    EXPECT_EQ(user1, comment1->getCommenter());
+
+    comment1->setCommenter(user2);
+
+    EXPECT_EQ(user2, comment1->getCommenter());
+
+    delete user1;
+    delete user2;
+    delete comment1;
+
+}
