@@ -41,3 +41,9 @@ TEST(TestComment, setComment) {
     EXPECT_EQ(comment1->getComment(), newComment4);
 }
 
+//Need to redo this test.
+TEST(TestComment, setCommenter) {
+    User* Fred = new User(15, "Fred");
+    Comment* comment1 = new Comment(10, Fred, "Testing setCommenter");
+    EXPECT_EQ(comment1->getCommenter(), Fred);
+}
