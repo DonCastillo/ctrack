@@ -229,6 +229,34 @@ User* CTrackUI::askWhichUser(std::vector<User*> usersOptions) {
     return dummyUser;
 }
 
+Issue* CTrackUI::askWhichIssue(std::vector<Issue*> issueOptions) {
+    std::map<unsigned int, std::string> mapIssues;
+
+    println("Enter the ID of the issue you want to edit");
+    for (Issue* i : issueOptions) {
+        unsigned int index = i->getID();
+        std::string title = i->getTitle();
+        mapIssues.insert( std::pair<unsigned int, std::string>(index, title) );
+    }
+    unsigned int choice = choose(mapIssues);
+    
+    // create dummy issue
+    Issue* dummyIssue = new Issue(choice, "", nullptr);
+    return dummyIssue;
+}
+
+unsigned int CTrackUI::askWhichIssueProperty() {
+    println("Which issue property to edit?");
+    std::vector<std::string> choices;
+    choices.push_back("Title");
+    choices.push_back("Description");
+    choices.push_back("Status");
+    choices.push_back("Type");
+    choices.push_back("Assignees");
+    choices.push_back("Comments");
+    return choose(choices);
+}
+
 std::vector<User*> CTrackUI::askIssueAssignees(std::vector<User*> users) {
     std::vector<User*> selectedUsers;
     std::vector<std::string> choices;

@@ -151,8 +151,14 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
     std::fstream f("./db.json");
     json j = json::parse(f);
     json resultJSON;
-    if (request->has_query_parameter("users")) {
-      if (request->has_path_parameter("id")) {
+
+    /**
+     *    /users
+     *    /users/{id}
+     *    /users?group={val}
+     */
+
+    if ( request->has_path_parameter("id") ) {
         std::string targetID = request->get_path_parameter("id");
 
         // search user based on id
@@ -166,71 +172,26 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
         if (resultJSON.empty())
             resultJSON["result"] = "No user found";
 
-        }
-      }
-    if (request->has_query_parameter("group")) {
-      std::string targetGroup = request->get_query_parameter("group");
-      json collection         = json::array();
+    } else {
 
-      for (auto &u : j["users"]) {
-        std::string userGroup = User::getGroup(u["group"]);
-          if (targetGroup == userGroup)
-            collection.push_back(u);
-          }
-      // get all users in the same group
-      resultJSON["users"] = collection;
-    }
-    if (!(request->has_query_parameter("users") || request->has_query_parameter("group"))) {
-      // if no id or query is specified, get all users
-      resultJSON["users"] = j["users"];
-    }
+        if ( request->has_query_parameter("group") ) {
 
-    if (request->has_query_parameter("issues")) {
-      json collectionStatus         = json::array();
-      if (request->has_path_parameter("id")) {
-        std::string targetID = request->get_path_parameter("id");
-        std::string commentId = request->get_path_parameter("comments_id");
-        // search user based on id
-        for (auto &u : j["issues"]) {
-          if (u["id"] == std::stoi(targetID)) {
-            resultJSON = u;
-            if (request->has_query_parameter("comments")) {
-              for (auto &h : j["comments"]) {
-                if (h["comments_id"] == commentId) {
-                  resultJSON = h;
-                  break;
-                }
-              }
+            // search for all users that belong in a specified group
+            std::string targetGroup = request->get_query_parameter("group"); 
+            json collection = json::array(); // initialize to empty array
+            for (auto &u : j["users"]) {
+                std::string userGroup = User::getGroup(u["group"]);
+                if( targetGroup == userGroup )
+                    collection.push_back(u);
             }
-            break;
-          }
+            resultJSON["users"] = collection;
+
+        } else { 
+
+            // if no id or query is specified, get all users
+            resultJSON["users"] = j["users"];
         }
-        if (request->has_path_parameter("comments") && resultJSON != j["comments_id"]) {
-          resultJSON["comments"] = j["comments"];
-        }
-      }
-      if (request->has_path_parameter("status")) {
-        std::string targetStatus = request->get_path_parameter("status");
-        for (auto &u : j["issues"]) {
-          std::string issueStatus = Issue::getStatusT(u["status"]);
-          if (issueStatus == targetStatus) {
-            collectionStatus.push_back(u);
-          }
-        }
-      }
-      if (request->has_path_parameter("type")) {
-          std::string targetType = request->get_path_parameter("type");
-          for (auto &u : j["issues"]) {
-            std::string issueType = Issue::getTypeT(u["type"]);
-            if (issueType == targetType) {
-              collectionStatus.push_back(u);
-            }
-          }
-        }
-        resultJSON["issues"] = collectionStatus;
-      } else {
-        resultJSON["issues"] = j["issues"];
-      }
+    }
 
     std::string response = resultJSON.dump(4);
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
@@ -309,6 +270,109 @@ void post_issue_handler(const std::shared_ptr<restbed::Session>& session) {
     size_t content_length   = request->get_header("Content-Length", 0);
     session->fetch(content_length, &post_issue_request);
 }
+
+
+
+/**
+ * @brief handles the GET request for the USER
+ * @param session   current session between server and client
+ */
+void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
+    const auto request = session->get_request();
+    std::fstream f("./db.json");
+    json j = json::parse(f);
+    json resultJSON;
+    bool withQuery = false;
+
+    /**
+     *    /issues
+     *    /issues?type=val
+     *    /issues?status=val
+     *    /issues?start=0&end=0       if start == end, then /issues/{id}
+     *    /issues?start=3&end=0       if start > end, then return result : "No issues found"
+     *    /issues?start=0&end=2       returns issues with id 0 through 2
+     */
+
+    // BY TYPE
+    if ( request->has_query_parameter("type") ) {
+        std::string targetType = request->get_query_parameter("type");
+        json collection = json::array();
+
+        // search user based on type
+        for (auto &i : j["issues"]) {
+            std::string issueType = Issue::getTypeT( i["type"] );
+            if ( issueType == targetType )
+                collection.push_back(i);
+        }
+        resultJSON["issues"] = collection;
+        withQuery = true;
+    } 
+
+
+
+    // BY STATUS
+    if ( request->has_query_parameter("status") ) {
+        std::string targetStatus = request->get_query_parameter("status");
+        json collection = json::array();
+
+        // search user based on status
+        for (auto &i : j["issues"]) {
+            std::string issueStatus = Issue::getStatusT( i["status"] );
+            if ( issueStatus == targetStatus )
+                collection.push_back(i);
+        }
+        resultJSON["issues"] = collection;
+        withQuery = true;
+    } 
+
+
+
+    // BY RANGE
+    if ( request->has_query_parameter("start") && request->has_query_parameter("end") ) {
+        std::string start     = request->get_query_parameter("start");
+        std::string end       = request->get_query_parameter("end");
+        unsigned int startID  = std::stoul(start, nullptr, 10);
+        unsigned int endID    = std::stoul(end, nullptr, 10);
+        json collection = json::array();
+        
+        
+        if ( startID > endID ) {
+            // startID > endID
+            resultJSON["issues"] = "Invalid parameters";
+        } else if ( startID == endID ) {
+            // return a single value
+            for (auto &i : j["issues"]) {
+                unsigned int issueID = i["id"];
+                if ( issueID == startID )
+                    collection.push_back(i);
+            }
+            resultJSON["issues"] = collection;
+        } else {
+            // search issues that is within the range
+            for (auto &i : j["issues"]) {
+                unsigned int issueID = i["id"];
+                if ( issueID >= startID && issueID <= endID )
+                    collection.push_back(i);
+            }
+            resultJSON["issues"] = collection;
+        } 
+        
+        withQuery = true;
+    }
+
+
+    // NO QUERY PARAM
+    if ( withQuery == false ) {
+        resultJSON["issues"] = j["issues"];
+    }
+    
+    std::string response = resultJSON.dump(4);
+    session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
+}
+
+
+
+
 /* ++++++++++++++++++++++++++++++++++
     Issue functions
 +++++++++++++++++++++++++++++++++++++ */
@@ -468,20 +532,20 @@ int main(const int, const char**) {
     auto resource_issue = std::make_shared<restbed::Resource>();
     resource_issue->set_path("/issues");
     resource_issue->set_method_handler("POST", post_issue_handler);
-    resource_issue->set_method_handler("GET", get_user_handler);
+    resource_issue->set_method_handler("GET", get_issue_handler);
 
-    auto resource_issue_by_id = std::make_shared<restbed::Resource>();
-    resource_issue_by_id->set_path("/issues/{id: .*}");
-    resource_issue_by_id->set_method_handler("GET", get_user_handler);
-    resource_issue_by_id->set_method_handler("DELETE", delete_user_handler);
+    // auto resource_issue_by_id = std::make_shared<restbed::Resource>();
+    // resource_issue_by_id->set_path("/issues/{id: .*}");
+    // resource_issue_by_id->set_method_handler("GET", get_user_handler);
+    // resource_issue_by_id->set_method_handler("DELETE", delete_user_handler);
 
-    auto resource_comments_by_id = std::make_shared<restbed::Resource>();
-    resource_comments_by_id->set_path("/issues/{id: .*}/comments/{comments_id: .*}");
-    resource_comments_by_id->set_method_handler("GET", get_user_handler);
+    // auto resource_comments_by_id = std::make_shared<restbed::Resource>();
+    // resource_comments_by_id->set_path("/issues/{id: .*}/comments/{comments_id: .*}");
+    // resource_comments_by_id->set_method_handler("GET", get_user_handler);
 
-    auto resource_comments = std::make_shared<restbed::Resource>();
-    resource_comments->set_path("/issues/{id: .*}/comments");
-    resource_comments->set_method_handler("GET", get_user_handler);
+    // auto resource_comments = std::make_shared<restbed::Resource>();
+    // resource_comments->set_path("/issues/{id: .*}/comments");
+    // resource_comments->set_method_handler("GET", get_user_handler);
 
 
     auto settings = std::make_shared<restbed::Settings>();
@@ -492,9 +556,9 @@ int main(const int, const char**) {
     service.publish(resource_users);
     service.publish(resource_user_by_id);
     service.publish(resource_issue);
-    service.publish(resource_issue_by_id);
-    service.publish(resource_comments_by_id);
-    service.publish(resource_comments);
+    // service.publish(resource_issue_by_id);
+    // service.publish(resource_comments_by_id);
+    // service.publish(resource_comments);
 
     service.start(settings);
     return EXIT_SUCCESS;

@@ -18,6 +18,7 @@ using json = nlohmann::json;
 const char* HOST = "localhost";
 const int PORT = 1234;
 std::vector<User*> users;
+std::vector<Issue*> issues;
 
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /*                General functions                   */
@@ -31,6 +32,16 @@ std::string create_uri(std::string endpoint) {
     uri_str.append("/");
     uri_str.append(endpoint);
     return uri_str;
+}
+
+
+User* getUser(unsigned int pID) {
+    for (User* u : users) {
+        if (pID == u->getID()) {
+            return u;
+        }
+    }
+    return nullptr;
 }
 
 
@@ -177,7 +188,7 @@ void handle_response(std::shared_ptr<restbed::Response> response) {
         break;
     }
     default:
-        fprintf(stderr, "There is an error connecting to the server. \n");
+        fprintf(stderr, "There is an error connecting to the server. \n Try again.");
         break;
     }
 }
@@ -200,6 +211,58 @@ void handle_response_user(std::shared_ptr<restbed::Response> response) {
             User* myUser = new User(u["id"], u["name"]);
             myUser->setGroup(u["group"]);
             users.push_back(myUser);
+        }
+        break;
+    }
+    case 400:
+    case 404: {
+        restbed::Http::fetch(length, response);
+        fprintf(stderr, "Error: %.*s\n", length, response->get_body().data());
+        break;
+    }
+    default:
+        fprintf(stderr, "There is an error connecting to the server. \n");
+        break;
+    }
+}
+
+
+void handle_response_issue(std::shared_ptr<restbed::Response> response) {
+    int status_code = response->get_status_code();
+    auto length     = response->get_header("Content-Length", 0);
+
+    std::cout << std::to_string(status_code);
+    issues.clear();
+
+    switch (status_code) {
+    case 200: {
+        restbed::Http::fetch(length, response);
+        std::string responseStr(reinterpret_cast<char*>(response->get_body().data()), length);
+        nlohmann::json resultJSON = nlohmann::json::parse(responseStr);
+
+        // store json as issue objects and prints them
+        // make the issuer of this issue null. we don't need it to be changed when the issue gets updated.
+        for (auto &i : resultJSON["issues"]) {
+            Issue* myIssue = new Issue(i["id"], i["title"], nullptr);
+            myIssue->setType(i["type"]);
+            myIssue->setStatus(i["status"]);
+            myIssue->setDescription(i["description"]);
+            myIssue->setNumOfComments(i["commentIDX"]);
+
+            // assignees cannot be updated
+            // we don't need edit the assignees
+            for (auto &a : i["assignees"]) {
+                //User* thisUser = getUser(a);
+                myIssue->addAssignee(nullptr);
+            }
+
+            // make the commenter of this issue null. we don't need it to be changed when the issue gets updated.
+            for (auto& c : i["comments"]) {
+                //User* thisUser = getUser(c["author"]);
+                myIssue->addComment(new Comment(c["id"], nullptr, c["comment"]));
+            }
+
+            issues.push_back(myIssue);
         }
         break;
     }
@@ -297,10 +360,53 @@ int main(const int, const char**) {
         case 2:
             //ui->deleteIssue();
             break;
-        case 3:
+        case 3: {
+                ui->printTitle("EDITING AN ISSUE");
+                // fetch all the users
+                request = get_request_by_path("/users");
+                auto response_user = restbed::Http::sync(request);
+                handle_response_user(response_user);
+                // fetch all the issues
+                request = get_request_by_path("/issues");
+                auto response_issue = restbed::Http::sync(request);
+                handle_response_issue(response_issue);
+                // ask issue ID to edit
+                // referenceIssue is a dummy issue with no real data
+                // except for the ID chosen by the user
+                Issue* referenceIssue      =   ui->askWhichIssue(issues);
+                Issue* dummyIssue;  // actual object chosen
+                for (Issue* i : issues) {
+                    if ( referenceIssue->getID() == i->getID() )
+                        dummyIssue = i;
+                }
+                // print the actual issue chosen
+                ui->println("Issue to be edited");
+                ui->printRow("Issue ID", std::to_string(dummyIssue->getID()));
+                ui->printRow("Issue Title", dummyIssue->getTitle());
+
+                // ask which property to edit
+                unsigned int propertyID    =   ui->askWhichIssueProperty();
+
+                    switch (propertyID) {
+                        case 0: {
+                                ui->println("Update Title");
+                                std::string title = dummyIssue->getTitle();
+                                ui->println("Current title :" + title);
+                                break;
+                                }
+
+
+
+                    }
+
+
+
+                }
             //ui->editIssue();
+
             break;
         case 4: {
+                ui->printTitle("CREATING A USER");
                 User* dummyUser = ui->createUser();
                 request       = create_user_post_request(dummyUser);
                 auto response = restbed::Http::sync(request);
@@ -309,6 +415,7 @@ int main(const int, const char**) {
                 }
             break;
         case 5: {
+                ui->printTitle("VIEWING A USER");
                 path          = ui->viewUser();
                 request       = get_request_by_path(path);
                 auto response = restbed::Http::sync(request);
@@ -316,6 +423,7 @@ int main(const int, const char**) {
                 }
             break;
         case 6: {
+                ui->printTitle("DELETING A USER");
                 path          = ui->deleteUser();
                 request       = delete_request_by_user_id(path);
                 auto response = restbed::Http::sync(request);
