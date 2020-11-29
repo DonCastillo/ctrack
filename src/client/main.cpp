@@ -118,7 +118,7 @@ std::shared_ptr<restbed::Request> create_issue_post_request(const Issue* dummyIs
 
 std::shared_ptr<restbed::Request> create_issue_put_request(const Issue* dummyIssue) {
     // Create the URI string
-    std::string uri = create_uri("issues");
+    std::string uri = create_uri("issues/" + std::to_string(dummyIssue->getID()));
 
     // Configure request headers
     auto request = std::make_shared<restbed::Request>(restbed::Uri(uri));
@@ -134,8 +134,7 @@ std::shared_ptr<restbed::Request> create_issue_put_request(const Issue* dummyIss
     issue["status"]       = dummyIssue->getStatusInt();
     issue["comments"]     = json::array();
 
-//    for (User* u : dummyIssue->getAssignees())
-//        issue["assignees"].push_back(u->getID());
+    std::cout << "working here" << std::endl;
 
     for (Comment* c : dummyIssue->getComments()) {
         json comment;
@@ -143,6 +142,8 @@ std::shared_ptr<restbed::Request> create_issue_put_request(const Issue* dummyIss
         comment["comment"]  = c->getComment();
         issue["comments"].push_back(comment);
     }
+
+
 
     std::string message = issue.dump();
 
@@ -210,7 +211,7 @@ void handle_response(std::shared_ptr<restbed::Response> response) {
     int status_code = response->get_status_code();
     auto length     = response->get_header("Content-Length", 0);
 
-    //std::cout << std::to_string(status_code);
+    std::cout << std::to_string(status_code) << std::endl;
 
     switch (status_code) {
     case 200: {
@@ -297,8 +298,8 @@ void handle_response_issue(std::shared_ptr<restbed::Response> response) {
 
             // make the commenter of this issue null. we don't need it to be changed when the issue gets updated.
             for (auto& c : i["comments"]) {
-                //User* thisUser = getUser(c["author"]);
-                myIssue->addComment(new Comment(c["id"], nullptr, c["comment"]));
+                User* thisUser = getUser(c["author"]);
+                myIssue->addComment(new Comment(c["id"], thisUser, c["comment"]));
             }
 
             issues.push_back(myIssue);
@@ -437,6 +438,9 @@ int main(const int, const char**) {
                                 std::string newTitle = ui->askIssueTitle();
                                 dummyIssue->setTitle(newTitle);
                                 ui->printRow("New title", dummyIssue->getTitle());
+                                request                = create_issue_put_request(dummyIssue);
+                                auto response          = restbed::Http::sync(request);
+                                handle_response(response);
                                 }
                             break;
                         case 1: {
@@ -445,6 +449,9 @@ int main(const int, const char**) {
                                 std::string newDesc = ui->askIssueDescription();
                                 dummyIssue->setDescription(newDesc);
                                 ui->println("New description: " + dummyIssue->getDescription());
+                                request                = create_issue_put_request(dummyIssue);
+                                auto response          = restbed::Http::sync(request);
+                                handle_response(response);
                                 }
                             break;
                         case 2: {
@@ -453,6 +460,9 @@ int main(const int, const char**) {
                                 unsigned int newStatus = ui->askIssueStatus();
                                 dummyIssue->setStatus(newStatus);
                                 ui->println("New status: " + dummyIssue->getStatusString());
+                                request                = create_issue_put_request(dummyIssue);
+                                auto response          = restbed::Http::sync(request);
+                                handle_response(response);
                                 }
                             break;
                         case 3: {
@@ -461,6 +471,9 @@ int main(const int, const char**) {
                                 unsigned int newType = ui->askIssueType();
                                 dummyIssue->setType(newType);
                                 ui->println("New type: " + dummyIssue->getTypeString());
+                                request                = create_issue_put_request(dummyIssue);
+                                auto response          = restbed::Http::sync(request);
+                                handle_response(response);
                                 }
                             break;
                         case 4: {
@@ -481,6 +494,9 @@ int main(const int, const char**) {
                                                     dummyIssue->addComment(c);
                                                 }
                                                 ui->println(std::to_string(newComments.size()) + " new comments added.");
+                                                request                = create_issue_put_request(dummyIssue);
+                                                auto response          = restbed::Http::sync(request);
+                                                handle_response(response);
                                                 }
                                             break;
                                         case 1: {
@@ -491,6 +507,9 @@ int main(const int, const char**) {
                                                     ui->println("1 comment deleted.");
                                                 else
                                                     ui->println("Comment deletion failed");
+                                                request                = create_issue_put_request(dummyIssue);
+                                                auto response          = restbed::Http::sync(request);
+                                                handle_response(response);
                                                 }
                                             break;
                                         case 2: {
@@ -505,6 +524,9 @@ int main(const int, const char**) {
                                                 // add altered comment with same id
                                                 //unsigned int prevNumOfComments = dummyIssue->getNumOfComments();
                                                 dummyIssue->addComment(new Comment(newCommentID, newCommenter, newComment));
+                                                request                = create_issue_put_request(dummyIssue);
+                                                auto response          = restbed::Http::sync(request);
+                                                handle_response(response);
                                                 }
                                             break;
                                         }
@@ -514,16 +536,13 @@ int main(const int, const char**) {
                                 break;
                             }
                 // call PUT request
-//                request                = create_issue_put_request(dummyIssue);
-//                auto response          = restbed::Http::sync(request);
-//                handle_response(response);
                // ui->println(std::to_string(dummyIssue->get));
 //                ui->println(dummyIssue->getDescription());
 //                ui->println(std::to_string( dummyIssue->getComments().size() ));
-                for (Comment* c : dummyIssue->getComments()) {
-                     ui->println(std::to_string(c->getID()));
-                     ui->println(c->getComment());
-                }
+//                for (Comment* c : dummyIssue->getComments()) {
+//                     ui->println(std::to_string(c->getID()));
+//                     ui->println(c->getComment());
+//                }
 
                 }
             break;

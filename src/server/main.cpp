@@ -274,6 +274,80 @@ void post_issue_handler(const std::shared_ptr<restbed::Session>& session) {
 
 
 /**
+ * @brief parses the string data and convert it to actual USER object
+ * @param data  actual data sent from the client
+ * @param user  USER object to be filled with data members
+ */
+void parse_issue_put(const char* data, Issue*& issue, const unsigned int id) {
+
+    // convert string to actual json obj
+    json i = json::parse(data);
+    
+    // search for the issue
+    issue = issues.find((int)id)->second;
+    
+    // don't replace ID, they're meant to be just a reference
+    issue->setTitle(i["title"]);
+    issue->setDescription(i["description"]);
+    issue->setType(i["type"]);
+    issue->setStatus(i["status"]);
+    issue->clearComments();
+
+    for (auto& c : i["comments"]) {
+        issue->addComment(new Comment(0, users[c["author"]], c["comment"]));
+    }
+}
+
+
+
+/**
+ * @brief creates a new USER object and inserts it into the users map
+ *        closes the session after
+ * @param session   current session between server and client
+ * @param body      body of the request
+ */
+void put_issue_request(const std::shared_ptr<restbed::Session >&
+                       session, const restbed::Bytes & body) {
+    const auto request   = session->get_request();
+    const char* data     = reinterpret_cast<const char*>(body.data());
+    std::string id       = request->get_path_parameter("id");
+    unsigned int issueID = std::stoul(id, nullptr, 10);
+
+    Issue* i;
+    parse_issue_put(data, i, issueID);
+
+    nlohmann::json resultJSON;
+    resultJSON["result"]    = "An issue is updated";
+
+    // info to be sent back to the client
+    std::string response = resultJSON.dump();
+
+    // info to be stored in the server
+    issues.erase((int)issueID);
+    issues.insert(std::make_pair(i->getID(), i));
+
+    // update db
+    writeDB();
+    session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
+}
+
+
+
+
+
+/**
+ * @brief handles the POST request for the USER
+ * @param session   current session between server and client
+ */
+void put_issue_handler(const std::shared_ptr<restbed::Session>& session) {
+    const auto request      = session->get_request();
+    size_t content_length   = request->get_header("Content-Length", 0);
+    session->fetch(content_length, &put_issue_request);
+}
+
+
+
+/**
  * @brief handles the GET request for the USER
  * @param session   current session between server and client
  */
@@ -545,6 +619,10 @@ int main(const int, const char**) {
     resource_issue->set_method_handler("POST", post_issue_handler);
     resource_issue->set_method_handler("GET", get_issue_handler);
 
+    auto resource_issue_by_id = std::make_shared<restbed::Resource>();
+    resource_issue_by_id->set_path("/issues/{id: .*}");
+    resource_issue_by_id->set_method_handler("PUT", put_issue_handler);
+
     // auto resource_issue_by_id = std::make_shared<restbed::Resource>();
     // resource_issue_by_id->set_path("/issues/{id: .*}");
     // resource_issue_by_id->set_method_handler("GET", get_user_handler);
@@ -567,7 +645,7 @@ int main(const int, const char**) {
     service.publish(resource_users);
     service.publish(resource_user_by_id);
     service.publish(resource_issue);
-    // service.publish(resource_issue_by_id);
+    service.publish(resource_issue_by_id);
     // service.publish(resource_comments_by_id);
     // service.publish(resource_comments);
 
