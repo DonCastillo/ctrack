@@ -232,7 +232,7 @@ User* CTrackUI::askWhichUser(std::vector<User*> usersOptions) {
 Issue* CTrackUI::askWhichIssue(std::vector<Issue*> issueOptions) {
     std::map<unsigned int, std::string> mapIssues;
 
-    println("Enter the ID of the issue you want to edit");
+    println("Enter the ID of the issue you want to edit/delete");
     for (Issue* i : issueOptions) {
         unsigned int index = i->getID();
         std::string title = i->getTitle();
@@ -245,6 +245,22 @@ Issue* CTrackUI::askWhichIssue(std::vector<Issue*> issueOptions) {
     return dummyIssue;
 }
 
+Comment* CTrackUI::askWhichComment(std::vector<Comment*> commentOptions) {
+    std::map<unsigned int, std::string> mapComments;
+
+    println("Enter the ID of the comment you want to edit/delete");
+    for (Comment* c : commentOptions) {
+        unsigned int index = c->getID();
+        std::string comment = c->getComment();
+        mapComments.insert( std::pair<unsigned int, std::string>(index, comment) );
+    }
+    unsigned int choice = choose(mapComments);
+    
+    // create dummy comment
+    Comment* dummyComment = new Comment(choice, nullptr, "");
+    return dummyComment;
+}
+
 unsigned int CTrackUI::askWhichIssueProperty() {
     println("Which issue property to edit?");
     std::vector<std::string> choices;
@@ -252,8 +268,16 @@ unsigned int CTrackUI::askWhichIssueProperty() {
     choices.push_back("Description");
     choices.push_back("Status");
     choices.push_back("Type");
-    choices.push_back("Assignees");
     choices.push_back("Comments");
+    return choose(choices);
+}
+
+unsigned int CTrackUI::updateCommentAction() {
+    println("What do you want?");
+    std::vector<std::string> choices;
+    choices.push_back("Add a comment");
+    choices.push_back("Delete a comment");
+    choices.push_back("Edit a comment");
     return choose(choices);
 }
 
@@ -323,6 +347,33 @@ std::vector<Comment*> CTrackUI::askIssueComments(std::vector<User*> users) {
         choice = choose(choices); 
     } while (choice == 1);
     return comments;
+}
+
+// std::vector<Comment*> CTrackUI::askIssueCommentsWithID(unsigned int numOfComments, std::vector<User*> users) {
+//     std::vector<Comment*> comments;
+//     std::vector<std::string> choices;
+//     choices.push_back("No");
+//     choices.push_back("Yes");
+//     unsigned int choice;
+//     unsigned int id = numOfComments; 
+//     do {
+//         // ask the commenter
+//         User* dummyUser = askWhichUser(users);
+//         std::string comment = askComment();
+//         Comment* dummyComment = new Comment(id++ , dummyUser, comment);
+//         comments.push_back(dummyComment);
+//         println("Add more comment?");
+//         choice = choose(choices); 
+//     } while (choice == 1);
+//     return comments;
+// }
+
+bool CTrackUI::continueAddingComment() {
+    println("Do you want to continue updating comment?");
+    std::vector<std::string> choices;
+    choices.push_back("No");
+    choices.push_back("Yes");
+    return choose(choices);
 }
 
 

@@ -17,6 +17,10 @@ unsigned int Comment::getID() const {
     return id;
 }
 
+void Comment::setID(unsigned int pInt) {
+    id = pInt;
+}
+
 void Comment::setComment(std::string pComment) {
     comment = pComment;
 }

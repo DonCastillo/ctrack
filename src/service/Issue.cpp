@@ -235,8 +235,8 @@ void Issue::setDescription(std::string pDesc) {
 }
 
 void Issue::addComment(Comment* pComment) {
+    pComment->setID(numOfComments++);
     comments.push_back(pComment);
-    numOfComments++;
 }
 
 std::vector<Comment*> Issue::getComments() const {

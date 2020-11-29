@@ -228,7 +228,7 @@ void parse_issue(const char* data, Issue*& issue) {
 
     unsigned int commentID = 0;
     for (auto& c : i["comments"]) {
-        issue->addComment(new Comment(commentID++, users[c["author"]], c["comment"]));
+        issue->addComment(new Comment(0, users[c["author"]], c["comment"]));
     }
 }
 
@@ -406,13 +406,16 @@ void readDB() {
         issue->setType(i["type"]);
         issue->setStatus(i["status"]);
         issue->setDescription(i["description"]);
-        issue->setNumOfComments(i["commentIDX"]);
 
         for (auto &a : i["assignees"])
             issue->addAssignee(users[a]);
 
         for (auto &c : i["comments"])
             issue->addComment(new Comment(c["id"], users[c["author"]], c["comment"]));
+
+        //issue->setNumOfComments(i["commentIDX"]);
+
+        
 
         issues.insert(std::make_pair(i["id"], issue));
     }
@@ -492,6 +495,14 @@ int main(const int, const char**) {
     readDB();
     std::cout << "users: " << std::to_string(users.size()) << std::endl;
     std::cout << "issues: " << std::to_string(issues.size()) << std::endl;
+
+    
+    // std::map<int, Issue*>::iterator it;
+    // for (it = issues.begin(); it != issues.end(); ++it) {
+    //         Issue* i = it->second;
+    //         for (Comment* c : i->getComments())
+    //             std::cout << *c;
+    // }
 
 
     /**

@@ -112,7 +112,46 @@ std::shared_ptr<restbed::Request> create_issue_post_request(const Issue* dummyIs
     return request;
 }
 
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/*                  PUT Functions                     */
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
+std::shared_ptr<restbed::Request> create_issue_put_request(const Issue* dummyIssue) {
+    // Create the URI string
+    std::string uri = create_uri("issues");
+
+    // Configure request headers
+    auto request = std::make_shared<restbed::Request>(restbed::Uri(uri));
+    request->set_header("Accept", "*/*");
+    request->set_method("PUT");
+    request->set_header("Content-Type", "text/plain");
+
+    // Create the message
+    json issue;
+    issue["title"]        = dummyIssue->getTitle();
+    issue["description"]  = dummyIssue->getDescription();
+    issue["type"]         = dummyIssue->getTypeInt();
+    issue["status"]       = dummyIssue->getStatusInt();
+    issue["comments"]     = json::array();
+
+//    for (User* u : dummyIssue->getAssignees())
+//        issue["assignees"].push_back(u->getID());
+
+    for (Comment* c : dummyIssue->getComments()) {
+        json comment;
+        comment["author"]   = c->getCommenter()->getID();
+        comment["comment"]  = c->getComment();
+        issue["comments"].push_back(comment);
+    }
+
+    std::string message = issue.dump();
+
+    // Set the message
+    request->set_header("Content-Length", std::to_string(message.length()));
+    request->set_body(message);
+
+    return request;
+}
 
 
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -247,7 +286,7 @@ void handle_response_issue(std::shared_ptr<restbed::Response> response) {
             myIssue->setType(i["type"]);
             myIssue->setStatus(i["status"]);
             myIssue->setDescription(i["description"]);
-            myIssue->setNumOfComments(i["commentIDX"]);
+            //myIssue->setNumOfComments(i["commentIDX"]);
 
             // assignees cannot be updated
             // we don't need edit the assignees
@@ -370,15 +409,19 @@ int main(const int, const char**) {
                 request = get_request_by_path("/issues");
                 auto response_issue = restbed::Http::sync(request);
                 handle_response_issue(response_issue);
+
+
                 // ask issue ID to edit
                 // referenceIssue is a dummy issue with no real data
                 // except for the ID chosen by the user
                 Issue* referenceIssue      =   ui->askWhichIssue(issues);
                 Issue* dummyIssue;  // actual object chosen
+
                 for (Issue* i : issues) {
                     if ( referenceIssue->getID() == i->getID() )
                         dummyIssue = i;
                 }
+
                 // print the actual issue chosen
                 ui->println("Issue to be edited");
                 ui->printRow("Issue ID", std::to_string(dummyIssue->getID()));
@@ -420,16 +463,69 @@ int main(const int, const char**) {
                                 ui->println("New type: " + dummyIssue->getTypeString());
                                 }
                             break;
+                        case 4: {
+                                bool continueCommenting;
+                                do {
+                                    ui->print("UPDATING COMMENT\n");
+                                    unsigned int updateID = ui->updateCommentAction();
+                                    switch (updateID) {
+                                        case 0: {
+                                                ui->println("ADDING COMMENT");
+                                                std::vector<Comment*> newComments;
+                                                ui->println("Choose a commenter.");
+                                                unsigned int numOfComments = dummyIssue->getNumOfComments();
+                                                newComments = ui->askIssueComments(users);
+                                                std::cout << newComments.size() << std::endl;
+                                                for (Comment* c : newComments) {
+                                                    std::cout << c->getComment() << std::endl;
+                                                    dummyIssue->addComment(c);
+                                                }
+                                                ui->println(std::to_string(newComments.size()) + " new comments added.");
+                                                }
+                                            break;
+                                        case 1: {
+                                                ui->println("DELETING COMMENT");
+                                                Comment* chosenComment = ui->askWhichComment(dummyIssue->getComments());
+                                                bool success = dummyIssue->deleteComment(chosenComment->getID());
+                                                if (success)
+                                                    ui->println("1 comment deleted.");
+                                                else
+                                                    ui->println("Comment deletion failed");
+                                                }
+                                            break;
+                                        case 2: {
+                                                ui->println("EDITING A COMMENT");
+                                                Comment* chosenComment = ui->askWhichComment(dummyIssue->getComments());
+                                                unsigned int newCommentID = chosenComment->getID(); // retain id
+                                                dummyIssue->deleteComment(newCommentID);
 
-
-
-                    }
-
-
+                                                std::string newComment = ui->askComment();
+                                                ui->println("Choose a commenter.");
+                                                User* newCommenter = ui->askWhichUser(users);
+                                                // add altered comment with same id
+                                                //unsigned int prevNumOfComments = dummyIssue->getNumOfComments();
+                                                dummyIssue->addComment(new Comment(newCommentID, newCommenter, newComment));
+                                                }
+                                            break;
+                                        }
+                                  continueCommenting = ui->continueAddingComment();
+                                } while ( continueCommenting == 1);
+                                }
+                                break;
+                            }
+                // call PUT request
+//                request                = create_issue_put_request(dummyIssue);
+//                auto response          = restbed::Http::sync(request);
+//                handle_response(response);
+               // ui->println(std::to_string(dummyIssue->get));
+//                ui->println(dummyIssue->getDescription());
+//                ui->println(std::to_string( dummyIssue->getComments().size() ));
+                for (Comment* c : dummyIssue->getComments()) {
+                     ui->println(std::to_string(c->getID()));
+                     ui->println(c->getComment());
+                }
 
                 }
-            //ui->editIssue();
-
             break;
         case 4: {
                 ui->printTitle("CREATING A USER");
