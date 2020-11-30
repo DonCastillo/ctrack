@@ -141,6 +141,24 @@ TEST(TestIssue, getTypeInt) {
     delete issue1;
 }
 
+TEST(TestIssue, getTypeT) {
+    std::string testType;
+    User* George = new User(0, "George");
+    Issue* issue1 = new Issue(1, "On button turns things off", George);
+
+    testType = issue1->getTypeT(0);
+    EXPECT_EQ(testType, "feature");
+
+    testType = issue1->getTypeT(1);
+    EXPECT_EQ(testType, "bug");
+
+    testType = issue1->getTypeT(2);
+    EXPECT_EQ(testType, "task");
+
+    delete George;
+    delete issue1;
+}
+
 TEST(TestIssue, setStatus) {
     User* George = new User(0, "George");
     Issue* issue1 = new Issue(1, "On button turns things off", George);
@@ -184,7 +202,7 @@ TEST(TestIssue, addAssignee) {
     testVect = issue1->getAssignees();
 
     for (unsigned int i = 0; i < testVect.size(); i++) {
-        std::cout << newUsers[i] << " == " << testVect[i] << std::endl;
+        std::cout << newUsers.at(i) << " == " << testVect.at(i) << std::endl;
         EXPECT_EQ(newUsers[i], testVect[i]);
     }
     delete George;
@@ -192,6 +210,8 @@ TEST(TestIssue, addAssignee) {
     delete Amy;
     delete issue1;
 }
+
+
 
 
 //TEST(TestIssue, issue_id) {
