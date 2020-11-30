@@ -275,3 +275,63 @@ TEST(TestIssues, getStatusT) {
     delete issue1;
 }
 
+TEST(TestIssue, getAssignee) {
+    User* user1 = new User(0, "user1");
+    Issue* issue1 = new Issue(0, "Are there actual cookies in my pc Cache?", user1);
+
+    User* user2 = new User(1, "user2");
+    issue1->addAssignee(user2);
+
+    User* grabbedAssignee = nullptr;
+    grabbedAssignee = issue1->getAssignee(1);
+
+    EXPECT_EQ(grabbedAssignee->getID(), user2->getID());
+
+    grabbedAssignee = issue1->getAssignee(4);
+    EXPECT_EQ(grabbedAssignee, nullptr);
+
+    delete user1;
+    delete user2;
+    delete issue1;
+    delete grabbedAssignee;
+}
+
+TEST(TestIssue, deleteAssignee) {
+    User* user1 = new User(0, "user1");
+    User* user2 = new User(1, "user2");
+    User* user3 = new User(2, "user3");
+    User* user4 = new User(3, "user4");
+    Issue* issue1 = new Issue(0, "Are there actual cookies in my pc Cache?", user1);
+
+    issue1->addAssignee(user2);
+    issue1->addAssignee(user3);
+    issue1->addAssignee(user4);
+
+    std::vector<User*> testAssignee;
+    // Test Initial Deletion
+    std::cout << "Inital users: " << std::endl;
+    testAssignee = issue1->getAssignees();
+    for (unsigned int i = 0; i < testAssignee.size(); i++) {
+        std::cout << testAssignee.at(i)->getName() << std::endl;
+    }
+
+    EXPECT_TRUE(issue1->deleteAssignee(2));
+    EXPECT_NE(issue1->getAssignee(2), user3);
+
+    std::cout << "After Deletion" << std::endl;
+    testAssignee = issue1->getAssignees();
+    for (unsigned int i = 0; i < testAssignee.size(); i++) {
+        std::cout << testAssignee.at(i)->getName() << std::endl;
+    }
+
+    //testing full deletion of assignees
+    EXPECT_TRUE(issue1->deleteAssignee(1));
+    EXPECT_TRUE(issue1->deleteAssignee(3));
+    EXPECT_EQ(issue1->getStatus(), issue1->NEW);
+
+    delete user1;
+    delete user2;
+    delete user3;
+    delete user4;
+    delete issue1;
+}

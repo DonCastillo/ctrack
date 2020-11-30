@@ -93,4 +93,6 @@ TEST(TestUser, getGroupString) {
     user1->setGroup(3);
     testGroup = user1->getGroup(3);
     EXPECT_EQ(testGroup, user1->getGroupString());
+
+    delete user1;
 }
