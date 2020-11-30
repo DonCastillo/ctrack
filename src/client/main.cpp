@@ -127,12 +127,12 @@ std::shared_ptr<restbed::Request> create_issue_put_request(const Issue* dummyIss
     request->set_header("Content-Type", "text/plain");
 
     // Create the message
-    json issue;
-    issue["title"]        = dummyIssue->getTitle();
-    issue["description"]  = dummyIssue->getDescription();
-    issue["type"]         = dummyIssue->getTypeInt();
-    issue["status"]       = dummyIssue->getStatusInt();
-    issue["comments"]     = json::array();
+    json issue; 
+    issue["issue"]["title"]        = dummyIssue->getTitle();
+    issue["issue"]["description"]  = dummyIssue->getDescription();
+    issue["issue"]["type"]         = dummyIssue->getTypeInt();
+    issue["issue"]["status"]       = dummyIssue->getStatusInt();
+    issue["issue"]["comments"]     = json::array();
 
     std::cout << "working here" << std::endl;
 
@@ -140,10 +140,8 @@ std::shared_ptr<restbed::Request> create_issue_put_request(const Issue* dummyIss
         json comment;
         comment["author"]   = c->getCommenter()->getID();
         comment["comment"]  = c->getComment();
-        issue["comments"].push_back(comment);
+        issue["issue"]["comments"].push_back(comment);
     }
-
-
 
     std::string message = issue.dump();
 
@@ -403,11 +401,11 @@ int main(const int, const char**) {
         case 3: {
                 ui->printTitle("EDITING AN ISSUE");
                 // fetch all the users
-                request = get_request_by_path("/users");
+                request = get_request_by_path("users");
                 auto response_user = restbed::Http::sync(request);
                 handle_response_user(response_user);
                 // fetch all the issues
-                request = get_request_by_path("/issues");
+                request = get_request_by_path("issues");
                 auto response_issue = restbed::Http::sync(request);
                 handle_response_issue(response_issue);
 
@@ -423,6 +421,7 @@ int main(const int, const char**) {
                         dummyIssue = i;
                 }
 
+                delete referenceIssue;
                 // print the actual issue chosen
                 ui->println("Issue to be edited");
                 ui->printRow("Issue ID", std::to_string(dummyIssue->getID()));
@@ -441,6 +440,7 @@ int main(const int, const char**) {
                                 request                = create_issue_put_request(dummyIssue);
                                 auto response          = restbed::Http::sync(request);
                                 handle_response(response);
+                                delete dummyIssue;
                                 }
                             break;
                         case 1: {
@@ -452,6 +452,7 @@ int main(const int, const char**) {
                                 request                = create_issue_put_request(dummyIssue);
                                 auto response          = restbed::Http::sync(request);
                                 handle_response(response);
+                                delete dummyIssue;
                                 }
                             break;
                         case 2: {
@@ -463,6 +464,7 @@ int main(const int, const char**) {
                                 request                = create_issue_put_request(dummyIssue);
                                 auto response          = restbed::Http::sync(request);
                                 handle_response(response);
+                                delete dummyIssue;
                                 }
                             break;
                         case 3: {
@@ -474,6 +476,7 @@ int main(const int, const char**) {
                                 request                = create_issue_put_request(dummyIssue);
                                 auto response          = restbed::Http::sync(request);
                                 handle_response(response);
+                                delete dummyIssue;
                                 }
                             break;
                         case 4: {
@@ -532,18 +535,10 @@ int main(const int, const char**) {
                                         }
                                   continueCommenting = ui->continueAddingComment();
                                 } while ( continueCommenting == 1);
+                                delete dummyIssue;
                                 }
                                 break;
                             }
-                // call PUT request
-               // ui->println(std::to_string(dummyIssue->get));
-//                ui->println(dummyIssue->getDescription());
-//                ui->println(std::to_string( dummyIssue->getComments().size() ));
-//                for (Comment* c : dummyIssue->getComments()) {
-//                     ui->println(std::to_string(c->getID()));
-//                     ui->println(c->getComment());
-//                }
-
                 }
             break;
         case 4: {

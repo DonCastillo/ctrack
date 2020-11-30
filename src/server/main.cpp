@@ -177,7 +177,7 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
         if ( request->has_query_parameter("group") ) {
 
             // search for all users that belong in a specified group
-            std::string targetGroup = request->get_query_parameter("group"); 
+            std::string targetGroup = request->get_query_parameter("group");
             json collection = json::array(); // initialize to empty array
             for (auto &u : j["users"]) {
                 std::string userGroup = User::getGroup(u["group"]);
@@ -186,7 +186,7 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
             }
             resultJSON["users"] = collection;
 
-        } else { 
+        } else {
 
             // if no id or query is specified, get all users
             resultJSON["users"] = j["users"];
@@ -213,7 +213,7 @@ void parse_issue(const char* data, Issue*& issue) {
 
     // convert string to actual json obj
     json i = json::parse(data);
-    
+
     // new issue gets an ID based on value of issueIDX
     unsigned int id     = issueIDX++;
 
@@ -222,7 +222,7 @@ void parse_issue(const char* data, Issue*& issue) {
     issue->setDescription(i["description"]);
     issue->setType(i["type"]);
     issue->setStatus(i["status"]);
-    
+
     for (auto& a : i["assignees"])
         issue->addAssignee(users[a]);
 
@@ -281,11 +281,11 @@ void post_issue_handler(const std::shared_ptr<restbed::Session>& session) {
 void parse_issue_put(const char* data, Issue*& issue, const unsigned int id) {
 
     // convert string to actual json obj
-    json i = json::parse(data);
-    
+    json i = json::parse(data)["issue"];
+
     // search for the issue
     issue = issues.find((int)id)->second;
-    
+
     // don't replace ID, they're meant to be just a reference
     issue->setTitle(i["title"]);
     issue->setDescription(i["description"]);
@@ -380,7 +380,7 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
         }
         resultJSON["issues"] = collection;
         withQuery = true;
-    } 
+    }
 
 
 
@@ -397,7 +397,7 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
         }
         resultJSON["issues"] = collection;
         withQuery = true;
-    } 
+    }
 
 
 
@@ -408,8 +408,8 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
         unsigned int startID  = std::stoul(start, nullptr, 10);
         unsigned int endID    = std::stoul(end, nullptr, 10);
         json collection = json::array();
-        
-        
+
+
         if ( startID > endID ) {
             // startID > endID
             resultJSON["issues"] = "Invalid parameters";
@@ -429,8 +429,8 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
                     collection.push_back(i);
             }
             resultJSON["issues"] = collection;
-        } 
-        
+        }
+
         withQuery = true;
     }
 
@@ -439,7 +439,7 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
     if ( withQuery == false ) {
         resultJSON["issues"] = j["issues"];
     }
-    
+
     std::string response = resultJSON.dump(4);
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
@@ -463,6 +463,7 @@ void readDB() {
     json j;
     std::fstream f("./db.json");
     j = json::parse(f);
+    std::cout << j.dump();
 
     userIDX  = j["userIDX"];
     issueIDX = j["issueIDX"];
@@ -489,7 +490,7 @@ void readDB() {
 
         //issue->setNumOfComments(i["commentIDX"]);
 
-        
+
 
         issues.insert(std::make_pair(i["id"], issue));
     }
@@ -556,6 +557,7 @@ void writeDB() {
     // Write to file
     std::cout << "SERVER UPDATING DATA" << std::endl;
     f << j;
+    std::cout << j.dump();
     f.close();
 }
 
@@ -569,15 +571,6 @@ int main(const int, const char**) {
     readDB();
     std::cout << "users: " << std::to_string(users.size()) << std::endl;
     std::cout << "issues: " << std::to_string(issues.size()) << std::endl;
-
-    
-    // std::map<int, Issue*>::iterator it;
-    // for (it = issues.begin(); it != issues.end(); ++it) {
-    //         Issue* i = it->second;
-    //         for (Comment* c : i->getComments())
-    //             std::cout << *c;
-    // }
-
 
     /**
         GET     /users                      lists all users
