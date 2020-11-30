@@ -87,3 +87,7 @@ TEST(TestComment, setCommentator) {
     delete user2;
     delete comment1;
 }
+
+TEST(TestComment, operator==) {
+    
+}

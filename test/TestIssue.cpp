@@ -168,6 +168,31 @@ TEST(TestIssue, setStatus) {
     delete issue1;
 }
 
+TEST(TestIssue, addAssignee) {
+    User* George = new User(0, "George");
+    User* Fred = new User(1, "Fred");
+    User* Amy = new User(2, "Amy");
+    Issue* issue1 = new Issue(1, "On button turns things off", George);
+
+    issue1->addAssignee(Fred);
+    issue1->addAssignee(Amy);
+
+    std::vector<User*> newUsers;
+    newUsers.push_back(Fred);
+    newUsers.push_back(Amy);
+    std::vector<User*> testVect;
+    testVect = issue1->getAssignees();
+
+    for (unsigned int i = 0; i < testVect.size(); i++) {
+        std::cout << newUsers[i] << " == " << testVect[i] << std::endl;
+        EXPECT_EQ(newUsers[i], testVect[i]);
+    }
+    delete George;
+    delete Fred;
+    delete Amy;
+    delete issue1;
+}
+
 
 //TEST(TestIssue, issue_id) {
 //    User* jane = new User(0, "Jane");
