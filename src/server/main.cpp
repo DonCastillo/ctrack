@@ -1,5 +1,4 @@
 #include <restbed>
-#include <nlohmann/json.hpp>
 #include <cstring>
 #include <cstdlib>
 #include <memory>
@@ -8,6 +7,7 @@
 #include <iostream>
 #include <utility>
 #include <map>
+#include <nlohmann/json.hpp>
 #include "../../include/service/Comment.h"
 #include "../../include/service/Issue.h"
 #include "../../include/service/User.h"
@@ -181,7 +181,7 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
             json collection = json::array(); // initialize to empty array
             for (auto &u : j["users"]) {
                 std::string userGroup = User::getGroup(u["group"]);
-                if( targetGroup == userGroup )
+                if (targetGroup == userGroup)
                     collection.push_back(u);
             }
             resultJSON["users"] = collection;
@@ -279,7 +279,6 @@ void post_issue_handler(const std::shared_ptr<restbed::Session>& session) {
  * @param user  USER object to be filled with data members
  */
 void parse_issue_put(const char* data, Issue*& issue, const unsigned int id) {
-
     // convert string to actual json obj
     json i = json::parse(data)["issue"];
 
@@ -374,7 +373,7 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
 
         // search user based on type
         for (auto &i : j["issues"]) {
-            std::string issueType = Issue::getTypeT( i["type"] );
+            std::string issueType = Issue::getTypeT(i["type"]);
             if ( issueType == targetType )
                 collection.push_back(i);
         }
@@ -391,7 +390,7 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
 
         // search user based on status
         for (auto &i : j["issues"]) {
-            std::string issueStatus = Issue::getStatusT( i["status"] );
+            std::string issueStatus = Issue::getStatusT(i["status"]);
             if ( issueStatus == targetStatus )
                 collection.push_back(i);
         }
