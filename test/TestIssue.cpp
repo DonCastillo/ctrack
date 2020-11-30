@@ -236,7 +236,7 @@ TEST(TestIssue, getStatusString) {
 }
 
 TEST(TestIssue, getStatusInt) {
-        User* George = new User(0, "George");
+    User* George = new User(0, "George");
     Issue* issue1 = new Issue(1, "On button turns things off", George);
     issue1->setStatus(2);
     EXPECT_EQ(issue1->getStatusInt(), 2);
@@ -254,3 +254,23 @@ TEST(TestIssue, getStatusInt) {
     delete issue1;
 }
 
+TEST(TestIssues, getStatusT) {
+    std::string testGetStatusT;
+    User* user1 = new User(0, "user1");
+    Issue* issue1 = new Issue(1, "Off button doesn't turn on pc", user1);
+
+    testGetStatusT = issue1->getStatusT(0);
+    EXPECT_EQ(testGetStatusT, "new");
+
+    testGetStatusT = issue1->getStatusT(1);
+    EXPECT_EQ(testGetStatusT, "assigned");
+
+    testGetStatusT = issue1->getStatusT(2);
+    EXPECT_EQ(testGetStatusT, "fixed");
+
+    testGetStatusT = issue1->getStatusT(3);
+    EXPECT_EQ(testGetStatusT, "won't fix");
+
+    delete user1;
+    delete issue1;
+}
