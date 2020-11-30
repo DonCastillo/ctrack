@@ -335,3 +335,91 @@ TEST(TestIssue, deleteAssignee) {
     delete user4;
     delete issue1;
 }
+
+TEST(TestIssue, setAndGetDescriptions) {
+    std::string testVal = "Is this person serious?";
+    User* user1 = new User(0, "user1");
+    Issue* issue1 = new Issue(0, "Are there actual cookies in my pc Cache?", user1);
+
+    issue1->setDescription(testVal);
+    EXPECT_EQ(issue1->getDescription(), testVal);
+
+    issue1->setDescription("cache");
+    EXPECT_NE(issue1->getDescription(), testVal);
+
+    delete user1;
+    delete issue1;
+}
+
+TEST(TestIssue, addComments) {
+    User* user1 = new User(0, "user1");
+    User* user2 = new User(1, "user2");
+    User* user3 = new User(2, "user3");
+    User* user4 = new User(3, "user4");
+
+    Comment* comment1 = new Comment(0, user1, "Hello world!");
+    Comment* comment2 = new Comment(1, user2, "I bet it's chocolate chip cookies!");
+    Comment* comment3 = new Comment(2, user3, "asdfsadfsa");
+    Comment* comment4 = new Comment(3, user4, "cookies");
+
+    Issue* issue1 = new Issue(0, "Are there actual cookies in my pc Cache?", user1);
+
+    issue1->addComment(comment1);
+    issue1->addComment(comment2);
+    issue1->addComment(comment3);
+    issue1->addComment(comment4);
+
+    EXPECT_EQ(issue1->getComment(3)->getID(), comment4->getID());
+
+    EXPECT_EQ(issue1->getComment(15), nullptr);
+
+    issue1->clearComments();
+
+    delete issue1;
+
+    delete comment1;
+    delete comment2;
+    delete comment3;
+    delete comment4;
+
+    delete user1;
+    delete user2;
+    delete user3;
+    delete user4;
+}
+
+TEST(TestIssue, clearComments) {
+    User* user1 = new User(0, "user1");
+    User* user2 = new User(1, "user2");
+    User* user3 = new User(2, "user3");
+    User* user4 = new User(3, "user4");
+
+    Comment* comment1 = new Comment(0, user1, "Hello world!");
+    Comment* comment2 = new Comment(1, user2, "I bet it's chocolate chip cookies!");
+    Comment* comment3 = new Comment(2, user3, "asdfsadfsa");
+    Comment* comment4 = new Comment(3, user4, "cookies");
+
+    Issue* issue1 = new Issue(0, "Are there actual cookies in my pc Cache?", user1);
+
+    issue1->addComment(comment1);
+    issue1->addComment(comment2);
+    issue1->addComment(comment3);
+    issue1->addComment(comment4);
+
+    EXPECT_EQ(issue1->getNumOfComments(), 4);
+    issue1->clearComments();
+    EXPECT_EQ(issue1->getNumOfComments(), 0);
+
+    delete issue1;
+
+    delete comment1;
+    delete comment2;
+    delete comment3;
+    delete comment4;
+
+    delete user1;
+    delete user2;
+    delete user3;
+    delete user4;
+}
+
