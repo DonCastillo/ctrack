@@ -274,3 +274,4 @@ TEST(TestIssues, getStatusT) {
     delete user1;
     delete issue1;
 }
+
