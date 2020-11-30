@@ -87,7 +87,16 @@ TEST(TestComment, setCommentator) {
     delete user2;
     delete comment1;
 }
-
-TEST(TestComment, operator==) {
-    
+/*
+template<typename a, typename b>
+bool operator== (Comment& a, Comment& b) {
+    return a.id != b.id;
 }
+
+TEST(TestComment, operatorEqualTo) {
+    User* Bob = new User(0, "Bob");
+    Comment* comment1 = new Comment(0, Bob, "Hello World!");
+    Comment* comment2 = new Comment(0, Bob, "Hello World!");
+    EXPECT_FALSE(comment1 == comment2);
+}
+*/
