@@ -1,3 +1,4 @@
+#include <nlohmann/json.hpp>
 #include <restbed>
 #include <memory>
 #include <string>
@@ -6,7 +7,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <vector>
-#include <nlohmann/json.hpp>
 #include "../../include/service/Comment.h"
 #include "../../include/service/Issue.h"
 #include "../../include/service/User.h"
