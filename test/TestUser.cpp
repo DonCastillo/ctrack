@@ -1,6 +1,18 @@
 #include <string>
 #include "User.h"
 #include "gtest/gtest.h"
+
+TEST(TestUser, getID) {
+    User* Bob = new User(0, "Bob");
+    User* Amy = new User(1, "Amy");
+
+    EXPECT_EQ(Amy->getID(), 1);
+    EXPECT_EQ(Bob->getID(), 0);
+
+    delete Bob;
+    delete Amy;
+}
+
 //#include <iostream>
 //
 //
