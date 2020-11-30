@@ -5,6 +5,25 @@
 #include "User.h"
 #include "gtest/gtest.h"
 
+/**
+ * //TODO: Fix this
+TEST(TestIssue, Deconstructor) {
+    User* John = new User(1, "John");
+    User* Henry = new User(2, "henry");
+    Issue* issue1 = new Issue(0, "CPSC3720", John);
+    Comment* comment1 = new Comment(4, Henry, "Added Comment");
+
+    issue1->addComment(comment1);
+
+    issue1->~Issue();
+
+    EXPECT_NE(issue1->getComment(4), comment1);
+
+    delete John;
+    delete Henry;
+    delete comment1;
+}*/
+
 TEST(TestIssue, setTitle) {
     User* Alex = new User(0, "Alex");
     Issue* issue1 = new Issue(1, "Cat on roof", Alex);
@@ -59,6 +78,44 @@ TEST(TestIssue, setIssuer) {
     delete issue1;
 }
 
+TEST(TestIssue, getID) {
+    User* Fred = new User(3, "Fred");
+    Issue* issue1 = new Issue(43, "Title of issue", Fred);
+
+    EXPECT_EQ(issue1->getID(), 43);
+    delete Fred;
+    delete issue1;
+}
+
+TEST(TestIssue, setType) {
+    User* George = new User(0, "George");
+    Issue* issue1 = new Issue(1, "On button turns things off", George);
+    //Test Issue::BUG
+    issue1->setType(1);
+    EXPECT_EQ(issue1->getType(), 1);
+    //Test Issue::FEATURE
+    issue1->setType(0);
+    EXPECT_EQ(issue1->getType(), 0);
+    //Test Issue::TASK, and Test default
+    issue1->setType(2);
+    EXPECT_EQ(issue1->getType(), 2);
+    delete George;
+    delete issue1;
+}
+
+TEST(TestIssue, getTypeString) {
+    User* George = new User(0, "George");
+    Issue* issue1 = new Issue(1, "On button turns things off", George);
+    issue1->setType(0);
+    std::string value = issue1->getTypeString();
+    std::cout << "Feature: " << value << "\n";
+    EXPECT_EQ(value, "feature");
+    issue1->setType(1);
+    issue1->setType(2);
+
+    delete George;
+    delete issue1;
+}
 //TEST(TestIssue, issue_id) {
 //    User* jane = new User(0, "Jane");
 //    Issue* issue1 = new Issue(0, "Not working properly", jane);

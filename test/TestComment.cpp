@@ -86,5 +86,4 @@ TEST(TestComment, setCommentator) {
     delete user1;
     delete user2;
     delete comment1;
-
 }
