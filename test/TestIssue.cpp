@@ -107,15 +107,68 @@ TEST(TestIssue, getTypeString) {
     User* George = new User(0, "George");
     Issue* issue1 = new Issue(1, "On button turns things off", George);
     issue1->setType(0);
+
     std::string value = issue1->getTypeString();
     std::cout << "Feature: " << value << "\n";
     EXPECT_EQ(value, "feature");
+
     issue1->setType(1);
+    value = issue1->getTypeString();
+    EXPECT_EQ(value, "bug");
+
     issue1->setType(2);
+    value = issue1->getTypeString();
+    EXPECT_EQ(value, "task");
 
     delete George;
     delete issue1;
 }
+
+TEST(TestIssue, getTypeInt) {
+    User* George = new User(0, "George");
+    Issue* issue1 = new Issue(1, "On button turns things off", George);
+
+    issue1->setType(0);
+    EXPECT_EQ(issue1->getTypeInt(), 0);
+
+    issue1->setType(1);
+    EXPECT_EQ(issue1->getTypeInt(), 1);
+
+    issue1->setType(2);
+    EXPECT_EQ(issue1->getTypeInt(), 2);
+
+    delete George;
+    delete issue1;
+}
+
+TEST(TestIssue, setStatus) {
+    User* George = new User(0, "George");
+    Issue* issue1 = new Issue(1, "On button turns things off", George);
+    //Status New
+    issue1->setStatus(0);
+    EXPECT_EQ(issue1->NEW, issue1->getStatus());
+
+    //Status Assigned
+    issue1->setStatus(1);
+    EXPECT_EQ(issue1->ASSIGNED, issue1->getStatus());
+
+    //Status Fixed
+    issue1->setStatus(2);
+    EXPECT_EQ(issue1->FIXED, issue1->getStatus());
+
+    //Status Wont Fix
+    issue1->setStatus(3);
+    EXPECT_EQ(issue1->WONTFIX, issue1->getStatus());
+
+    //Status New
+    issue1->setStatus(4);
+    EXPECT_EQ(issue1->NEW, issue1->getStatus());
+
+    delete George;
+    delete issue1;
+}
+
+
 //TEST(TestIssue, issue_id) {
 //    User* jane = new User(0, "Jane");
 //    Issue* issue1 = new Issue(0, "Not working properly", jane);
