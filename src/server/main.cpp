@@ -511,7 +511,7 @@ void get_issue_by_id_handler(const std::shared_ptr<restbed::Session>& session) {
         resultJSON["result"] = "No issue found";
     }
 
-    //f.close();
+    f.close();
     std::string response = resultJSON.dump(4);
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
@@ -519,11 +519,94 @@ void get_issue_by_id_handler(const std::shared_ptr<restbed::Session>& session) {
 
 
 
+/**
+ * @brief handles the GET request for the USER
+ * @param session   current session between server and client
+ */
+void get_comment_handler(const std::shared_ptr<restbed::Session>& session) {
+    const auto request = session->get_request();
+    std::fstream f("./db.json");
+    json j = json::parse(f);
+    json resultJSON;
+    json issue;
 
-void sample(const std::shared_ptr<restbed::Session>& session) {
+    /**
+     *   /issues/{id}/comments       lists all comments of an id-specified issue
+     */
+    
+    // get the specific issue
+    std::string targetIssueID = request->get_path_parameter("issue_id");
+    for (auto &i : j["issues"]) {
+        int issueID = i["id"];
+        if (issueID == std::stoi(targetIssueID)) {
+            issue = i;
+            break;
+        }
+    }
+          
+    // get all the comments
+    if (!issue.empty()) {
+        resultJSON = issue["comments"];
+    } else {
+        resultJSON["result"] = "No issue found";
+    }
 
-    session->close(restbed::OK, "Hello", { ALLOW_ALL, { "Content-Length", "5" } } );
+    f.close();
+    std::string response = resultJSON.dump(4);
+    session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
+
+
+
+
+/**
+ * @brief handles the GET request for the USER
+ * @param session   current session between server and client
+ */
+void get_comment_by_id_handler(const std::shared_ptr<restbed::Session>& session) {
+    const auto request = session->get_request();
+    std::fstream f("./db.json");
+    json j = json::parse(f);
+    json resultJSON;
+    json issue;
+
+    /**
+     *   /issues/{issue_id}/comments/{comment_id}   views a specific comment of an issue based on id
+     */
+    
+    // get the specific issue
+    std::string targetIssueID = request->get_path_parameter("issue_id");
+    for (auto &i : j["issues"]) {
+        int issueID = i["id"];
+        if (issueID == std::stoi(targetIssueID)) {
+            issue = i;
+            break;
+        }
+    }
+          
+    // get the the comment by id
+    if (!issue.empty()) {
+        std::string targetCommentID = request->get_path_parameter("comment_id");
+        for (auto &c : issue["comments"]) {
+            int commentID = c["id"];
+            if (commentID == std::stoi(targetCommentID)) {
+                resultJSON = c;
+                break;
+            }
+        }
+        if (resultJSON.empty())
+            resultJSON["result"] = "No comment found";
+    } else {
+        resultJSON["result"] = "No issue found";
+    }
+
+    f.close();
+    std::string response = resultJSON.dump(4);
+    session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
+}
+
+
+
 
 /* ++++++++++++++++++++++++++++++++++
     Issue functions
@@ -710,6 +793,14 @@ int main(const int, const char**) {
     resource_issue_by_id->set_method_handler("PUT", put_issue_handler);
     resource_issue_by_id->set_method_handler("DELETE", delete_issue_handler);
 
+    auto resource_comments = std::make_shared<restbed::Resource>();
+    resource_comments->set_path("/issues/{issue_id: .*}/comments");
+    resource_comments->set_method_handler("GET", get_comment_handler);
+
+    auto resource_comment_by_id = std::make_shared<restbed::Resource>();
+    resource_comment_by_id->set_path("/issues/{issue_id: .*}/comments/{comment_id: .*}");
+    resource_comment_by_id->set_method_handler("GET", get_comment_by_id_handler);
+
 
     auto settings = std::make_shared<restbed::Settings>();
     settings->set_port(1234);
@@ -720,8 +811,8 @@ int main(const int, const char**) {
     service.publish(resource_user_by_id);
     service.publish(resource_issue);
     service.publish(resource_issue_by_id);
-    // service.publish(resource_comments_by_id);
-    // service.publish(resource_comments);
+    service.publish(resource_comments);
+    service.publish(resource_comment_by_id);
 
     service.start(settings);
     return EXIT_SUCCESS;
