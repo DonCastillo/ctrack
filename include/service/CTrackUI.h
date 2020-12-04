@@ -1,12 +1,11 @@
 #ifndef CTRACKUI_H_INCLUDED
 #define CTRACKUI_H_INCLUDED
-
-#include "../../include/service/User.h"
-#include "../../include/service/Issue.h"
-#include "../../include/service/Comment.h"
 #include <string>
 #include <vector>
 #include <map>
+#include "../../include/service/User.h"
+#include "../../include/service/Issue.h"
+#include "../../include/service/Comment.h"
 
 /** UI class */
 class CTrackUI {

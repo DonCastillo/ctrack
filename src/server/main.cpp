@@ -1,13 +1,14 @@
 #include <restbed>
-#include <nlohmann/json.hpp>
 #include <cstring>
 #include <cstdlib>
 #include <memory>
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <iomanip>
 #include <utility>
 #include <map>
+#include <nlohmann/json.hpp>
 #include "../../include/service/Comment.h"
 #include "../../include/service/Issue.h"
 #include "../../include/service/User.h"
@@ -29,7 +30,7 @@ void post_user_request(const std::shared_ptr<restbed::Session >& session,
                        const restbed::Bytes & body);
 void post_user_handler(const std::shared_ptr<restbed::Session>& session);
 void get_user_handler(const std::shared_ptr<restbed::Session>& session);
-void readDB();
+bool readDB();
 void writeDB();
 
 
@@ -38,7 +39,7 @@ void writeDB();
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 std::map<int, User*> users;
 std::map<int, Issue*> issues;
-int userIDX, issueIDX;
+int userIDX = 0, issueIDX = 0;
 
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -173,21 +174,18 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
             resultJSON["result"] = "No user found";
 
     } else {
-
         if ( request->has_query_parameter("group") ) {
-
             // search for all users that belong in a specified group
             std::string targetGroup = request->get_query_parameter("group");
             json collection = json::array(); // initialize to empty array
             for (auto &u : j["users"]) {
                 std::string userGroup = User::getGroup(u["group"]);
-                if( targetGroup == userGroup )
+                if (targetGroup == userGroup)
                     collection.push_back(u);
             }
             resultJSON["users"] = collection;
 
         } else {
-
             // if no id or query is specified, get all users
             resultJSON["users"] = j["users"];
         }
@@ -210,7 +208,6 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
  * @param user  USER object to be filled with data members
  */
 void parse_issue(const char* data, Issue*& issue) {
-
     // convert string to actual json obj
     json i = json::parse(data);
 
@@ -279,7 +276,6 @@ void post_issue_handler(const std::shared_ptr<restbed::Session>& session) {
  * @param user  USER object to be filled with data members
  */
 void parse_issue_put(const char* data, Issue*& issue, const unsigned int id) {
-
     // convert string to actual json obj
     json i = json::parse(data)["issue"];
 
@@ -407,7 +403,7 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
 
         // search user based on type
         for (auto &i : j["issues"]) {
-            std::string issueType = Issue::getTypeT( i["type"] );
+            std::string issueType = Issue::getTypeT(i["type"]);
             if ( issueType == targetType )
                 collection.push_back(i);
         }
@@ -424,7 +420,7 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
 
         // search user based on status
         for (auto &i : j["issues"]) {
-            std::string issueStatus = Issue::getStatusT( i["status"] );
+            std::string issueStatus = Issue::getStatusT(i["status"]);
             if ( issueStatus == targetStatus )
                 collection.push_back(i);
         }
@@ -541,40 +537,57 @@ void sample(const std::shared_ptr<restbed::Session>& session) {
    \brief   reads the JSON file
    \pre     call this function in the main function to load all the objects
 */
-void readDB() {
+bool readDB() {
     json j;
     std::fstream f("./db.json");
+    std::string s;
+    if (!(f >> s))
+        return false;
+
+    f.clear();
+    f.seekg(0, std::ios::beg);
     j = json::parse(f);
 
-    userIDX  = j["userIDX"];
-    issueIDX = j["issueIDX"];
+    if (!j["userIDX"].is_null())
+        userIDX  = j["userIDX"];
+    if (!j["issueIDX"].is_null())
+        issueIDX = j["issueIDX"];
 
     // create user objects
-    for (auto &u : j["users"]) {
-        User* user = new User(u["id"], u["name"]);
-        user->setGroup(u["group"]);
-        users.insert(std::make_pair(u["id"], user));
+    if (!j["users"].is_null()) {
+        for (auto &u : j["users"]) {
+            User* user = new User(u["id"], u["name"]);
+            user->setGroup(u["group"]);
+            users.insert(std::make_pair(u["id"], user));
+        }
     }
 
     // create issue objects
-    for (auto &i : j["issues"]) {
-        Issue* issue = new Issue(i["id"], i["title"], users[i["author"]]);
-        issue->setType(i["type"]);
-        issue->setStatus(i["status"]);
-        issue->setDescription(i["description"]);
+    if (!j["issues"].is_null()) {
+        for (auto &i : j["issues"]) {
+            Issue* issue = new Issue(i["id"], i["title"], users[i["author"]]);
+            issue->setType(i["type"]);
+            issue->setStatus(i["status"]);
+            issue->setDescription(i["description"]);
 
-        for (auto &a : i["assignees"])
-            issue->addAssignee(users[a]);
+            if (!i["assignees"].is_null()) {
+                for (auto &a : i["assignees"])
+                    issue->addAssignee(users[a]);
+            }
 
-        for (auto &c : i["comments"])
-            issue->addComment(new Comment(c["id"], users[c["author"]], c["comment"]));
+            if (!i["comments"].is_null()) {
+                for (auto &c : i["comments"])
+                    issue->addComment(new Comment(c["id"], users[c["author"]], c["comment"]));
+            }
 
-        //issue->setNumOfComments(i["commentIDX"]);
+            //issue->setNumOfComments(i["commentIDX"]);
 
-        issues.insert(std::make_pair(i["id"], issue));
+            issues.insert(std::make_pair(i["id"], issue));
+        }
     }
 
     f.close();
+    return true;
 }
 
 
@@ -635,8 +648,8 @@ void writeDB() {
 
     // Write to file
     std::cout << "SERVER UPDATING DATA" << std::endl;
-    f << j;
-    std::cout << j.dump();
+    f << std::setw(4) << j;
+    // std::cout << j.dump();
     f.close();
 }
 

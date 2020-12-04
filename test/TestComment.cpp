@@ -1,98 +1,102 @@
+#include <string>
+#include <iostream>
 #include "Comment.h"
 #include "User.h"
 #include "gtest/gtest.h"
-#include <string>
-#include <iostream>
 
-//TEST(TestComment, comment_id) {
-//    User* jane = new User(0, "Jane");
-//    Comment* comment1 = new Comment(0, jane, "This is comment 1");
-//    Comment* comment2 = new Comment(1, jane, "This is comment 2");
-//
-//    User* bob = new User(1, "Bob");
-//    Comment* comment3 = new Comment(2, bob, "This is comment 3");
-//    Comment* comment4 = new Comment(3, bob, "This is comment 4");
-//
-//    EXPECT_EQ(comment1->getID(), 0);
-//    EXPECT_EQ(comment2->getID(), 1);
-//    EXPECT_EQ(comment3->getID(), 2);
-//    EXPECT_EQ(comment4->getID(), 3);
-//
-//    delete comment1;
-//    delete comment2;
-//    delete comment3;
-//    delete comment4;
-//    delete jane;
-//    delete bob;
-//}
-//
-//TEST(TestComment, setting_and_getting_comment) {
-//    std::string comment = "";
-//    User* jane = new User(0, "Jane");
-//
-//    // blank comment
-//    comment = "";
-//    Comment* myComment = new Comment(0, jane, comment);
-//    EXPECT_EQ(myComment->getComment().length(), 0);
-//
-//    // one char comment
-//    comment = "x";
-//    myComment->setComment(comment);
-//    EXPECT_EQ(myComment->getComment(), comment);
-//
-//    // short comment
-//    comment = "this is a short comment.";
-//    myComment->setComment(comment);
-//    EXPECT_EQ(myComment->getComment(), comment);
-//
-//    // long comment
-//    comment = "this is a very long long long long comment.";
-//    myComment->setComment(comment);
-//    EXPECT_EQ(myComment->getComment(), comment);
-//
-//    delete myComment;
-//    delete jane;
-//}
-//
-//
-//TEST(TestComment, setting_and_getting_commenter) {
-//    // jane as original commenter
-//    User* jane = new User(0, "Jane");
-//    Comment* myComment = new Comment(0, jane, "sample comment");
-//    EXPECT_EQ(myComment->getCommenter()->getName(), "Jane");
-//
-//    // change commenter to Bob
-//    User* bob = new User(1, "Bob");
-//    myComment->setCommenter(bob);
-//    EXPECT_EQ(myComment->getCommenter()->getName(), "Bob");
-//
-//    delete myComment;
-//    delete jane;
-//    delete bob;
-//}
-//
-//TEST(TestComment, operator_overload) {
-//    User* jane = new User(0, "Jane");
-//    User* john = new User(1, "John");
-//    Comment* commentA = new Comment(0, jane, "comment from jane");
-//    Comment* commentB = new Comment(1, john, "comment from john");
-//
-//    // same comment
-//    EXPECT_TRUE(commentA == commentA);
-//    EXPECT_FALSE(commentA != commentA);
-//
-//    // different user
-//    EXPECT_TRUE(commentA != commentB);
-//    EXPECT_FALSE(commentA == commentB);
-//
-//    // cout
-//    std::cout << *commentA;
-//    std::cout << *commentB;
-//
-//    delete commentA;
-//    delete commentB;
-//    delete john;
-//    delete jane;
-//}
+TEST(TestComment, getID) {
+    User* Bob = new User(0, "Bob");
+    Comment* comment1 = new Comment(3, Bob, "Bobs Testing Comment");
+    Comment* comment2 = new Comment(15, Bob, "Bob's second Test");
+    Comment* comment3 = new Comment(4000, Bob, "Bob's asdf Test");
+    Comment* comment4 = new Comment(12, Bob, "Bob's lasdjf Test");
+    Comment* comment5 = new Comment(100, Bob, "Bob's asdfwegddaf");
 
+    EXPECT_EQ(comment1->getID(), 3);
+    EXPECT_EQ(comment2->getID(), 15);
+    EXPECT_EQ(comment3->getID(), 4000);
+    EXPECT_EQ(comment4->getID(), 12);
+    EXPECT_EQ(comment5->getID(), 100);
 
+    delete Bob;
+    delete comment1;
+    delete comment2;
+    delete comment3;
+    delete comment4;
+    delete comment5;
+}
+
+TEST(TestComment, setComment) {
+    User* John = new User(1, "John");
+    Comment* comment1 = new Comment(1, John, "Set Test");
+
+    std::string newComment1 = "abc dhe eiru aldkei";
+    comment1->setComment(newComment1);
+    EXPECT_EQ(comment1->getComment(), newComment1);
+
+    std::string newComment2 = "Software engineering";
+    comment1->setComment(newComment2);
+    EXPECT_EQ(comment1->getComment(), newComment2);
+
+    std::string newComment3 = "Comment test";
+    comment1->setComment(newComment3);
+    EXPECT_EQ(comment1->getComment(), newComment3);
+
+    std::string newComment4 = "I'm a new comment";
+    comment1->setComment(newComment4);
+    EXPECT_EQ(comment1->getComment(), newComment4);
+
+    delete John;
+    delete comment1;
+}
+
+//Need to redo this test.
+TEST(TestComment, setCommenter) {
+    User* Fred = new User(15, "Fred");
+    Comment* comment1 = new Comment(10, Fred, "Testing setCommenter");
+    EXPECT_EQ(comment1->getCommenter(), Fred);
+
+    delete Fred;
+    delete comment1;
+}
+
+TEST(TestComment, setID) {
+    User* nUser = new User(1, "user1");
+    Comment* comment1 = new Comment(10, nUser, "This comment");
+
+    EXPECT_EQ(comment1->getID(), 10);
+    comment1->setID(5);
+    EXPECT_EQ(comment1->getID(), 5);
+
+    delete nUser;
+    delete comment1;
+}
+
+TEST(TestComment, setCommentator) {
+    User* user1 = new User(16, "user");
+    User* user2 = new User(1, "user2");
+    Comment* comment1 = new Comment(5, user1, "Hello World!");
+
+    EXPECT_EQ(user1, comment1->getCommenter());
+
+    comment1->setCommenter(user2);
+
+    EXPECT_EQ(user2, comment1->getCommenter());
+
+    delete user1;
+    delete user2;
+    delete comment1;
+}
+/*
+template<typename a, typename b>
+bool operator== (Comment& a, Comment& b) {
+    return a.id != b.id;
+}
+
+TEST(TestComment, operatorEqualTo) {
+    User* Bob = new User(0, "Bob");
+    Comment* comment1 = new Comment(0, Bob, "Hello World!");
+    Comment* comment2 = new Comment(0, Bob, "Hello World!");
+    EXPECT_FALSE(comment1 == comment2);
+}
+*/

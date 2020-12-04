@@ -1,16 +1,17 @@
-#include "../../include/service/CTrackUI.h"
-#include "../../include/service/User.h"
-#include "../../include/service/Issue.h"
-#include "../../include/service/Comment.h"
 #include <string>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <cctype>
 #include <vector>
+#include <utility>
 #include <list>
 #include <map>
-#include<limits>
+#include <limits>
+#include "../../include/service/CTrackUI.h"
+#include "../../include/service/User.h"
+#include "../../include/service/Issue.h"
+#include "../../include/service/Comment.h"
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /*              GENERAL DISPLAY FUNCTIONS              */
@@ -84,7 +85,7 @@ void CTrackUI::sanitizeString(std::string &text) {
 
   // scan from the end
   for (int i = text.length() - 1; i >= 0; --i) {
-      if(text[i] == ' ') {
+      if (text[i] == ' ') {
           continue;
       } else {
           endIndex = i;
@@ -111,7 +112,7 @@ unsigned int CTrackUI::askForID() {
         std::getline(std::cin, choice);
         //std::cin.clear();
         isValid = choiceValid(choice, 9999);
-    } while(isValid == false);
+    } while (isValid == false);
     return std::stoul(choice, nullptr, 10);
 }
 
@@ -159,7 +160,7 @@ unsigned int CTrackUI::choose(std::vector<std::string> choices) {
 
 unsigned int CTrackUI::choose(std::map<unsigned int, std::string> mapChoices) {
     std::map<unsigned int, std::string>::iterator mapIt;
-    std::vector<unsigned int> indexes; 
+    std::vector<unsigned int> indexes;
     std::string choice = "";
     unsigned int choiceInt;
     bool isValid = false;
@@ -200,7 +201,7 @@ std::string CTrackUI::askIssueTitle() {
         //std::cin.clear();
         sanitizeString(title);
         isValid = stringValid(title);
-    } while(isValid == false);
+    } while (isValid == false);
     return title;
 }
 
@@ -213,23 +214,22 @@ std::string CTrackUI::askIssueDescription() {
         //std::cin.clear();
         sanitizeString(description);
         isValid = stringValid(description);
-    } while(isValid == false);
+    } while (isValid == false);
     return description;
 }
 
 User* CTrackUI::askWhichUser(std::vector<User*> usersOptions) {
     std::vector<unsigned int> indexes;
     std::map<unsigned int, std::string> mapUsers;
-    
     println("Enter the ID of the user you want to add: ");
     for (User* u : usersOptions) {
         unsigned int index = u->getID();
         std::string name   = u->getName();
-        mapUsers.insert( std::pair<unsigned int, std::string>(index, name) );
+        mapUsers.insert(std::pair<unsigned int, std::string>(index, name));
     }
 
     unsigned int choice = choose(mapUsers);
-    
+
     // create dummy user
     User* dummyUser = new User(choice, mapUsers.find(choice)->second);
     return dummyUser;
@@ -242,10 +242,10 @@ Issue* CTrackUI::askWhichIssue(std::vector<Issue*> issueOptions) {
     for (Issue* i : issueOptions) {
         unsigned int index = i->getID();
         std::string title = i->getTitle();
-        mapIssues.insert( std::pair<unsigned int, std::string>(index, title) );
+        mapIssues.insert(std::pair<unsigned int, std::string>(index, title));
     }
     unsigned int choice = choose(mapIssues);
-    
+
     // create dummy issue
     Issue* dummyIssue = new Issue(choice, "", nullptr);
     return dummyIssue;
@@ -258,10 +258,10 @@ Comment* CTrackUI::askWhichComment(std::vector<Comment*> commentOptions) {
     for (Comment* c : commentOptions) {
         unsigned int index = c->getID();
         std::string comment = c->getComment();
-        mapComments.insert( std::pair<unsigned int, std::string>(index, comment) );
+        mapComments.insert(std::pair<unsigned int, std::string>(index, comment));
     }
     unsigned int choice = choose(mapComments);
-    
+
     // create dummy comment
     Comment* dummyComment = new Comment(choice, nullptr, "");
     return dummyComment;
@@ -295,7 +295,7 @@ std::vector<User*> CTrackUI::askIssueAssignees(std::vector<User*> users) {
 
     println("Enter the IDs of the user(s)");
     print("you want to assign to this issue.\n");
-    
+
     unsigned int choice;
     do {
         User* tempUser = askWhichUser(users);
@@ -334,7 +334,7 @@ std::string CTrackUI::askComment() {
         //std::cin.clear();
         sanitizeString(comment);
         isValid = stringValid(comment);
-    } while(isValid == false);
+    } while (isValid == false);
     return comment;
 }
 
@@ -351,7 +351,7 @@ std::vector<Comment*> CTrackUI::askIssueComments(std::vector<User*> users) {
         Comment* dummyComment = new Comment(0, dummyUser, comment);
         comments.push_back(dummyComment);
         println("Add more comment?");
-        choice = choose(choices); 
+        choice = choose(choices);
     } while (choice == 1);
     return comments;
 }
@@ -380,7 +380,7 @@ User* CTrackUI::createUser() {
         //std::cin.clear();
         sanitizeString(name);
         isValid = stringValid(name);
-    } while(isValid == false);
+    } while (isValid == false);
 
     // ask which group
     std::vector<std::string> choices;
@@ -412,13 +412,13 @@ std::string CTrackUI::viewUser() {
 
     unsigned int targetChoice = choose(choices);
     std::string url = "";
-    switch(targetChoice) {
+    switch (targetChoice) {
         case 0:
             url = "/users";
             break;
         case 1: {
             unsigned int id = askForID();
-            url = "/users/" + std::to_string(id); 
+            url = "/users/" + std::to_string(id);
         }   break;
     }
     return url;

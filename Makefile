@@ -78,9 +78,11 @@ memcheck: $(PROGRAM_TEST)
 
 coverage: $(PROGRAM_TEST)
 	./$(PROGRAM_TEST)
-	# Determine code coverage
-	$(GCOV) -b $(SRC_DIR_SERVICE)/*.cpp -o .
-	#Remove all of the generated files from gcov
+	$(LCOV) --capture --gcov-tool $(GCOV) --directory . --output-file $(COVERAGE_RESULTS)
+	# Only show code coverage for the source code files (not library files)
+	$(LCOV) --extract $(COVERAGE_RESULTS) "*/czar/src/*" -o $(COVERAGE_RESULTS)
+	#Generate the HTML reports
+	genhtml $(COVERAGE_RESULTS) --output-directory $(COVERAGE_DIR)
 	rm -f *.gc*
 
 static: ${SRC_DIR_SERVER} ${SRC_DIR_CLIENT} ${SRC_DIR_SERVICE} ${TEST_DIR}

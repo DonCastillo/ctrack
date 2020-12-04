@@ -1,90 +1,98 @@
+#include <string>
 #include "User.h"
 #include "gtest/gtest.h"
-#include <string>
-//#include <iostream>
-//
-//
-//TEST(TestUser, user_id) {
-//    User* michael = new User(0, "Michael");
-//    User* dwight = new User(1, "Dwight");
-//    User* jim = new User(2, "Jim");
-//    User* pam = new User(3, "Pam");
-//
-//    EXPECT_EQ(michael->getID(), 0);
-//    EXPECT_EQ(dwight->getID(), 1);
-//    EXPECT_EQ(jim->getID(), 2);
-//    EXPECT_EQ(pam->getID(), 3);
-//
-//    delete michael;
-//    delete dwight;
-//    delete jim;
-//    delete pam;
-//}
-//
-//TEST(TestUser, setting_and_getting_name) {
-//    User* jane = new User(0, "Jane");
-//
-//    // check original name
-//    EXPECT_EQ(jane->getName(), "Jane");
-//
-//    // change name to John
-//    jane->setName("John");
-//    EXPECT_EQ(jane->getName(), "John");
-//
-//    delete jane;
-//}
-//
-//TEST(TestUser, setting_and_getting_group) {
-//    User* jane = new User(0, "Jane");
-//
-//    // checking default user group
-//    EXPECT_EQ(jane->getGroup(), "user");
-//
-//    // change user group to developer
-//    jane->setGroup(0);
-//    EXPECT_EQ(jane->getGroup(), "developer");
-//
-//    // change to tester
-//    jane->setGroup(1);
-//    EXPECT_EQ(jane->getGroup(), "tester");
-//
-//    // change to manager
-//    jane->setGroup(2);
-//    EXPECT_EQ(jane->getGroup(), "manager");
-//
-//    // change back to user
-//    jane->setGroup(3);
-//    EXPECT_EQ(jane->getGroup(), "user");
-//
-//    // check default
-//    jane->setGroup(999);
-//    EXPECT_EQ(jane->getGroup(), "user");
-//
-//    delete jane;
-//}
-//
-//TEST(TestUser, operator_overload) {
-//    User* jane = new User(0, "Jane");
-//    User* john = new User(1, "John");
-//
-//    // same user
-//    EXPECT_TRUE(jane == jane);
-//    EXPECT_FALSE(jane != jane);
-//
-//    // different user
-//    EXPECT_TRUE(jane != john);
-//    EXPECT_FALSE(jane == john);
-//
-//    // cout
-//    std::cout << *jane;
-//    std::cout << *john;
-//
-//    delete john;
-//    delete jane;
-//}
 
+TEST(TestUser, getID) {
+    User* Bob = new User(0, "Bob");
+    User* Amy = new User(1, "Amy");
 
+    EXPECT_EQ(Amy->getID(), 1);
+    EXPECT_EQ(Bob->getID(), 0);
 
+    delete Bob;
+    delete Amy;
+}
 
+TEST(TestUser, setName) {
+    User* user1 = new User(0, "user1");
+    EXPECT_EQ(user1->getName(), "user1");
 
+    user1->setName("user2");
+    EXPECT_EQ(user1->getName(), "user2");
 
+    user1->setName("user3");
+    EXPECT_EQ(user1->getName(), "user3");
+
+    user1->setName("user4");
+    EXPECT_EQ(user1->getName(), "user4");
+
+    user1->setName("user5");
+    EXPECT_EQ(user1->getName(), "user5");
+
+    delete user1;
+}
+
+TEST(TestUser, setGroup) {
+    std::string testGroup;
+    User* user1 = new User(0, "user1");
+
+    user1->setGroup(0);
+    testGroup = user1->getGroupString();
+    EXPECT_EQ(testGroup, "developer");
+
+    user1->setGroup(1);
+    testGroup = user1->getGroupString();
+    EXPECT_EQ(testGroup, "tester");
+
+    user1->setGroup(2);
+    testGroup = user1->getGroupString();
+    EXPECT_EQ(testGroup, "manager");
+
+    user1->setGroup(3);
+    testGroup = user1->getGroupString();
+    EXPECT_EQ(testGroup, "user");
+
+    delete user1;
+}
+
+TEST(TestUser, getGroup) {
+    std::string testGroup;
+    User* user1 = new User(0, "user1");
+
+    user1->setGroup(0);
+    EXPECT_EQ(user1->getGroup(), user1->DEVELOPER);
+
+    user1->setGroup(1);
+    EXPECT_EQ(user1->getGroup(), user1->TESTER);
+
+    user1->setGroup(2);
+    EXPECT_EQ(user1->getGroup(), user1->MANAGER);
+
+    user1->setGroup(3);
+    EXPECT_EQ(user1->getGroup(), user1->USER);
+
+    delete user1;
+}
+
+TEST(TestUser, getGroupString) {
+    std::string testGroup;
+    User* user1 = new User(0, "user1");
+
+    user1->setGroup(0);
+    testGroup = user1->getGroup(0);
+    EXPECT_EQ(testGroup, user1->getGroupString());
+
+    user1->setGroup(1);
+    testGroup = user1->getGroup(1);
+    EXPECT_EQ(testGroup, user1->getGroupString());
+
+    user1->setGroup(2);
+    testGroup = user1->getGroup(2);
+    EXPECT_EQ(testGroup, user1->getGroupString());
+
+    user1->setGroup(3);
+    testGroup = user1->getGroup(3);
+    EXPECT_EQ(testGroup, user1->getGroupString());
+
+    delete user1;
+}

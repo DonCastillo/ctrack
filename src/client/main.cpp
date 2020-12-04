@@ -1,5 +1,5 @@
-#include <restbed>
 #include <nlohmann/json.hpp>
+#include <restbed>
 #include <memory>
 #include <string>
 #include <future>
@@ -322,9 +322,8 @@ void handle_response_issue(std::shared_ptr<restbed::Response> response) {
 /*                    MAIN FUNCTION                     */
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 int main(const int, const char**) {
-
-   std::string path;
-   unsigned int id;
+    std::string path;
+    unsigned int id;
 
 
     Issue* dummyIssue       = nullptr;
@@ -596,7 +595,6 @@ int main(const int, const char**) {
         }
 
         cont = ui->continueUsing();
-
     } while (cont);
 
     delete ui;
