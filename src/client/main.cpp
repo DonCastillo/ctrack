@@ -127,7 +127,7 @@ std::shared_ptr<restbed::Request> create_issue_put_request(const Issue* dummyIss
     request->set_header("Content-Type", "text/plain");
 
     // Create the message
-    json issue; 
+    json issue;
     issue["issue"]["title"]        = dummyIssue->getTitle();
     issue["issue"]["description"]  = dummyIssue->getDescription();
     issue["issue"]["type"]         = dummyIssue->getTypeInt();
@@ -185,9 +185,10 @@ std::shared_ptr<restbed::Request> get_request_by_user_query(User* pUser) {
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /*                DELETE Functions                    */
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-std::shared_ptr<restbed::Request> delete_request_by_user_id(std::string path) {
+std::shared_ptr<restbed::Request> delete_request_by_id(std::string path) {
     // Create the URI string
     std::string uri = create_uri(path);
+    std::cout << uri << std::endl;
 
     //Configure request headers
     auto request = std::make_shared<restbed::Request>(restbed::Uri(uri));
@@ -338,6 +339,16 @@ int main(const int, const char**) {
         ui->welcome();
         choice = ui->menu();
 
+        // fetch all the users
+        request = get_request_by_path("users");
+        auto response_user = restbed::Http::sync(request);
+        handle_response_user(response_user);
+
+        // fetch all the issues
+        request = get_request_by_path("issues");
+        auto response_issue = restbed::Http::sync(request);
+        handle_response_issue(response_issue);
+
         switch(choice) {
 
         case 0: {
@@ -355,9 +366,7 @@ int main(const int, const char**) {
                 // ask user ID to be assigned as issuer/author
                 ui->println("Enter the ID of the user");
                 ui->print("you want as an author of this issue.\n");
-                request = get_request_by_path("/users");
-                auto response_user = restbed::Http::sync(request);
-                handle_response_user(response_user);
+
                 User* issuer           = ui->askWhichUser(users);
 
                 // ask issue type
@@ -392,11 +401,25 @@ int main(const int, const char**) {
                 delete issuer;
                 }
             break;
-        case 1:
-            //ui->viewIssue();
+        case 1: {
+                ui->printTitle("VIEWING AN ISSUE");
+                path          = ui->viewIssue();
+                request       = get_request_by_path(path);
+                auto response = restbed::Http::sync(request);
+                handle_response(response);
+                }
             break;
-        case 2:
-            //ui->deleteIssue();
+        case 2: {
+                ui->printTitle("DELETING AN ISSUE");
+                ui->println("Which issue to delete?");
+                std::map<unsigned int, std::string> issueMap;
+                for (Issue* i : issues)
+                    issueMap.insert(std::pair<unsigned int, std::string>(i->getID(), i->getTitle()));
+                unsigned int issueID  = ui->choose(issueMap);
+                request       = delete_request_by_id("issues/" + std::to_string(issueID));
+                auto response = restbed::Http::sync(request);
+                handle_response(response);
+                }
             break;
         case 3: {
                 ui->printTitle("EDITING AN ISSUE");
@@ -560,12 +583,16 @@ int main(const int, const char**) {
             break;
         case 6: {
                 ui->printTitle("DELETING A USER");
-                path          = ui->deleteUser();
-                request       = delete_request_by_user_id(path);
+                ui->println("Which user to delete?");
+                std::map<unsigned int, std::string> userMap;
+                for (User* u : users)
+                    userMap.insert(std::pair<unsigned int, std::string>(u->getID(), u->getName()));
+                unsigned int userID  = ui->choose(userMap);
+                request       = delete_request_by_id("users/" + std::to_string(userID));
                 auto response = restbed::Http::sync(request);
                 handle_response(response);
-                break;
                 }
+            break;
         }
 
         cont = ui->continueUsing();

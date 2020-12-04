@@ -109,7 +109,7 @@ unsigned int CTrackUI::askForID() {
     do {
         print("Enter ID: ");
         std::getline(std::cin, choice);
-        std::cin.clear();
+        //std::cin.clear();
         isValid = choiceValid(choice, 9999);
     } while(isValid == false);
     return std::stoul(choice, nullptr, 10);
@@ -150,7 +150,7 @@ unsigned int CTrackUI::choose(std::vector<std::string> choices) {
     do {
         std::cout << "Select a choice: ";
         std::getline(std::cin, choice);
-        std::cin.clear();
+        //std::cin.clear();
     }while( !choiceValid(choice, choices.size()) );
 
     return std::stoul(choice, nullptr, 10);
@@ -175,7 +175,6 @@ unsigned int CTrackUI::choose(std::map<unsigned int, std::string> mapChoices) {
     do {
         std::cout << "Select a choice: ";
         std::getline(std::cin, choice);
-        std::cin.clear();
         isValid = choiceValid(choice, 9999);
         if (isValid) {
             choiceInt = std::stoul(choice, nullptr, 10);
@@ -183,6 +182,7 @@ unsigned int CTrackUI::choose(std::map<unsigned int, std::string> mapChoices) {
         }
         
     } while(isValid == false);
+    //std::cin.clear();
 
     return choiceInt;
 }
@@ -197,7 +197,7 @@ std::string CTrackUI::askIssueTitle() {
     do {
         println("Enter title of the issue: ");
         std::getline(std::cin, title);
-        std::cin.clear();
+        //std::cin.clear();
         sanitizeString(title);
         isValid = stringValid(title);
     } while(isValid == false);
@@ -210,7 +210,7 @@ std::string CTrackUI::askIssueDescription() {
     do {
         println("Enter a short description of the issue: ");
         std::getline(std::cin, description);
-        std::cin.clear();
+        //std::cin.clear();
         sanitizeString(description);
         isValid = stringValid(description);
     } while(isValid == false);
@@ -331,7 +331,7 @@ std::string CTrackUI::askComment() {
     do {
         println("Write a comment: ");
         std::getline(std::cin, comment);
-        std::cin.clear();
+        //std::cin.clear();
         sanitizeString(comment);
         isValid = stringValid(comment);
     } while(isValid == false);
@@ -377,7 +377,7 @@ User* CTrackUI::createUser() {
     do {
         println("Enter Name: ");
         std::getline(std::cin, name);
-        std::cin.clear();
+        //std::cin.clear();
         sanitizeString(name);
         isValid = stringValid(name);
     } while(isValid == false);
@@ -419,6 +419,29 @@ std::string CTrackUI::viewUser() {
         case 1: {
             unsigned int id = askForID();
             url = "/users/" + std::to_string(id); 
+        }   break;
+    }
+    return url;
+}
+
+
+
+
+std::string CTrackUI::viewIssue() {
+    println("Do you want to...");
+    std::vector<std::string> choices;
+    choices.push_back("View all issues");
+    choices.push_back("View issue by ID");
+
+    unsigned int targetChoice = choose(choices);
+    std::string url = "";
+    switch(targetChoice) {
+        case 0:
+            url = "/issues";
+            break;
+        case 1: {
+            unsigned int id = askForID();
+            url = "/issues/" + std::to_string(id); 
         }   break;
     }
     return url;

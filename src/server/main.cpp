@@ -346,6 +346,39 @@ void put_issue_handler(const std::shared_ptr<restbed::Session>& session) {
 }
 
 
+/**
+ * @brief handles the DELETE request for the USER
+ * @param session   current session between server and client
+ */
+void delete_issue_handler(const std::shared_ptr<restbed::Session>& session) {
+    const auto request      = session->get_request();
+    std::map<int, Issue*>::iterator it;
+    std::string message;
+    json resultJSON;
+
+    std::cout << "Hello from " << std::endl;
+    if (request->has_path_parameter("id")) {
+        std::string paramID = request->get_path_parameter("id");
+        int targetID        = std::stoi(paramID);
+
+        it = issues.find(targetID);
+        if (it != issues.end()) {
+            issues.erase(it);
+            message = "Issue successfully deleted";
+            writeDB();
+        } else {
+            message = "Issue not found";
+        }
+
+    } else {
+        message = "Issue not found";
+    }
+
+    resultJSON["result"]    = message;
+    std::string response    = resultJSON.dump();
+    session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
+}
+
 
 /**
  * @brief handles the GET request for the USER
@@ -440,12 +473,61 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
         resultJSON["issues"] = j["issues"];
     }
 
+    f.close();
+    std::string response = resultJSON.dump(4);
+    session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
+}
+
+
+/**
+ * @brief handles the GET request for the USER
+ * @param session   current session between server and client
+ */
+void get_issue_by_id_handler(const std::shared_ptr<restbed::Session>& session) {
+    const auto request = session->get_request();
+    std::fstream f("./db.json");
+    json j = json::parse(f);
+    json resultJSON;
+
+    std::cout << "GET ISSUE HANDLER By ID" << std::endl;
+
+    /**
+     *    /issues/{id}
+     */
+
+    // BY TYPE
+    if ( request->has_path_parameter("issue_id") ) {
+        std::string targetID = request->get_path_parameter("issue_id");
+
+        // search issue by id
+        for (auto &i : j["issues"]) {
+            int issueID = i["id"];
+            if ( issueID == std::stoi(targetID) ) {
+                resultJSON = i;
+                break;
+            }
+        }
+
+        if (resultJSON.empty())
+            resultJSON["result"] = "No issue found";
+
+    } else {
+        resultJSON["result"] = "No issue found";
+    }
+
+    //f.close();
     std::string response = resultJSON.dump(4);
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
 
 
 
+
+
+void sample(const std::shared_ptr<restbed::Session>& session) {
+
+    session->close(restbed::OK, "Hello", { ALLOW_ALL, { "Content-Length", "5" } } );
+}
 
 /* ++++++++++++++++++++++++++++++++++
     Issue functions
@@ -463,7 +545,6 @@ void readDB() {
     json j;
     std::fstream f("./db.json");
     j = json::parse(f);
-    std::cout << j.dump();
 
     userIDX  = j["userIDX"];
     issueIDX = j["issueIDX"];
@@ -489,8 +570,6 @@ void readDB() {
             issue->addComment(new Comment(c["id"], users[c["author"]], c["comment"]));
 
         //issue->setNumOfComments(i["commentIDX"]);
-
-
 
         issues.insert(std::make_pair(i["id"], issue));
     }
@@ -613,21 +692,10 @@ int main(const int, const char**) {
     resource_issue->set_method_handler("GET", get_issue_handler);
 
     auto resource_issue_by_id = std::make_shared<restbed::Resource>();
-    resource_issue_by_id->set_path("/issues/{id: .*}");
+    resource_issue_by_id->set_path("/issues/{issue_id: .*}");
+    resource_issue_by_id->set_method_handler("GET", get_issue_by_id_handler);
     resource_issue_by_id->set_method_handler("PUT", put_issue_handler);
-
-    // auto resource_issue_by_id = std::make_shared<restbed::Resource>();
-    // resource_issue_by_id->set_path("/issues/{id: .*}");
-    // resource_issue_by_id->set_method_handler("GET", get_user_handler);
-    // resource_issue_by_id->set_method_handler("DELETE", delete_user_handler);
-
-    // auto resource_comments_by_id = std::make_shared<restbed::Resource>();
-    // resource_comments_by_id->set_path("/issues/{id: .*}/comments/{comments_id: .*}");
-    // resource_comments_by_id->set_method_handler("GET", get_user_handler);
-
-    // auto resource_comments = std::make_shared<restbed::Resource>();
-    // resource_comments->set_path("/issues/{id: .*}/comments");
-    // resource_comments->set_method_handler("GET", get_user_handler);
+    resource_issue_by_id->set_method_handler("DELETE", delete_issue_handler);
 
 
     auto settings = std::make_shared<restbed::Settings>();

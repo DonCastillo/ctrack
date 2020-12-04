@@ -112,6 +112,7 @@ class CTrackUI {
     bool continueAddingComment();
     Comment* askWhichComment(std::vector<Comment*> commentOptions);
     std::vector<Comment*> askIssueCommentsWithID(unsigned int numOfComments, std::vector<User*> users);
+    std::string viewIssue();
 
 
 
