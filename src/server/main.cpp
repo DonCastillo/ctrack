@@ -30,6 +30,19 @@ void post_user_request(const std::shared_ptr<restbed::Session >& session,
                        const restbed::Bytes & body);
 void post_user_handler(const std::shared_ptr<restbed::Session>& session);
 void get_user_handler(const std::shared_ptr<restbed::Session>& session);
+void post_issue_request(const std::shared_ptr<restbed::Session >&
+                       session, const restbed::Bytes & body);
+void post_issue_handler(const std::shared_ptr<restbed::Session>& session);
+void parse_issue(const char* data, Issue*& issue);
+void delete_issue_handler(const std::shared_ptr<restbed::Session>& session);
+void put_issue_request(const std::shared_ptr<restbed::Session >&
+                       session, const restbed::Bytes & body);
+void put_issue_handler(const std::shared_ptr<restbed::Session>& session);
+void parse_issue_put(const char* data, Issue*& issue, const unsigned int id);
+void get_issue_handler(const std::shared_ptr<restbed::Session>& session);
+void get_issue_by_id_handler(const std::shared_ptr<restbed::Session>& session);
+void get_comment_handler(const std::shared_ptr<restbed::Session>& session);
+void get_comment_by_id_handler(const std::shared_ptr<restbed::Session>& session);
 bool readDB();
 void writeDB();
 
@@ -377,7 +390,15 @@ void delete_issue_handler(const std::shared_ptr<restbed::Session>& session) {
 
 
 /**
- * @brief handles the GET request for the USER
+ * @brief handles the GET request for the /issue endpoint 
+ *        with query parameters
+ *        Endpoints:
+ *        /issues                     gets all the issues
+ *        /issues?type=val            gets issues by type
+ *        /issues?status=val          gets issues by status
+ *        /issues?start=0&end=0       if start == end, then /issues/{start==val}
+ *        /issues?start=3&end=0       if start > end, then return "result" : "No issues found"
+ *        /issues?start=0&end=2       returns issues with id 0 through 2
  * @param session   current session between server and client
  */
 void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
@@ -387,33 +408,22 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
     json resultJSON;
     bool withQuery = false;
 
-    /**
-     *    /issues
-     *    /issues?type=val
-     *    /issues?status=val
-     *    /issues?start=0&end=0       if start == end, then /issues/{id}
-     *    /issues?start=3&end=0       if start > end, then return result : "No issues found"
-     *    /issues?start=0&end=2       returns issues with id 0 through 2
-     */
-
-    // BY TYPE
-    if ( request->has_query_parameter("type") ) {
+    /*********************************************************** BY TYPE */
+    if (request->has_query_parameter("type")) {
         std::string targetType = request->get_query_parameter("type");
         json collection = json::array();
 
         // search user based on type
         for (auto &i : j["issues"]) {
             std::string issueType = Issue::getTypeT(i["type"]);
-            if ( issueType == targetType )
+            if (issueType == targetType)
                 collection.push_back(i);
         }
         resultJSON["issues"] = collection;
         withQuery = true;
     }
 
-
-
-    // BY STATUS
+    /********************************************************* BY STATUS */
     if ( request->has_query_parameter("status") ) {
         std::string targetStatus = request->get_query_parameter("status");
         json collection = json::array();
@@ -428,9 +438,7 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
         withQuery = true;
     }
 
-
-
-    // BY RANGE
+    /********************************************************* BY RANGE */
     if ( request->has_query_parameter("start") && request->has_query_parameter("end") ) {
         std::string start     = request->get_query_parameter("start");
         std::string end       = request->get_query_parameter("end");
@@ -438,12 +446,11 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
         unsigned int endID    = std::stoul(end, nullptr, 10);
         json collection = json::array();
 
-
-        if ( startID > endID ) {
+        if (startID > endID) {
             // startID > endID
-            resultJSON["issues"] = "Invalid parameters";
-        } else if ( startID == endID ) {
-            // return a single value
+            resultJSON["result"] = "Invalid parameters";
+        } else if (startID == endID) {
+            // startID == endID
             for (auto &i : j["issues"]) {
                 unsigned int issueID = i["id"];
                 if ( issueID == startID )
@@ -451,7 +458,7 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
             }
             resultJSON["issues"] = collection;
         } else {
-            // search issues that is within the range
+            // startID < endID
             for (auto &i : j["issues"]) {
                 unsigned int issueID = i["id"];
                 if ( issueID >= startID && issueID <= endID )
@@ -459,12 +466,11 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
             }
             resultJSON["issues"] = collection;
         }
-
         withQuery = true;
     }
 
 
-    // NO QUERY PARAM
+    /*********************************************** WITHOUT QUERY PARAM */
     if ( withQuery == false ) {
         resultJSON["issues"] = j["issues"];
     }
@@ -476,7 +482,8 @@ void get_issue_handler(const std::shared_ptr<restbed::Session>& session) {
 
 
 /**
- * @brief handles the GET request for the USER
+ * @brief handles the GET request for the
+ *        /issues/{issue_id} endpoint
  * @param session   current session between server and client
  */
 void get_issue_by_id_handler(const std::shared_ptr<restbed::Session>& session) {
@@ -485,17 +492,10 @@ void get_issue_by_id_handler(const std::shared_ptr<restbed::Session>& session) {
     json j = json::parse(f);
     json resultJSON;
 
-    std::cout << "GET ISSUE HANDLER By ID" << std::endl;
-
-    /**
-     *    /issues/{id}
-     */
-
-    // BY TYPE
-    if ( request->has_path_parameter("issue_id") ) {
+    // get the issue by ID
+    if (request->has_path_parameter("issue_id")) {
         std::string targetID = request->get_path_parameter("issue_id");
 
-        // search issue by id
         for (auto &i : j["issues"]) {
             int issueID = i["id"];
             if ( issueID == std::stoi(targetID) ) {
@@ -520,7 +520,8 @@ void get_issue_by_id_handler(const std::shared_ptr<restbed::Session>& session) {
 
 
 /**
- * @brief handles the GET request for the USER
+ * @brief handles the GET request for the 
+ *        /issues/{issue_id}/comments/ endpoint
  * @param session   current session between server and client
  */
 void get_comment_handler(const std::shared_ptr<restbed::Session>& session) {
@@ -529,10 +530,6 @@ void get_comment_handler(const std::shared_ptr<restbed::Session>& session) {
     json j = json::parse(f);
     json resultJSON;
     json issue;
-
-    /**
-     *   /issues/{id}/comments       lists all comments of an id-specified issue
-     */
     
     // get the specific issue
     std::string targetIssueID = request->get_path_parameter("issue_id");
@@ -560,7 +557,8 @@ void get_comment_handler(const std::shared_ptr<restbed::Session>& session) {
 
 
 /**
- * @brief handles the GET request for the USER
+ * @brief handles the GET request for the 
+ *        /issues/{issues_id}/comments/{comment_id} endpoint
  * @param session   current session between server and client
  */
 void get_comment_by_id_handler(const std::shared_ptr<restbed::Session>& session) {
@@ -569,10 +567,6 @@ void get_comment_by_id_handler(const std::shared_ptr<restbed::Session>& session)
     json j = json::parse(f);
     json resultJSON;
     json issue;
-
-    /**
-     *   /issues/{issue_id}/comments/{comment_id}   views a specific comment of an issue based on id
-     */
     
     // get the specific issue
     std::string targetIssueID = request->get_path_parameter("issue_id");
@@ -605,11 +599,8 @@ void get_comment_by_id_handler(const std::shared_ptr<restbed::Session>& session)
     session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
 
-
-
-
 /* ++++++++++++++++++++++++++++++++++
-    Issue functions
+    End of Issue functions
 +++++++++++++++++++++++++++++++++++++ */
 
 
@@ -700,7 +691,7 @@ void writeDB() {
         j["users"].push_back(user);
     }
 
-    // Add Issues to JSON object
+    // Add issues to JSON object
     for (auto &i : issues) {
         json issue;
         issue["id"]          = i.second->getID();
@@ -732,7 +723,6 @@ void writeDB() {
     // Write to file
     std::cout << "SERVER UPDATING DATA" << std::endl;
     f << std::setw(4) << j;
-    // std::cout << j.dump();
     f.close();
 }
 
