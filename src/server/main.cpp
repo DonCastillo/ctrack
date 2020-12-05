@@ -292,6 +292,7 @@ void parse_issue_put(const char* data, Issue*& issue, const unsigned int id) {
     // convert string to actual json obj
     json i = json::parse(data)["issue"];
 
+    std::cout << i << std::endl;
     // search for the issue
     issue = issues.find((int)id)->second;
 
@@ -319,7 +320,7 @@ void put_issue_request(const std::shared_ptr<restbed::Session >&
                        session, const restbed::Bytes & body) {
     const auto request   = session->get_request();
     const char* data     = reinterpret_cast<const char*>(body.data());
-    std::string id       = request->get_path_parameter("id");
+    std::string id       = request->get_path_parameter("issue_id");
     unsigned int issueID = std::stoul(id, nullptr, 10);
 
     Issue* i;
@@ -365,9 +366,8 @@ void delete_issue_handler(const std::shared_ptr<restbed::Session>& session) {
     std::string message;
     json resultJSON;
 
-    std::cout << "Hello from " << std::endl;
-    if (request->has_path_parameter("id")) {
-        std::string paramID = request->get_path_parameter("id");
+    if (request->has_path_parameter("issue_id")) {
+        std::string paramID = request->get_path_parameter("issue_id");
         int targetID        = std::stoi(paramID);
 
         it = issues.find(targetID);
@@ -774,13 +774,13 @@ int main(const int, const char**) {
 
     auto resource_issue = std::make_shared<restbed::Resource>();
     resource_issue->set_path("/issues");
-    resource_issue->set_method_handler("POST", post_issue_handler);
+    resource_issue->set_method_handler("POST", { {"Accept", "application/json"}, {"Content-Type", "application/json"} }, &post_issue_handler);
     resource_issue->set_method_handler("GET", get_issue_handler);
 
     auto resource_issue_by_id = std::make_shared<restbed::Resource>();
     resource_issue_by_id->set_path("/issues/{issue_id: .*}");
     resource_issue_by_id->set_method_handler("GET", get_issue_by_id_handler);
-    resource_issue_by_id->set_method_handler("PUT", put_issue_handler);
+    resource_issue_by_id->set_method_handler("PUT", { {"Accept", "application/json"}, {"Content-Type", "application/json"} }, &put_issue_handler);
     resource_issue_by_id->set_method_handler("DELETE", delete_issue_handler);
 
     auto resource_comments = std::make_shared<restbed::Resource>();
