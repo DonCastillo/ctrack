@@ -56,7 +56,6 @@ TEST(TestUser, setGroup) {
 }
 
 TEST(TestUser, getGroup) {
-    std::string testGroup;
     User* user1 = new User(0, "user1");
 
     user1->setGroup(0);
