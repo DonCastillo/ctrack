@@ -3,17 +3,15 @@
 #include "../../include/service/User.h"
 #include "../../include/service/CTrackUI.h"
 
-User::User(unsigned int pId, std::string pName) {
-    id = pId;
-    name = pName;
-    group = User::USER;
-}
+User::User(unsigned int pId, const std::string& pName) :
+    id(pId), name(pName), group(User::USER) {}
+
 
 unsigned int User::getID() const {
     return id;
 }
 
-void User::setName(const std::string pName) {
+void User::setName(const std::string& pName) {
     name = pName;
 }
 
