@@ -1,33 +1,70 @@
 {
-    "issueIDX": 2,
+    "issueIDX": 6,
     "issues": [
         {
             "assignees": [
-                1,
-                4
+                0
             ],
-            "author": 1,
+            "author": 5,
             "commentIDX": 2,
             "comments": [
                 {
-                    "author": 4,
-                    "comment": "manager comment text here",
+                    "author": 0,
+                    "comment": "I agree",
                     "id": 0
                 },
                 {
                     "author": 1,
-                    "comment": "dev comment text here",
+                    "comment": "True",
                     "id": 1
                 }
             ],
-            "description": "This is the description of issue 1",
-            "id": 1,
+            "description": "and not an integer",
+            "id": 3,
             "status": 1,
-            "title": "Another title goes here",
-            "type": 2
+            "title": "User ID should be a string",
+            "type": 1
+        },
+        {
+            "assignees": [
+                7
+            ],
+            "author": 8,
+            "commentIDX": 1,
+            "comments": [
+                {
+                    "author": 8,
+                    "comment": "Might need to restart the modem",
+                    "id": 0
+                }
+            ],
+            "description": "Cannot connect to the internet",
+            "id": 4,
+            "status": 3,
+            "title": "Issue with the internet",
+            "type": 0
+        },
+        {
+            "assignees": [
+                3
+            ],
+            "author": 5,
+            "commentIDX": 1,
+            "comments": [
+                {
+                    "author": 4,
+                    "comment": "We should order a new battery",
+                    "id": 0
+                }
+            ],
+            "description": "It feels bulgy. must be a battery issue",
+            "id": 5,
+            "status": 2,
+            "title": "Phone won't open",
+            "type": 0
         }
     ],
-    "userIDX": 5,
+    "userIDX": 9,
     "users": [
         {
             "group": 0,
@@ -53,6 +90,26 @@
             "group": 2,
             "id": 4,
             "name": "user4-manager"
+        },
+        {
+            "group": 3,
+            "id": 5,
+            "name": "Willy Wonka"
+        },
+        {
+            "group": 2,
+            "id": 6,
+            "name": "Superman"
+        },
+        {
+            "group": 1,
+            "id": 7,
+            "name": "Michael Scott"
+        },
+        {
+            "group": 0,
+            "id": 8,
+            "name": "Pam Beesly"
         }
     ]
 }

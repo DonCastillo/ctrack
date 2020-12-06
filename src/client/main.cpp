@@ -138,7 +138,7 @@ std::shared_ptr<restbed::Request> create_issue_put_request(const Issue* dummyIss
     issue["issue"]["status"]       = dummyIssue->getStatusInt();
     issue["issue"]["comments"]     = json::array();
 
-    std::cout << "working here" << std::endl;
+    //std::cout << "working here" << std::endl;
 
     for (Comment* c : dummyIssue->getComments()) {
         json comment;
@@ -148,7 +148,7 @@ std::shared_ptr<restbed::Request> create_issue_put_request(const Issue* dummyIss
     }
 
     std::string message = issue.dump();
-    std::cout << message << std::endl;
+    //std::cout << message << std::endl;
 
     // Set the message
     request->set_header("Content-Length", std::to_string(message.length()));
@@ -222,7 +222,7 @@ void handle_response(std::shared_ptr<restbed::Response> response) {
         restbed::Http::fetch(length, response);
         std::string responseStr(reinterpret_cast<char*>(response->get_body().data()), length);
         nlohmann::json resultJSON = nlohmann::json::parse(responseStr);
-        std::cout << resultJSON;
+        std::cout << resultJSON.dump(4);
         break;
     }
     case 400:
@@ -587,14 +587,15 @@ int main(const int, const char**) {
             break;
         case 6: {
                 ui->printTitle("DELETING A USER");
-                ui->println("Which user to delete?");
-                std::map<unsigned int, std::string> userMap;
-                for (User* u : users)
-                    userMap.insert(std::pair<unsigned int, std::string>(u->getID(), u->getName()));
-                unsigned int userID  = ui->choose(userMap);
-                request       = delete_request_by_id("users/" + std::to_string(userID));
-                auto response = restbed::Http::sync(request);
-                handle_response(response);
+                ui->println("Not Implemented");
+                // ui->println("Which user to delete?");
+                // std::map<unsigned int, std::string> userMap;
+                // for (User* u : users)
+                //     userMap.insert(std::pair<unsigned int, std::string>(u->getID(), u->getName()));
+                // unsigned int userID  = ui->choose(userMap);
+                // request       = delete_request_by_id("users/" + std::to_string(userID));
+                // auto response = restbed::Http::sync(request);
+                // handle_response(response);
                 }
             break;
         }

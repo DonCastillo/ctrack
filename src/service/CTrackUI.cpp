@@ -321,7 +321,7 @@ unsigned int CTrackUI::askIssueStatus() {
     choices.push_back("New");
     choices.push_back("Assigned");
     choices.push_back("Fixed");
-    choices.push_back("Wont't Fixed");
+    choices.push_back("Won't Fixed");
     return choose(choices);
 }
 

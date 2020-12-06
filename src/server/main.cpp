@@ -295,7 +295,7 @@ void parse_issue_put(const char* data, Issue*& issue, const unsigned int id) {
     // convert string to actual json obj
     json i = json::parse(data)["issue"];
 
-    std::cout << i << std::endl;
+    //std::cout << i << std::endl;
     // search for the issue
     issue = issues.find((int)id)->second;
 
