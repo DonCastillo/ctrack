@@ -175,20 +175,6 @@ std::shared_ptr<restbed::Request> get_request_by_path(std::string path) {
 }
 
 
-std::shared_ptr<restbed::Request> get_request_by_user_query(User* pUser) {
-    // Create the URI string
-    std::string uri = create_uri("users");
-
-    //Configure request headers
-    auto request = std::make_shared<restbed::Request>(restbed::Uri(uri));
-    request->set_method("GET");
-
-    // Set the parameters
-    request->set_query_parameter("group",  pUser->getGroupString());
-
-    return request;
-}
-
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /*                DELETE Functions                    */
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -293,7 +279,6 @@ void handle_response_issue(std::shared_ptr<restbed::Response> response) {
             myIssue->setType(i["type"]);
             myIssue->setStatus(i["status"]);
             myIssue->setDescription(i["description"]);
-            //myIssue->setNumOfComments(i["commentIDX"]);
 
             // assignees cannot be updated
             // we don't need edit the assignees
@@ -430,11 +415,11 @@ int main(const int, const char**) {
                 ui->printTitle("EDITING AN ISSUE");
                 // fetch all the users
                 request = get_request_by_path("users");
-                auto response_user = restbed::Http::sync(request);
+                response_user = restbed::Http::sync(request);
                 handle_response_user(response_user);
                 // fetch all the issues
                 request = get_request_by_path("issues");
-                auto response_issue = restbed::Http::sync(request);
+                response_issue = restbed::Http::sync(request);
                 handle_response_issue(response_issue);
 
 
@@ -442,7 +427,7 @@ int main(const int, const char**) {
                 // referenceIssue is a dummy issue with no real data
                 // except for the ID chosen by the user
                 Issue* referenceIssue      =   ui->askWhichIssue(issues);
-                Issue* dummyIssue;  // actual object chosen
+                //Issue* dummyIssue;  // actual object chosen
 
                 for (Issue* i : issues) {
                     if ( referenceIssue->getID() == i->getID() )

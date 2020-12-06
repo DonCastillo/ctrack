@@ -654,8 +654,6 @@ bool readDB() {
                     issue->addComment(new Comment(c["id"], users[c["author"]], c["comment"]));
             }
 
-            //issue->setNumOfComments(i["commentIDX"]);
-
             issues.insert(std::make_pair(i["id"], issue));
         }
     }
