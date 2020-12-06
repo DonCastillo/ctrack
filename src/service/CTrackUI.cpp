@@ -181,8 +181,7 @@ unsigned int CTrackUI::choose(std::map<unsigned int, std::string> mapChoices) {
             choiceInt = std::stoul(choice, nullptr, 10);
             isValid = isAmongChoices(choiceInt, indexes);
         }
-        
-    } while(isValid == false);
+    } while (isValid == false);
     //std::cin.clear();
 
     return choiceInt;
@@ -435,14 +434,14 @@ std::string CTrackUI::viewIssue() {
 
     unsigned int targetChoice = choose(choices);
     std::string url = "";
-    switch(targetChoice) {
+    switch (targetChoice) {
         case 0:
             url = "/issues";
             break;
         case 1: {
             unsigned int id = askForID();
-            url = "/issues/" + std::to_string(id); 
-        }   break;
+            url = "/issues/" + std::to_string(id); }
+            break;
     }
     return url;
 }
