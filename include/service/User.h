@@ -36,7 +36,7 @@ class User {
         \brief  Sets the name of the user.
         \param  pName    - name to be set (string)
      */
-     void setName(std::string pName);
+     void setName(const std::string pName);
 
      /*!
         \brief  Gets the name of the user.
