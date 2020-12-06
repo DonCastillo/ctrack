@@ -8,7 +8,7 @@
 #include "../../include/service/CTrackUI.h"
 
 
-Issue::Issue(unsigned int pId, std::string pTitle, User* pIssuer) {
+Issue::Issue(unsigned int pId, const std::string& pTitle, User* pIssuer) {
     id              = pId;
     title           = pTitle;
     issuer          = pIssuer;
@@ -27,7 +27,7 @@ unsigned int Issue::getID() const {
     return id;
 }
 
-void Issue::setTitle(std::string pTitle) {
+void Issue::setTitle(const std::string& pTitle) {
     title = pTitle;
 }
 
@@ -232,7 +232,7 @@ std::string Issue::getDescription() const {
     return description;
 }
 
-void Issue::setDescription(std::string pDesc) {
+void Issue::setDescription(const std::string& pDesc) {
     description = pDesc;
 }
 

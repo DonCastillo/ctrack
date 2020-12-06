@@ -42,7 +42,7 @@ class Issue {
         \param  pTitle  - issue title (string)
         \param  pIssuer - the user who issues the issue (User*)
      */
-     Issue(unsigned int pId, std::string pTitle, User* pIssuer);
+     Issue(unsigned int pId, const std::string& pTitle, User* pIssuer);
 
      /*!
         \brief  Destructor
@@ -54,7 +54,7 @@ class Issue {
         \brief  Sets the title of the issue.
         \param  pTitle  - title of the issue (string)
      */
-     void setTitle(std::string pTitle);
+     void setTitle(const std::string& pTitle);
 
      /*!
         \brief  Gets the title of the issue.
@@ -178,7 +178,7 @@ class Issue {
         \brief  Sets the issue's description
         \param  pDesc     - description (string)
      */
-     void setDescription(std::string pDesc);
+     void setDescription(const std::string& pDesc);
 
      /*!
         \brief  Adds a comment to this issue.
