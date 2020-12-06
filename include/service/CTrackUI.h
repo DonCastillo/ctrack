@@ -93,7 +93,7 @@ class CTrackUI {
        \return  returns the string of url based on
                 id of the user to be deleted
     */
-    std::string deleteUser();
+    //std::string deleteUser();
 
     /*!
        \brief   Asks the user to enter an ID
@@ -267,7 +267,7 @@ class CTrackUI {
        \return returns text (string) in the format:
                (left-text) right-text
     */
-    std::string formatStringRow(std::string left, std::string right);
+    //std::string formatStringRow(std::string left, std::string right);
 
  protected:
     /** line width */

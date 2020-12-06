@@ -396,11 +396,11 @@ User* CTrackUI::createUser() {
 }
 
 
-std::string CTrackUI::deleteUser() {
-    println("Enter the ID of the user you want to delete.");
-    unsigned int id = askForID();
-    return "/users/" + std::to_string(id);
-}
+//std::string CTrackUI::deleteUser() {
+//    println("Enter the ID of the user you want to delete.");
+//    unsigned int id = askForID();
+//    return "/users/" + std::to_string(id);
+//}
 
 
 std::string CTrackUI::viewUser() {
@@ -503,6 +503,6 @@ std::string CTrackUI::formatIDRow(unsigned int id, std::string right) {
   return row;
 }
 
-std::string CTrackUI::formatStringRow(std::string left, std::string right) {
-  return "(" + left + ") " + right;
-}
+//std::string CTrackUI::formatStringRow(std::string left, std::string right) {
+//  return "(" + left + ") " + right;
+//}
