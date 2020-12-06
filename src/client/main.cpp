@@ -79,11 +79,11 @@ std::shared_ptr<restbed::Request> create_issue_post_request(const Issue* dummyIs
 
     // Configure request headers
     auto request = std::make_shared<restbed::Request>(restbed::Uri(uri));
-    request->set_header("Accept", "*/*");
+    request->set_header("Accept", "application/json");
     request->set_method("POST");
     request->set_header("Content-Type", "application/json");
-    request->set_header("X-Content-Type-Options", "nosniff");
-    request->set_header("Accept-Charset", "utf-8");
+    //request->set_header("X-Content-Type-Options", "nosniff");
+    //request->set_header("Accept-Charset", "utf-8");
 
     // Create the message
     json issue;
@@ -124,11 +124,11 @@ std::shared_ptr<restbed::Request> create_issue_put_request(const Issue* dummyIss
 
     // Configure request headers
     auto request = std::make_shared<restbed::Request>(restbed::Uri(uri));
-    request->set_header("Accept", "*/*");
+    request->set_header("Accept", "application/json");
     request->set_method("PUT");
     request->set_header("Content-Type", "application/json");
-    request->set_header("X-Content-Type-Options", "nosniff");
-    request->set_header("Accept-Charset", "utf-8");
+    //request->set_header("X-Content-Type-Options", "nosniff");
+    //request->set_header("Accept-Charset", "utf-8");
 
     // Create the message
     json issue;
