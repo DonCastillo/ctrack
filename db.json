@@ -1,1 +1,58 @@
-{"issueIDX":6,"issues":[{"assignees":[0,2],"author":0,"commentIDX":2,"comments":[{"author":3,"comment":"user comment text here","id":0},{"author":2,"comment":"developer comment text here","id":1}],"description":"This is the description of issue 0","id":0,"status":0,"title":"sdsdsd","type":1},{"assignees":[1,4],"author":1,"commentIDX":2,"comments":[{"author":4,"comment":"manager comment text here","id":0},{"author":1,"comment":"dev comment text here","id":1}],"description":"This is the description of issue 1","id":1,"status":0,"title":"hey","type":2},{"assignees":[3],"author":3,"commentIDX":1,"comments":[{"author":3,"comment":"ndgjnfjndfjng","id":0}],"description":"Order of the phonenix","id":2,"status":3,"title":"This is a new title 3","type":0},{"assignees":[0],"author":0,"commentIDX":1,"comments":[{"author":0,"comment":"new comment","id":0}],"description":"new desc","id":3,"status":0,"title":"This is a new title 4","type":0},{"assignees":[0],"author":0,"commentIDX":1,"comments":[{"author":0,"comment":"new comment","id":0}],"description":"new desc","id":4,"status":0,"title":"This is a new title 5","type":0},{"assignees":[0],"author":0,"commentIDX":3,"comments":[{"author":0,"comment":"nre comment","id":0},{"author":0,"comment":"drcdhgcgftufgfghtyuh","id":1},{"author":0,"comment":"sasasasa","id":2}],"description":"new","id":5,"status":0,"title":"new issue","type":0}],"userIDX":5,"users":[{"group":0,"id":0,"name":"user0-dev"},{"group":0,"id":1,"name":"user1-dev"},{"group":1,"id":2,"name":"user2-tester"},{"group":3,"id":3,"name":"user3-user"}]}
+{
+    "issueIDX": 2,
+    "issues": [
+        {
+            "assignees": [
+                1,
+                4
+            ],
+            "author": 1,
+            "commentIDX": 2,
+            "comments": [
+                {
+                    "author": 4,
+                    "comment": "manager comment text here",
+                    "id": 0
+                },
+                {
+                    "author": 1,
+                    "comment": "dev comment text here",
+                    "id": 1
+                }
+            ],
+            "description": "This is the description of issue 1",
+            "id": 1,
+            "status": 1,
+            "title": "Another title goes here",
+            "type": 2
+        }
+    ],
+    "userIDX": 5,
+    "users": [
+        {
+            "group": 0,
+            "id": 0,
+            "name": "user0-dev"
+        },
+        {
+            "group": 0,
+            "id": 1,
+            "name": "user1-dev"
+        },
+        {
+            "group": 1,
+            "id": 2,
+            "name": "user2-tester"
+        },
+        {
+            "group": 3,
+            "id": 3,
+            "name": "user3-user"
+        },
+        {
+            "group": 2,
+            "id": 4,
+            "name": "user4-manager"
+        }
+    ]
+}

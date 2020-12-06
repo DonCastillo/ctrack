@@ -21,6 +21,9 @@ using json = nlohmann::json;
 /** Response header to close connection */
 #define CLOSE_CONNECTION { "Connection", "close" }
 
+#define JSON { "Content-Type", "application/json" }
+
+
 
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /*             Function declaration                   */
@@ -266,7 +269,7 @@ void post_issue_request(const std::shared_ptr<restbed::Session >&
 
     // update db
     writeDB();
-    session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
+    session->close(restbed::OK, response, { ALLOW_ALL, JSON, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
 
 
@@ -338,7 +341,7 @@ void put_issue_request(const std::shared_ptr<restbed::Session >&
 
     // update db
     writeDB();
-    session->close(restbed::OK, response, { ALLOW_ALL, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
+    session->close(restbed::OK, response, { ALLOW_ALL, JSON, { "Content-Length", std::to_string(response.length()) }, CLOSE_CONNECTION });
 }
 
 
@@ -390,7 +393,7 @@ void delete_issue_handler(const std::shared_ptr<restbed::Session>& session) {
 
 
 /**
- * @brief handles the GET request for the /issue endpoint 
+ * @brief handles the GET request for the /issue endpoint
  *        with query parameters
  *        Endpoints:
  *        /issues                     gets all the issues
@@ -520,7 +523,7 @@ void get_issue_by_id_handler(const std::shared_ptr<restbed::Session>& session) {
 
 
 /**
- * @brief handles the GET request for the 
+ * @brief handles the GET request for the
  *        /issues/{issue_id}/comments/ endpoint
  * @param session   current session between server and client
  */
@@ -530,7 +533,7 @@ void get_comment_handler(const std::shared_ptr<restbed::Session>& session) {
     json j = json::parse(f);
     json resultJSON;
     json issue;
-    
+
     // get the specific issue
     std::string targetIssueID = request->get_path_parameter("issue_id");
     for (auto &i : j["issues"]) {
@@ -540,7 +543,7 @@ void get_comment_handler(const std::shared_ptr<restbed::Session>& session) {
             break;
         }
     }
-          
+
     // get all the comments
     if (!issue.empty()) {
         resultJSON = issue["comments"];
@@ -557,7 +560,7 @@ void get_comment_handler(const std::shared_ptr<restbed::Session>& session) {
 
 
 /**
- * @brief handles the GET request for the 
+ * @brief handles the GET request for the
  *        /issues/{issues_id}/comments/{comment_id} endpoint
  * @param session   current session between server and client
  */
@@ -567,7 +570,7 @@ void get_comment_by_id_handler(const std::shared_ptr<restbed::Session>& session)
     json j = json::parse(f);
     json resultJSON;
     json issue;
-    
+
     // get the specific issue
     std::string targetIssueID = request->get_path_parameter("issue_id");
     for (auto &i : j["issues"]) {
@@ -577,7 +580,7 @@ void get_comment_by_id_handler(const std::shared_ptr<restbed::Session>& session)
             break;
         }
     }
-          
+
     // get the the comment by id
     if (!issue.empty()) {
         std::string targetCommentID = request->get_path_parameter("comment_id");
