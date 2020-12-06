@@ -337,11 +337,12 @@ int main(const int, const char**) {
     Comment* dummyComment   = nullptr;
     CTrackUI* ui = new CTrackUI();
 
-    unsigned int choice;
+
     bool cont = false;
     std::shared_ptr<restbed::Request> request;
 
     do {
+        unsigned int choice;
         ui->welcome();
         choice = ui->menu();
 
