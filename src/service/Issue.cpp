@@ -8,15 +8,10 @@
 #include "../../include/service/CTrackUI.h"
 
 
-Issue::Issue(unsigned int pId, const std::string& pTitle, User* pIssuer) {
-    id              = pId;
-    title           = pTitle;
-    issuer          = pIssuer;
-    type            = Issue::TASK;
-    status          = Issue::NEW;
-    description     = "";
-    numOfComments   = 0;
-}
+Issue::Issue(unsigned int pId, const std::string& pTitle, User* pIssuer) :
+    id(pId), title(pTitle), issuer(pIssuer), type(Issue::TASK),
+    status(Issue::NEW), description(""), numOfComments(0) {}
+
 
 Issue::~Issue() {
     for (int i = 0; i < comments.size(); ++i)
