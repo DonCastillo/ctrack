@@ -228,7 +228,7 @@ class Issue {
         \param  pInt    - the numOfComments will be reset
                           to this value
      */
-     void setNumOfComments(unsigned int pInt);
+     //void setNumOfComments(unsigned int pInt);
 
      /*!
         \brief  Deletes all the issue's comments and
