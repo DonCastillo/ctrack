@@ -84,35 +84,129 @@ class CTrackUI {
     /*!
        \brief   Lets the user view users
        \return  returns the string of url based on how the user
-                specified how s/he wants to view the users
+                specified how s/he wants to view the users (string)
     */
     std::string viewUser();
 
     /*!
        \brief   Lets the user delete a user
-       \return  returns the string of url based on how the user
-                specified how s/he wants to view the users
+       \return  returns the string of url based on
+                id of the user to be deleted
     */
     std::string deleteUser();
-    unsigned int askForID();
-    std::string askIssueTitle();
-    std::string askIssueDescription();
-    unsigned int askIssueType();
-    unsigned int askIssueStatus();
-    std::vector<User*> askIssueAssignees(std::vector<User*> users);
-    User* askWhichUser(std::vector<User*> usersOptions);
-    bool isAmongChoices(unsigned int choice, std::vector<unsigned int> choices);
-    unsigned int choose(std::map<unsigned int, std::string> mapChoices);
-    std::string askComment();
-    std::vector<Comment*> askIssueComments(std::vector<User*> users);
-    Issue* askWhichIssue(std::vector<Issue*> issueOptions);
-    unsigned int askWhichIssueProperty();
-    unsigned int updateCommentAction();
-    bool continueAddingComment();
-    Comment* askWhichComment(std::vector<Comment*> commentOptions);
-    std::vector<Comment*> askIssueCommentsWithID(unsigned int numOfComments, std::vector<User*> users);
-    std::string viewIssue();
 
+    /*!
+       \brief   Asks the user to enter an ID
+       \return  returns the ID entered (unsigned int)
+    */
+    unsigned int askForID();
+
+    /*!
+       \brief  Asks the user to enter the issue title
+       \return issue title (string)
+    */
+    std::string askIssueTitle();
+
+    /*!
+       \brief  Asks the user to enter the issue description
+       \return issue description (string)
+    */
+    std::string askIssueDescription();
+
+    /*!
+       \brief  Asks the user to enter the issue type
+       \return issue type (unsigned int)
+    */
+    unsigned int askIssueType();
+
+    /*!
+       \brief  Asks the user to enter the issue status
+       \return issue status (unsigned int)
+    */
+    unsigned int askIssueStatus();
+
+    /*!
+       \brief  Asks the user to enter user objects to be
+               assigned to the issue
+       \param  users      - vector of users to be b chosen from
+       \return returns the vector of users assigned to the issue
+    */
+    std::vector<User*> askIssueAssignees(std::vector<User*> users);
+
+    /*!
+       \brief  Asks the user to choose a user from the list
+               of users presented
+       \param  usersOptions   - list of users as options
+       \return returns a user selected (User*)
+    */
+    User* askWhichUser(std::vector<User*> usersOptions);
+
+    /*!
+       \brief   Checks if the user's choice is among the valid choices
+       \param   choice    - user's choice (unsigned int)
+       \param   choices   - valid choices
+       \return  true if the choice is among the valid choices,
+                otherwise false
+    */
+    bool isAmongChoices(unsigned int choice, std::vector<unsigned int> choices);
+
+    /*!
+       \brief  Asks the user to choose between the choices
+       \param  mapChoices   - choices to choose from
+       \return returns the ID or integer of choice (unsigned int)
+    */
+    unsigned int choose(std::map<unsigned int, std::string> mapChoices);
+
+    /*!
+       \brief  Asks the user to provide a comment to an issue
+       \return returns a comment (string)
+    */
+    std::string askComment();
+
+    /*!
+       \brief  Asks the user to add a comment to an issue
+       \param  users      - vector of users to choose from
+                            to be assigned as a commenter
+       \return vector of comments to be added to an issue
+    */
+    std::vector<Comment*> askIssueComments(std::vector<User*> users);
+
+    /*!
+       \brief  Asks the user to choose an issue from the list of issues
+       \param  issueOptions   - list of issues to choose from
+       \return chosen Issue object (Issue)
+    */
+    Issue* askWhichIssue(std::vector<Issue*> issueOptions);
+
+    /*!
+       \brief   Asks the user which property of the Issue to edit/update
+       \return  Chosen propery as indicated by its integer representation
+    */
+    unsigned int askWhichIssueProperty();
+
+    /*!
+       \brief  Asks the user what kind of update he wants to a comment
+       \return Chosen action as indicated by its integer representation
+    */
+    unsigned int updateCommentAction();
+
+    /*!
+       \brief Asks the user if he wants to continue adding a comment
+       \return true if he wants to continue, otherwise false
+    */
+    bool continueAddingComment();
+
+    /*!
+       \brief Asks the user to choose which comment to edit/delete
+       \return chosen comment
+    */
+    Comment* askWhichComment(std::vector<Comment*> commentOptions);
+
+    /*!
+       \brief Lets the user view the issues
+       \return string url of the issue to be viewed
+    */
+    std::string viewIssue();
 
 
     /*!
