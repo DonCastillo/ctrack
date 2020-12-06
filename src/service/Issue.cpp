@@ -69,6 +69,7 @@ std::string Issue::getTypeString() const {
             break;
         case Issue::TASK:
             typeLabel = "task";
+            break;
     }
     return typeLabel;
 }
@@ -85,6 +86,7 @@ unsigned int Issue::getTypeInt() const {
             break;
         case Issue::TASK:
             typeInt = 2;
+            break;
     }
     return typeInt;
 }

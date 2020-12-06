@@ -8,6 +8,15 @@ class User {
  public:
      /** group categories */
      enum Group {DEVELOPER, TESTER, MANAGER, USER};
+
+     /*!
+        \brief  converts an integer representation of
+                any group into a string
+        \param  pInt      integer representation of
+                          a group to be converted to
+                          string (unsigned int)
+        \return returns the string representation of a group (string)
+     */
      static std::string getGroup(unsigned int pInt);
 
      /*!
@@ -49,14 +58,15 @@ class User {
 
      /*!
         \brief  Gets the group which the user belongs to.
-        \return returns the group name (string)
+        \return returns the group (Group)
      */
      Group getGroup() const;
 
+     /*!
+        \brief  Gets the user's group's string representation
+        \return returns the group name in string (string)
+     */
      std::string getGroupString() const;
-
-
-
 
      /*!
         \brief  Gets the user's id

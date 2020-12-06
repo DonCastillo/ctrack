@@ -11,10 +11,30 @@ class Issue {
  public:
      /** type categories */
      enum Type {FEATURE, BUG, TASK};
-     static std::string getTypeT(unsigned int pInt);
+
      /** status categories */
      enum Status {NEW, ASSIGNED, FIXED, WONTFIX};
+
+     /*!
+        \brief  Converts an integer representation
+                of any issue's type into a string
+        \param  pInt    - integer representation
+                          of an issue's type (unsigned int)
+        \return returns the issue's type string
+                representation (string)
+     */
+     static std::string getTypeT(unsigned int pInt);
+
+     /*!
+        \brief  Converts an integer representation of
+                any issue's status into a string
+        \param  sInt     - integer representation of
+                          an issue's status (unsigned int)
+        \return returns the issue's status string
+                representation (string)
+     */
      static std::string getStatusT(unsigned int sInt);
+
      /*!
         \brief  Constructor
         \brief  Initializes issue id, title, and the issuer
@@ -71,8 +91,18 @@ class Issue {
      */
      std::string getTypeString() const;
 
+     /*!
+        \brief  Gets the integer representation of
+                the issue's type
+        \return returns the integer representation of
+                the issue's type
+     */
      unsigned int getTypeInt() const;
 
+     /*!
+        \brief  Gets the issue's type
+        \return returns the issue's type (Type)
+     */
      Type getType() const;
 
      /*!
@@ -93,8 +123,18 @@ class Issue {
      */
      std::string getStatusString() const;
 
+     /*!
+        \brief  Returns the integer representation
+                of the issue's status
+        \return integer representation of the issue's
+                status (unsigned int)
+     */
      unsigned int getStatusInt() const;
 
+     /*!
+        \brief  Gets the issue's status
+        \return returns the issue's status (Status)
+     */
      Status getStatus() const;
 
      /*!
@@ -176,10 +216,24 @@ class Issue {
      */
      unsigned int getID() const;
 
+     /*!
+        \brief  Gets the issue's number of comments
+        \return returns the issue's number of comments
+                (unsigned int)
+     */
      unsigned int getNumOfComments() const;
 
+     /*!
+        \brief  resets the numOfComments of an issue
+        \param  pInt    - the numOfComments will be reset
+                          to this value
+     */
      void setNumOfComments(unsigned int pInt);
 
+     /*!
+        \brief  Deletes all the issue's comments and
+                resets the numOfComments to 0
+     */
      void clearComments();
 
     /*!

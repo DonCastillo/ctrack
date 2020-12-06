@@ -51,9 +51,15 @@ class Comment {
         \return returns the comment's id (unsigned int)
      */
      unsigned int getID() const;
+
+    /*!
+        \brief  Sets the comment's id
+        \param  pInt       - integer to be assigned as the 
+                             comment's id (unsigned int)
+     */
      void setID(unsigned int pInt);
 
-          /*!
+     /*!
         \brief  Compares two comments if they have equal id
         \param  a         - first comment (Comment)
         \param  b         - second comment (Comment)

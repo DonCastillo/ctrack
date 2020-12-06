@@ -115,7 +115,7 @@ void post_user_request(const std::shared_ptr<restbed::Session >&
 
 
 /**
- * @brief handles the POST request for the USER
+ * @brief handles the POST request for the /users endpoint
  * @param session   current session between server and client
  */
 void post_user_handler(const std::shared_ptr<restbed::Session>& session) {
@@ -127,7 +127,7 @@ void post_user_handler(const std::shared_ptr<restbed::Session>& session) {
 
 
 /**
- * @brief handles the DELETE request for the USER
+ * @brief handles the DELETE request for the /users/{id} endpoint
  * @param session   current session between server and client
  */
 void delete_user_handler(const std::shared_ptr<restbed::Session>& session) {
@@ -160,7 +160,10 @@ void delete_user_handler(const std::shared_ptr<restbed::Session>& session) {
 
 
 /**
- * @brief handles the GET request for the USER
+ * @brief handles the GET request for the /users endpoint
+ *        /users                lists all the users
+ *        /users/{id}           list the specified user by id
+ *        /users?group={val}    list user by group
  * @param session   current session between server and client
  */
 void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
@@ -168,12 +171,6 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
     std::fstream f("./db.json");
     json j = json::parse(f);
     json resultJSON;
-
-    /**
-     *    /users
-     *    /users/{id}
-     *    /users?group={val}
-     */
 
     if ( request->has_path_parameter("id") ) {
         std::string targetID = request->get_path_parameter("id");
@@ -219,9 +216,9 @@ void get_user_handler(const std::shared_ptr<restbed::Session>& session) {
     Issue functions
 +++++++++++++++++++++++++++++++++++++ */
 /**
- * @brief parses the string data and convert it to actual USER object
+ * @brief parses the string data and convert it to actual ISSUE object
  * @param data  actual data sent from the client
- * @param user  USER object to be filled with data members
+ * @param issue  ISSUE object to be filled with data members
  */
 void parse_issue(const char* data, Issue*& issue) {
     // convert string to actual json obj
@@ -247,7 +244,7 @@ void parse_issue(const char* data, Issue*& issue) {
 
 
 /**
- * @brief creates a new USER object and inserts it into the users map
+ * @brief creates a new ISSUE object and inserts it into the users map
  *        closes the session after
  * @param session   current session between server and client
  * @param body      body of the request
@@ -275,7 +272,7 @@ void post_issue_request(const std::shared_ptr<restbed::Session >&
 
 
 /**
- * @brief handles the POST request for the USER
+ * @brief handles the POST request for the /issues/ endpoint
  * @param session   current session between server and client
  */
 void post_issue_handler(const std::shared_ptr<restbed::Session>& session) {
@@ -287,9 +284,10 @@ void post_issue_handler(const std::shared_ptr<restbed::Session>& session) {
 
 
 /**
- * @brief parses the string data and convert it to actual USER object
+ * @brief parses the string data and convert it to actual ISSUE object
  * @param data  actual data sent from the client
- * @param user  USER object to be filled with data members
+ * @param issue  ISSUE object to be filled with data members
+ * @param id    id of the issue to be updated
  */
 void parse_issue_put(const char* data, Issue*& issue, const unsigned int id) {
     // convert string to actual json obj
@@ -314,8 +312,7 @@ void parse_issue_put(const char* data, Issue*& issue, const unsigned int id) {
 
 
 /**
- * @brief creates a new USER object and inserts it into the users map
- *        closes the session after
+ * @brief updates the DB whenever the issue is updated
  * @param session   current session between server and client
  * @param body      body of the request
  */
@@ -349,7 +346,7 @@ void put_issue_request(const std::shared_ptr<restbed::Session >&
 
 
 /**
- * @brief handles the POST request for the USER
+ * @brief handles the PUT request for the /issues/{id} endpoint
  * @param session   current session between server and client
  */
 void put_issue_handler(const std::shared_ptr<restbed::Session>& session) {
@@ -360,7 +357,7 @@ void put_issue_handler(const std::shared_ptr<restbed::Session>& session) {
 
 
 /**
- * @brief handles the DELETE request for the USER
+ * @brief handles the DELETE request for the /issues/{id} endpoint
  * @param session   current session between server and client
  */
 void delete_issue_handler(const std::shared_ptr<restbed::Session>& session) {
