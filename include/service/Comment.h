@@ -15,7 +15,7 @@ class Comment {
        \param   pCommenter  - the user who comments (User*)
        \param   pComment    - the user's comment (string)
     */
-     Comment(unsigned int pId, User* pCommenter, std::string pComment);
+     Comment(unsigned int pId, User* pCommenter, const std::string& pComment);
 
      /*!
         \brief  Destructor
@@ -26,7 +26,7 @@ class Comment {
         \brief  Sets the comment.
         \param  pComment    - the comment (string)
      */
-     void setComment(std::string pComment);
+     void setComment(const std::string& pComment);
 
      /*!
         \brief  Gets the comment.
@@ -54,7 +54,7 @@ class Comment {
 
     /*!
         \brief  Sets the comment's id
-        \param  pInt       - integer to be assigned as the 
+        \param  pInt       - integer to be assigned as the
                              comment's id (unsigned int)
      */
      void setID(unsigned int pInt);

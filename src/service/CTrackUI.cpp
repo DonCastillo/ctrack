@@ -218,7 +218,6 @@ std::string CTrackUI::askIssueDescription() {
 }
 
 User* CTrackUI::askWhichUser(std::vector<User*> usersOptions) {
-    std::vector<unsigned int> indexes;
     std::map<unsigned int, std::string> mapUsers;
     println("Enter the ID of the user you want to add: ");
     for (User* u : usersOptions) {
@@ -450,17 +449,17 @@ std::string CTrackUI::viewIssue() {
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /*                   UI FORMATS                        */
 /*******************************************************/
-void CTrackUI::println(std::string message) {
+void CTrackUI::println(const std::string& message) {
   std::cout << std::endl
             << message
             << std::endl;
 }
 
-void CTrackUI::print(std::string message) {
+void CTrackUI::print(const std::string& message) {
   std::cout << message;
 }
 
-void CTrackUI::printTitle(std::string title) {
+void CTrackUI::printTitle(const std::string& title) {
     std::cout << std::endl;
     title = " " + title;
     std::cout << std::setw(LINE_WIDTH)
@@ -469,7 +468,7 @@ void CTrackUI::printTitle(std::string title) {
               << std::endl;
 }
 
-void CTrackUI::printRow(std::string left, std::string right) {
+void CTrackUI::printRow(const std::string& left, const std::string& right) {
   std::cout << std::setfill(LINE_FILL)
             << std::left
             << std::setw((LINE_WIDTH/2) - 2)
@@ -481,7 +480,7 @@ void CTrackUI::printRow(std::string left, std::string right) {
             << std::endl;
 }
 
-std::string CTrackUI::formatRow(std::string left, std::string right) {
+std::string CTrackUI::formatRow(const std::string& left, const std::string& right) {
   std::ostringstream oss;
   oss       << std::setfill(LINE_FILL)
             << std::left
@@ -496,7 +495,7 @@ std::string CTrackUI::formatRow(std::string left, std::string right) {
   return row;
 }
 
-std::string CTrackUI::formatIDRow(unsigned int id, std::string right) {
+std::string CTrackUI::formatIDRow(unsigned int id, const std::string& right) {
   std::string row;
   std::string left = std::to_string(id);
   row = "(" + left + ") " + right;

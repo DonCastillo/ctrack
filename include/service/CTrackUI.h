@@ -213,19 +213,19 @@ class CTrackUI {
        \brief   prints text in a new line
        \param   message       - text to be printed (string)
     */
-    void println(std::string message);
+    void println(const std::string& message);
 
     /*!
        \brief   prints text in the same line
        \param   message       - text to be printed (string)
     */
-    void print(std::string message);
+    void print(const std::string& message);
 
     /*!
        \brief   prints title
        \param   title         - heading to be printed (string)
     */
-    void printTitle(std::string title);
+    void printTitle(const std::string& title);
 
     /*!
        \brief   prints a row of text with filler characters
@@ -233,7 +233,7 @@ class CTrackUI {
        \param   left          - text to be displayed in the left side (string)
        \param   right         - text to be displayed in the right side (string)
     */
-    void printRow(std::string left, std::string right);
+    void printRow(const std::string& left, const std::string& right);
 
     /*!
        \brief   formats text into a row with filler
@@ -243,7 +243,7 @@ class CTrackUI {
        \return  returns text (string) in the format:
                 left-text.......................right-text
     */
-    std::string formatRow(std::string left, std::string right);
+    std::string formatRow(const std::string& left, const std::string& right);
 
     /*!
        \brief   formats text with number in the left side and string
@@ -255,7 +255,7 @@ class CTrackUI {
        \return returns text (string) in the format:
                (id) right-text
     */
-    std::string formatIDRow(unsigned int id, std::string right);
+    std::string formatIDRow(unsigned int id, const std::string& right);
 
     /*!
        \brief   formats text with a string in the left side and string

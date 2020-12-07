@@ -5,11 +5,9 @@
 #include "../../include/service/CTrackUI.h"
 
 
-Comment::Comment(unsigned int pId, User* pCommenter, std::string pComment) {
-    id = pId;
-    commenter = pCommenter;
-    comment = pComment;
-}
+Comment::Comment(unsigned int pId, User* pCommenter, const std::string& pComment) :
+    id(pId), commenter(pCommenter), comment(pComment) {}
+
 
 Comment::~Comment() {}
 
@@ -21,7 +19,7 @@ void Comment::setID(unsigned int pInt) {
     id = pInt;
 }
 
-void Comment::setComment(std::string pComment) {
+void Comment::setComment(const std::string& pComment) {
     comment = pComment;
 }
 
