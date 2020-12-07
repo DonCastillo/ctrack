@@ -263,9 +263,6 @@ bool Issue::deleteComment(unsigned int pId) {
     return false;
 }
 
-//void Issue::setNumOfComments(unsigned int pInt) {
-//    numOfComments = pInt;
-//}
 
 unsigned int Issue::getNumOfComments() const {
     return numOfComments;
