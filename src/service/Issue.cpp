@@ -282,7 +282,7 @@ bool operator!= (const Issue& a, const Issue& b) {
 std::ostream& operator<<(std::ostream& os, const Issue& i) {
     CTrackUI* ui = new CTrackUI();
     unsigned int left;
-    std::string right = "";
+    std::string right;
 
     //os << ui->formatRow("ISSUE ID",         std::to_string(i.id));
     os << ui->formatRow("TITLE",            i.title);

@@ -236,7 +236,6 @@ void parse_issue(const char* data, Issue*& issue) {
     for (auto& a : i["assignees"])
         issue->addAssignee(users[a]);
 
-    unsigned int commentID = 0;
     for (auto& c : i["comments"]) {
         issue->addComment(new Comment(0, users[c["author"]], c["comment"]));
     }

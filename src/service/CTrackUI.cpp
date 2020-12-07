@@ -53,7 +53,7 @@ bool CTrackUI::choiceValid(std::string choice, unsigned int choicesSize) {
 
     // check if it's out of range
     unsigned int choiceTemp = std::stoul(choice, nullptr, 10);
-    if (choiceTemp < 0 || choiceTemp > (choicesSize - 1))
+    if (choiceTemp > (choicesSize - 1))
         return false;
 
     return true;
