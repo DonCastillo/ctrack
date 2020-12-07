@@ -223,11 +223,11 @@ class Issue {
      */
      unsigned int getNumOfComments() const;
 
-     /*!
-        \brief  resets the numOfComments of an issue
-        \param  pInt    - the numOfComments will be reset
-                          to this value
-     */
+   //   /*!
+   //      \brief  resets the numOfComments of an issue
+   //      \param  pInt    - the numOfComments will be reset
+   //                        to this value
+   //   */
      //void setNumOfComments(unsigned int pInt);
 
      /*!
