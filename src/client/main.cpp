@@ -163,7 +163,7 @@ std::shared_ptr<restbed::Request> create_issue_put_request(const Issue* dummyIss
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /*                  GET Functions                     */
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-std::shared_ptr<restbed::Request> get_request_by_path(std::string path) {
+std::shared_ptr<restbed::Request> get_request_by_path(const std::string& path) {
     // Create the URI string
     std::string uri = create_uri(path);
 
@@ -178,7 +178,7 @@ std::shared_ptr<restbed::Request> get_request_by_path(std::string path) {
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /*                DELETE Functions                    */
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-std::shared_ptr<restbed::Request> delete_request_by_id(std::string path) {
+std::shared_ptr<restbed::Request> delete_request_by_id(const std::string& path) {
     // Create the URI string
     std::string uri = create_uri(path);
     std::cout << uri << std::endl;
