@@ -131,7 +131,7 @@ class CTrackUI {
        \param  users      - vector of users to be b chosen from
        \return returns the vector of users assigned to the issue
     */
-    std::vector<User*> askIssueAssignees(std::vector<User*> users);
+    std::vector<User*> askIssueAssignees(const std::vector<User*>& users);
 
     /*!
        \brief  Asks the user to choose a user from the list
@@ -169,7 +169,7 @@ class CTrackUI {
                             to be assigned as a commenter
        \return vector of comments to be added to an issue
     */
-    std::vector<Comment*> askIssueComments(std::vector<User*> users);
+    std::vector<Comment*> askIssueComments(const std::vector<User*>& users);
 
     /*!
        \brief  Asks the user to choose an issue from the list of issues

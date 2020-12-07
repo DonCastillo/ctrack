@@ -285,7 +285,7 @@ unsigned int CTrackUI::updateCommentAction() {
     return choose(choices);
 }
 
-std::vector<User*> CTrackUI::askIssueAssignees(std::vector<User*> users) {
+std::vector<User*> CTrackUI::askIssueAssignees(const std::vector<User*>& users) {
     std::vector<User*> selectedUsers;
     std::vector<std::string> choices;
     choices.push_back("No");
@@ -336,7 +336,7 @@ std::string CTrackUI::askComment() {
     return comment;
 }
 
-std::vector<Comment*> CTrackUI::askIssueComments(std::vector<User*> users) {
+std::vector<Comment*> CTrackUI::askIssueComments(const std::vector<User*>& users) {
     std::vector<Comment*> comments;
     std::vector<std::string> choices;
     choices.push_back("No");
