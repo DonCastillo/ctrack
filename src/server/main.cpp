@@ -1,3 +1,4 @@
+#include <nlohmann/json.hpp>
 #include <restbed>
 #include <cstring>
 #include <cstdlib>
@@ -8,7 +9,6 @@
 #include <iomanip>
 #include <utility>
 #include <map>
-#include <nlohmann/json.hpp>
 #include "../../include/service/Comment.h"
 #include "../../include/service/Issue.h"
 #include "../../include/service/User.h"
