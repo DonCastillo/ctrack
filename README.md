@@ -1,7 +1,7 @@
-# C-TRACK
 ![Team logo](docs/czar.png)
-## A text-based issue tracking system developed by Team Czar. 
-## Project in CPSC 3720: Introduction to Software Engineering
+# C-TRACK
+A text-based issue tracking system developed by Team Czar. 
+Project in CPSC 3720: Introduction to Software Engineering
 
 #### TEAM MEMBERS
 1. Castillo, Don
@@ -24,6 +24,13 @@ The program uses the following libraries. Make sure they are installed before th
 On the console inteface:
 * Create a new issue
 * Edit an existing issue
+  * Edit issue title
+  * Edit issue description
+  * Edit issue status
+  * Edit issue type
+  * Add issue comment
+  * Edit an issue comment
+  * Delete an issue comment
 * Delete an existing issue
 * View an existing issue:
   * View all
@@ -48,6 +55,9 @@ On the web browser
     * [http://localhost:1234/issues?type=task](http://localhost:1234/issues?type=task)
   * View by ID range
     * [http://localhost:1234/issues?start={issue_id}&end={issue_id}](http://localhost:1234/issues?start={issue_id}&end={issue_id})
+* View an issue comment
+  * View all comments of an issue [http://localhost:1234/issues/{issue_id}/comments](http://localhost:1234/issues/{issue_id}/comments)
+  * View a comment of an issue [http://localhost:1234/issues/{issue_id}/comments/{comment_id}](http://localhost:1234/issues/{issue_id}/comments/{comment_id})
 * View a user
   * View all [http://localhost:1234/users](http://localhost:1234/users)
   * View by user ID [http://localhost:1234/users/{user_id}](http://localhost:1234/users/{user_id})
